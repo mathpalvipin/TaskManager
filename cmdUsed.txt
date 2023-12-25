@@ -1,0 +1,14 @@
+backend 
+
+mkdir backend
+cd backend
+npm init -y
+
+Frontend
+npx create-react-app Frontend
+or 
+npx create-react-app my-app --template typescript    // if tou want create react app with typescript template
+
+if you already have project use
+npm install --save typescript @types/node @types/react @types/react-dom @types/jest
+Next, rename any file to be a TypeScript file (e.g. src/index.js to src/index.tsx) and restart your development server!
