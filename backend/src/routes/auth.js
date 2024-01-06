@@ -3,8 +3,8 @@ const router = Router();
 import { genSalt, hash, compare } from "bcrypt";
 import JWT from "jsonwebtoken";
 import User from "../models/User.js";
-import { secretKey } from "../config/config.js";
-import { tokenGenerator } from "../helper/tokengenerater.js";
+// import { secretKey } from "../config/config.js";
+import { tokenGenerator, verifyToken } from "../helper/tokengenerater.js";
 
 router.post("/signup", async (req, res) => {
   try {
@@ -70,22 +70,6 @@ router.post("/login", async (req, res) => {
 });
 
 // Middleware to verify JWT token
-const verifyToken = (req, res, next) => {
-  const token = req.headers.authorization;
-
-  if (!token) {
-    return res.status(401).json({ message: "Unauthorized: Missing token" });
-  }
-
-  JWT.verify(token.replace("Bearer ", ""), secretKey, (err, decoded) => {
-    if (err) {
-      return res.status(401).json({ message: "Unauthorized: Invalid token" });
-    }
-
-    req.user = decoded; // Attach user information to the request object
-    next();
-  });
-};
 
 router.get("/protected", verifyToken, (req, res) => {
   res.json({ message: "This is a protected route", user: req.user });
