@@ -4,7 +4,7 @@ import { genSalt, hash, compare } from "bcrypt";
 import JWT from "jsonwebtoken";
 import User from "../models/User.js";
 // import { secretKey } from "../config/config.js";
-import { tokenGenerator, verifyToken } from "../helper/tokengenerater.js";
+import { tokenGenerator, verifyToken } from "../helper/authToken.js";
 
 router.post("/signup", async (req, res) => {
   try {
