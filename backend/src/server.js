@@ -30,10 +30,7 @@ app.use(bodyParser.urlencoded({
 // this middleware parses the form data and makes it available in the req.body object.
 //The extended: true option allows for parsing complex objects and arrays in the URL-encoded data.
 
-mongoose.connect(config.mongoURI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+mongoose.connect(config.mongoURI);
 
 app.use('/auth', authRoutes);
 
