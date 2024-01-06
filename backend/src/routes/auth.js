@@ -67,4 +67,5 @@ router.post('/login', async (req, res) => {
   }
 });
 
+router.post('/validate',)
 module.exports = router;
