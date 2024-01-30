@@ -1,0 +1,196 @@
+https://reactrouter.com/en/main/start/tutorial
+
+this theory is old but can be used for reference use above link for latest function.
+
+In React, the react-router-dom library is commonly used for implementing client-side routing. 
+The Router and Routes components are fundamental parts of this library.
+ They help manage navigation and rendering different components based on the current URL.
+
+1. Installation:
+Install the react-router-dom package using npm or yarn:
+
+bash
+npm install react-router-dom
+
+2. Basic Usage:
+Wrap your main application component with a BrowserRouter, which provides the routing context for your app.
+
+
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+
+const App = () => {
+  return (
+    <Router>
+      <Routes>
+        {/* Routes go here */}
+      </Routes>
+    </Router>
+  );
+};
+
+export default App;
+
+
+3. Route Component:
+Use the Route component to define paths and the corresponding components to render.
+
+
+import React from 'react';
+import { Route } from 'react-router-dom';
+
+const Home = () => <div>Home Page</div>;
+const About = () => <div>About Page</div>;
+
+const App = () => {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" exact component={Home} />
+        <Route path="/about" component={About} />
+      </Routes>
+    </Router>
+  );
+};
+
+export default App;
+The exact attribute ensures that only the exact path is matched.
+
+
+4. Routes Component:
+The Routes component is used to render the first Route or Redirect that matches the current location.
+
+
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+
+const Home = () => <div>Home Page</div>;
+const About = () => <div>About Page</div>;
+const NotFound = () => <div>404 Not Found</div>;
+
+const App = () => {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" exact component={Home} />
+        <Route path="/about" component={About} />
+        <Route component={NotFound} />
+      </Routes>
+    </Router>
+  );
+};
+
+export default App;
+The Route without a path prop is a catch-all for paths that don't match any other route.
+
+
+5. Route Parameters:
+You can use parameters in the path to create dynamic routes.
+
+
+import React from 'react';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+
+const UserProfile = ({ match }) => {
+  const { username } = match.params;
+  return <div>User Profile: {username}</div>;
+};
+
+const App = () => {
+  return (
+    <Router>
+      <Route path="/user/:username" component={UserProfile} />
+    </Router>
+  );
+};
+
+export default App;
+In this example, the :username part in the path is a parameter.
+
+
+6. Nested Routes:
+You can nest Route components to create nested route structures.
+
+ 
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+
+const Home = () => <div>Home Page</div>;
+const Dashboard = () => <div>Dashboard</div>;
+const Settings = () => <div>Settings</div>;
+
+const App = () => {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" exact component={Home} />
+        <Route path="/dashboard" component={Dashboard} />
+        <Route path="/settings" component={Settings} />
+      </Routes>
+    </Router>
+  );
+};
+
+export default App;
+In this example, /dashboard and /settings are nested routes.
+
+
+7. Redirects:
+Use the Redirect component to redirect users to another route.
+
+ 
+import React from 'react';
+import { BrowserRouter as Router, Route, Redirect, Routes } from 'react-router-dom';
+
+const PrivatePage = () => {
+  // Check if user is authenticated, if not, redirect to login
+  const isAuthenticated = true;
+
+  if (!isAuthenticated) {
+    return <Redirect to="/login" />;
+  }
+
+  return <div>Private Page</div>;
+};
+
+const App = () => {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/private" component={PrivatePage} />
+        <Redirect from="/" to="/private" />
+      </Routes>
+    </Router>
+  );
+};
+
+export default App;
+In this example, accessing the root path (/) will redirect to /private.
+8. Navigation:
+The Link component is used to create navigation links.
+
+jsx
+Copy code
+import React from 'react';
+import { BrowserRouter as Router, Link, Route } from 'react-router-dom';
+
+const Home = () => <div>Home Page</div>;
+const About = () => <div>About Page</div>;
+
+const App = () => {
+  return (
+    <Router>
+      <nav>
+        <Link to="/">Home</Link>
+        <Link to="/about">About</Link>
+      </nav>
+      <Route path="/" exact component={Home} />
+      <Route path="/about" component={About} />
+    </Router>
+  );
+};
+
+export default App;
+Clicking on the links will navigate to the specified paths.
+9. Wrapping Up:
+React Router provides powerful tools for handling navigation in your React applications. You can create dynamic and responsive user interfaces by leveraging these routing components and features. Explore the documentation for more advanced use cases and customization options.
