@@ -1,14 +1,17 @@
 import { useState } from "react";
+import { useAuth } from "../../context/AuthContext";
 
 const Signup = () => {
+  const  {user,signUp}= useAuth();
+  
   const [userData, setUserData] = useState({
     username: "",
     email: "",
     password: "",
   });
   const handleSubmit = async (e) => {
-    e.preventdefault();
-    // Signup();
+    e.preventDefault();
+     signUp(userData);
   };
 
   return (
@@ -41,8 +44,9 @@ const Signup = () => {
             setUserData({ ...userData, password: e.target.value })
           }
         ></input>
-        <button>Submit</button>
+        <button type="Submit">Submit</button>
       </form>
+      <div>{user.username}</div>
     </>
   );
 };

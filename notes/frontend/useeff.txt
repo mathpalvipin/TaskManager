@@ -1,0 +1,197 @@
+https://react.dev/reference/react/useEffect
+
+import { useEffect } from 'react';
+import { createConnection } from './chat.js';
+
+function ChatRoom({ roomId }) {
+  const [serverUrl, setServerUrl] = useState('https://localhost:1234');
+
+  useEffect(() => {//A setup function with setup code that connects to that system.
+  	const connection = createConnection(serverUrl, roomId);
+    connection.connect();
+  	return () => { //It should return a cleanup function with cleanup code that disconnects from that system.
+      connection.disconnect();
+  	};
+  }, [serverUrl, roomId]);//A list of dependencies including every value from your component used inside of those functions.
+  /// if it is blank and setupand cleanup function run on every varaiable change.
+  // ...
+}
+
+You need to pass two arguments to useEffect:
+
+A setup function with setup code that connects to that system.
+It should return a cleanup function with cleanup code that disconnects from that system.
+A list of dependencies including every value from your component used inside of those functions.
+
+
+React calls your setup and cleanup functions whenever it’s necessary, which may happen multiple times:
+
+Your setup code runs when your component is added to the page (mounts).
+A.After every re-render of your component where the dependencies have changed:
+ 1.First, your cleanup code runs with the old props and state.
+ 2.Then, your setup code runs with the new props and state.
+B.Your cleanup code runs one final time after your component is removed from the page (unmounts).
+
+
+The cleanup function should stop or undo whatever the setup function was doing
+
+
+
+Specifying reactive dependencies 
+Notice that you can’t “choose” the dependencies of your Effect.
+Every reactive value used by your Effect’s code must be declared as a dependency. 
+Your Effect’s dependency list is determined by the surrounding code:
+
+To remove a dependency, you need to “prove” to the linter that it doesn’t need to be a dependency.
+For example, you can move serverUrl out of your component to prove that it’s not reactive and won’t change on re-renders:
+const serverUrl = 'https://localhost:1234'; // Not a reactive value anymore
+
+function ChatRoom({ roomId }) {
+  useEffect(() => {
+    const connection = createConnection(serverUrl, roomId);
+    connection.connect();
+    return () => connection.disconnect();
+  }, [roomId]); // ✅ All dependencies declared
+  // ...
+}
+
+
+## Update the state on basis of previous state.
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setCount(count + 1); // You want to increment the counter every second...
+    }, 1000)
+    return () => clearInterval(intervalId);
+  }, [count]); // 🚩 ... but specifying `count` as a dependency always resets the interval.
+  // ...
+
+
+ Now that you’re passing c => c + 1 instead of count + 1, your Effect no longer needs to depend on count.
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setCount(c => c + 1); // ✅ Pass a state updater
+    }, 1000);
+    return () => clearInterval(intervalId);
+  }, []); // ✅ Now count is not a dependency
+
+
+## Removing unnecessary object dependencies 
+
+
+
+If your Effect depends on an object or a function created during rendering, 
+it might run too often. For example, this Effect re-connects after every render because the options object is different for every render:
+
+const serverUrl = 'https://localhost:1234';
+
+function ChatRoom({ roomId }) {
+  const [message, setMessage] = useState('');
+
+  const options = { // 🚩 This object is created from scratch on every re-render
+    serverUrl: serverUrl,
+    roomId: roomId
+  };
+
+  useEffect(() => {
+    const connection = createConnection(options); // It's used inside the Effect
+    connection.connect();
+    return () => connection.disconnect();
+  }, [options]); // 🚩 As a result, these dependencies are always different on a re-render
+  // ...
+
+
+Avoid using an object created during rendering as a dependency. Instead, create the object inside the Effect:
+ useEffect(() => {
+    const options = {
+      serverUrl: serverUrl,
+      roomId: roomId
+    };
+    const connection = createConnection(options);
+    connection.connect();
+    return () => connection.disconnect();
+  }, [roomId]);
+
+
+Now that you create the options object inside the Effect, the Effect itself only depends on the roomId string.
+
+With this fix, typing into the input doesn’t reconnect the chat. Unlike an object which gets re-created, 
+a string like roomId doesn’t change unless you set it to another value. Read more about removing dependencies.
+
+
+## Removing unnecessary function dependencies 
+If your Effect depends on an object or a function created during rendering, it might run too often. 
+For example, this Effect re-connects after every render because the createOptions function is different for every render:
+
+function ChatRoom({ roomId }) {
+  const [message, setMessage] = useState('');
+
+  function createOptions() { // 🚩 This function is created from scratch on every re-render
+    return {
+      serverUrl: serverUrl,
+      roomId: roomId
+    };
+  }
+
+  useEffect(() => {
+    const options = createOptions(); // It's used inside the Effect
+    const connection = createConnection();
+    connection.connect();
+    return () => connection.disconnect();
+  }, [createOptions]); // 🚩 As a result, these dependencies are always different on a re-render
+  // ...
+
+  
+Avoid using a function created during rendering as a dependency. Instead, declare it inside the Effect:
+useEffect(() => {
+    function createOptions() {
+      return {
+        serverUrl: serverUrl,
+        roomId: roomId
+      };
+    }
+
+    const options = createOptions();
+    const connection = createConnection(options);
+    connection.connect();
+    return () => connection.disconnect();
+  }, [roomId]);
+
+  Now that you define the createOptions function inside the Effect, 
+  the Effect itself only depends on the roomId string. 
+  With this fix, typing into the input doesn’t reconnect the chat.
+   Unlike a function which gets re-created, a string like roomId doesn’t change unless you set it to another value.
+  
+##  Reading the latest props and state from an Effect 
+
+By default, when you read a reactive value from an Effect, you have to add it as a dependency.
+ This ensures that your Effect “reacts” to every change of that value. For most dependencies, that’s the behavior you want.
+
+However, sometimes you’ll want to read the latest props and state from an Effect without “reacting” to them. 
+For example, imagine you want to log the number of the items in the shopping cart for every page visit:
+
+
+
+## Displaying different content on the server and the client 
+If your app uses server rendering (either directly or via a framework), your component will render in two different environments. On the server, it will render to produce the initial HTML. On the client, React will run the rendering code again so that it can attach your event handlers to that HTML. This is why, for hydration to work, your initial render output must be identical on the client and the server.
+
+In rare cases, you might need to display different content on the client. For example, if your app reads some data from localStorage, it can’t possibly do that on the server. Here is how you could implement this:
+
+function MyComponent() {
+  const [didMount, setDidMount] = useState(false);
+
+  useEffect(() => {
+    setDidMount(true);
+  }, []);
+
+  if (didMount) {
+    // ... return client-only JSX ...
+  }  else {
+    // ... return initial JSX ...
+  }
+}
+While the app is loading, the user will see the initial render output. Then, when it’s loaded and hydrated, your Effect will run and set didMount to true, triggering a re-render. This will switch to the client-only render output. Effects don’t run on the server, so this is why didMount was false during the initial server render.
+
+Use this pattern sparingly. Keep in mind that users with a slow connection will see the initial content for quite a bit of time—potentially, many seconds—so you don’t want to make jarring changes to your component’s appearance. In many cases, you can avoid the need for this by conditionally showing different things with CSS.
+

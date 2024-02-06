@@ -1,7 +1,6 @@
 https://reactrouter.com/en/main/start/tutorial
 
 this theory is old but can be used for reference use above link for latest function.
-
 In React, the react-router-dom library is commonly used for implementing client-side routing. 
 The Router and Routes components are fundamental parts of this library.
  They help manage navigation and rendering different components based on the current URL.

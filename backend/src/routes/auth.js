@@ -37,7 +37,7 @@ router.post("/signup", async (req, res) => {
     var token = tokenGenerator(user);
     res
       .status(201)
-      .json({ token: token, message: "User created successfully" });
+      .json({ message: "User created successfully", username: user.username , email :user.email, token: token });
   } catch (error) {
     // console.error(error.code);
     if (error.code == 11000)
@@ -62,7 +62,7 @@ router.post("/login", async (req, res) => {
     }
 
     var token = tokenGenerator(user);
-    res.json({ token: token, username: user.username });
+    res.status(200).json({ message:"Login sucessfully" , token: token, username: user.username,email:user.email });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
