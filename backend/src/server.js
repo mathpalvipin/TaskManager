@@ -4,13 +4,14 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import authRoutes from "./routes/auth.js";
 import { mongoURI } from "./config/config.js";
+import  cookieParser from "cookie-parser";
+
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
 
-app.use(cors());
-app.use(express.json());
-
+app.use(cookieParser());  //used to get cookies from user http request.
 app.use(bodyParser.json());
 //bodyParser.json():
 //Purpose: This middleware is used to parse incoming request bodies in JSON format.

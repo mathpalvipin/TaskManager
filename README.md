@@ -21,3 +21,6 @@ cd backend
 npm init -y
 npm install express mongoose bcrypt cors jsonwebtoken
 ```
+
+## refer the youtube video for HTTPonly cookie setup
+ https://www.youtube.com/watch?v=a5Krfkfl9MM&ab_channel=RahulAhire  

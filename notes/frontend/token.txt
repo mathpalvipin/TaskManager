@@ -1,0 +1,86 @@
+authenication 
+
+statefull 
+1.sesssion based 
+a.store session id in serer and give user his session id
+b.user can use this session id to authenication and do work
+ 
+ usefull
+ c.in bank where session is created for small timeperiod.
+ b. we have fulll control over user login . we can delete user session from server any time.
+
+ disadvantage 
+ a.require store.
+ b. if system crash all user log out.
+
+
+ stateless
+ 1.JWT token jsonweb token
+ a.create token using the userdetail and screate key(store at server) give it to user/
+ user will store it and send with every request 
+ b. 
+
+ ad. 
+ a.serverless architecture can use this 
+ b. no extra memory 
+
+ disadvantage
+ a. not easy to manage 
+ b. unable to invalidate one token as we dont have any maping store.
+
+https://www.youtube.com/watch?v=a5Krfkfl9MM&ab_channel=RahulAhire
+
+The best way to store a token in a browser depends on various factors such as security requirements,
+ ease of use, and compatibility with your application. Here are some common methods along with their considerations:
+
+HTTP Cookies:
+
+Cookies are commonly used for storing tokens.
+Advantages:
+Automatic inclusion in HTTP requests, which simplifies server-side handling.
+Cookie attributes such as HttpOnly and Secure can enhance security.
+Considerations:
+Cookies are vulnerable to Cross-Site Scripting (XSS) attacks if not properly secured.
+Limited storage size (usually around 4KB per cookie).
+Best Practice: Use HTTP-only cookies for storing tokens to mitigate XSS attacks. Ensure cookies are sent over secure connections (HTTPS).
+LocalStorage:
+
+Allows you to store data persistently in the browser.
+Advantages:
+Easy to use and accessible via JavaScript.
+Data persists even after the browser is closed.
+Considerations:
+Not inherently secure against XSS attacks since JavaScript can access it.
+Tokens stored in LocalStorage are vulnerable to Cross-Site Scripting (XSS) attacks.
+Best Practice: Avoid storing sensitive information like authentication tokens in LocalStorage unless absolutely necessary. If you must use it, consider implementing additional security measures like encryption.
+SessionStorage:
+
+Similar to LocalStorage but scoped to the current browser tab.
+Advantages:
+Data is cleared when the tab is closed, providing better security than LocalStorage.
+Considerations:
+Vulnerable to XSS attacks.
+Limited to the current browser tab/session.
+Best Practice: Use SessionStorage for temporary storage needs. Avoid storing sensitive tokens.
+IndexedDB/Web Storage API:
+
+Provides a more advanced and flexible storage mechanism compared to LocalStorage and SessionStorage.
+Advantages:
+Supports larger data sizes and structured data.
+Offers more control over data storage and retrieval.
+Considerations:
+Requires more complex implementation compared to LocalStorage and SessionStorage.
+Vulnerable to XSS attacks if not properly secured.
+Best Practice: Suitable for storing large amounts of structured data but requires careful implementation and security considerations.
+Secure HttpOnly Cookies:
+
+Special type of cookie flagged with the HttpOnly attribute.
+Advantages:
+Cannot be accessed via JavaScript, reducing the risk of XSS attacks.
+Automatically included in HTTP requests.
+Considerations:
+Limited to HTTP requests and cannot be accessed by client-side JavaScript.
+May require additional server-side configurations for token refresh.
+Best Practice: Use HttpOnly cookies for storing sensitive tokens such as authentication tokens to mitigate XSS attacks.
+In summary, when storing tokens in the browser, it's essential to prioritize security and choose a storage mechanism that aligns with your application's requirements and security considerations. For sensitive tokens like authentication tokens,
+prefer using HttpOnly cookies over other client-side storage options like LocalStorage or SessionStorage to mitigate XSS vulnerabilities.

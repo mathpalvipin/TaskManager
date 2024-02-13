@@ -1,14 +1,16 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { apiLogIn, apiSignUp } from "../services/Authservice";
+import { apiLogIn, apiSignUp,apiVerifyToken } from "../services/Authservice";
 
 const AuthContext = createContext(null);
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState({ username: "", email: "" });
   const [error, setError] = useState(null);
-  useEffect(() => {
+  useEffect(  () => {
     const loginUser = sessionStorage.getItem("user");
+       apiVerifyToken();
+
     if (loginUser) {
-      console.log(loginUser);
+      
       setUser(JSON.parse(loginUser));
     }
   }, []);
@@ -29,6 +31,7 @@ export const AuthProvider = ({ children }) => {
       const { message,...userDetails}=loginUser;
       setUser(userDetails);
       setError(null);
+    
       sessionStorage.setItem("user", JSON.stringify(userDetails));
     } catch (error) {
       setError(error.message || "An error occurred during login.");

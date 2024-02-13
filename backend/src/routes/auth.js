@@ -1,10 +1,11 @@
 import { Router } from "express";
 const router = Router();
 import { genSalt, hash, compare } from "bcrypt";
-import JWT from "jsonwebtoken";
+
 import User from "../models/User.js";
 // import { secretKey } from "../config/config.js";
 import { tokenGenerator, verifyToken } from "../helper/authToken.js";
+import cookieParser from "cookie-parser";
 
 router.post("/signup", async (req, res) => {
   try {
@@ -35,9 +36,12 @@ router.post("/signup", async (req, res) => {
     });
     await user.save();
     var token = tokenGenerator(user);
+    res.cookie('userToken', token, { httpOnly: true }); //set token in HTTPonly cookie ,
+    // this cookie can not be read by javascript (so secure)and send with every request from frontend to backend.
+  
     res
       .status(201)
-      .json({ message: "User created successfully", username: user.username , email :user.email, token: token });
+      .json({ message: "User created successfully", username: user.username , email :user.email });
   } catch (error) {
     // console.error(error.code);
     if (error.code == 11000)
@@ -62,7 +66,9 @@ router.post("/login", async (req, res) => {
     }
 
     var token = tokenGenerator(user);
-    res.status(200).json({ message:"Login sucessfully" , token: token, username: user.username,email:user.email });
+    res.cookie('userToken', token, { httpOnly: true }); //set token in HTTPonly cookie ,
+    // this cookie can not be read by javascript (so secure)and send with every request from frontend to backend.
+    res.status(200).json({ message:"Login sucessfully" , username: user.username,email:user.email });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
@@ -74,5 +80,8 @@ router.post("/login", async (req, res) => {
 router.get("/protected", verifyToken, (req, res) => {
   res.json({ message: "This is a protected route", user: req.user });
 });
-// router.post('/validate',)
+
+
+
+
 export default router;
