@@ -8,6 +8,7 @@ export const tokenGenerator = (user) => {
 };
 
 export const verifyToken = (req, res, next) => {
+  
   const token = req.cookies.userToken;
 
   if (!token) {
@@ -20,6 +21,8 @@ export const verifyToken = (req, res, next) => {
     }
 
     req.user = decoded; // Attach user information to the request object
-    next();
+    console.log(req.user); 
+    setTimeout(() => next(),2000); // this dealy is added to chck loading functionality 
+    // next();
   });
 };

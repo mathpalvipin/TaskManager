@@ -1,18 +1,30 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { apiLogIn, apiSignUp,apiVerifyToken } from "../services/Authservice";
+import { redirect } from "react-router-dom";
+
 
 const AuthContext = createContext(null);
 export const AuthProvider = ({ children }) => {
+  
   const [user, setUser] = useState({ username: "", email: "" });
   const [error, setError] = useState(null);
-  useEffect(  () => {
-    const loginUser = sessionStorage.getItem("user");
-       apiVerifyToken();
+  
+  const [loading, setLoading] = useState(false);
+   const verifyuser = async () => {
+     setLoading(true);
+    const verifiedUser = await apiVerifyToken();
+     setUser({ username: verifiedUser.username, email: verifiedUser.email });
+     setLoading(false);
+    
+  }
+    
 
-    if (loginUser) {
-      
-      setUser(JSON.parse(loginUser));
-    }
+  useEffect(() => {
+   
+      // intro page will no se any delay(add at backend using timeout)
+      //as intro page don't need any verification of user.
+        verifyuser();
+    
   }, []);
   const signUp = async (userData) => {
     try {
@@ -28,11 +40,12 @@ export const AuthProvider = ({ children }) => {
   const logIn = async (userData) => {
     try {
       const loginUser = await apiLogIn(userData);
-      const { message,...userDetails}=loginUser;
+      const { message, ...userDetails } = loginUser;
       setUser(userDetails);
       setError(null);
-    
+ 
       sessionStorage.setItem("user", JSON.stringify(userDetails));
+      
     } catch (error) {
       setError(error.message || "An error occurred during login.");
     }
@@ -42,9 +55,15 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, error, logIn, signUp, logOut }}>
-      {children}
-    </AuthContext.Provider>
+    <>
+      {loading ? (
+        <div>loading..</div>
+      ) : (
+        <AuthContext.Provider value={{ user, error, logIn, signUp, logOut }}>
+          {children}
+        </AuthContext.Provider>
+      )}
+    </>
   );
 };
 export const useAuth = () => {

@@ -78,7 +78,9 @@ router.post("/login", async (req, res) => {
 // Middleware to verify JWT token
 
 router.get("/protected", verifyToken, (req, res) => {
-  res.json({ message: "This is a protected route", user: req.user });
+  
+  
+  res.status(200).json({ message: "This is a protected route", user: req.user });
 });
 
 

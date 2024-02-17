@@ -24,7 +24,8 @@ export const apiSignUp = async (credential) => {
 export const apiVerifyToken = async()=>{
   try{
     const response =await axios.get(VerifyToken,{withCredentials:true});
-    // return response.data;
+    
+     return response.data.user;
   }catch(error){
     return error.response.data;
   }
