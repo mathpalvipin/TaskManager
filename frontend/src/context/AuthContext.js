@@ -1,30 +1,29 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { apiLogIn, apiSignUp,apiVerifyToken } from "../services/Authservice";
-import { redirect } from "react-router-dom";
-
+import { apiLogIn, apiSignUp, apiVerifyToken } from "../services/Authservice";
+import { NavLink } from "react-router-dom";
 
 const AuthContext = createContext(null);
 export const AuthProvider = ({ children }) => {
-  
   const [user, setUser] = useState({ username: "", email: "" });
   const [error, setError] = useState(null);
-  
+
   const [loading, setLoading] = useState(false);
-   const verifyuser = async () => {
-     setLoading(true);
-    const verifiedUser = await apiVerifyToken();
-     setUser({ username: verifiedUser.username, email: verifiedUser.email });
-     setLoading(false);
-    
-  }
-    
+  const verifyuser = async () => {
+    setLoading(true);
+    console.log("contextfunction");
+    const verifiedUser= await apiVerifyToken();
+    if (verifiedUser?.email) {
+
+      setUser({ username: verifiedUser.username, email: verifiedUser.email });
+    }
+    console.log("contextfunctionend");
+    setLoading(false);
+  };
 
   useEffect(() => {
-   
-      // intro page will no se any delay(add at backend using timeout)
-      //as intro page don't need any verification of user.
-        verifyuser();
-    
+    // intro page will no se any delay(add at backend using timeout)
+    //as intro page don't need any verification of user.
+    verifyuser();
   }, []);
   const signUp = async (userData) => {
     try {
@@ -43,9 +42,8 @@ export const AuthProvider = ({ children }) => {
       const { message, ...userDetails } = loginUser;
       setUser(userDetails);
       setError(null);
- 
+
       sessionStorage.setItem("user", JSON.stringify(userDetails));
-      
     } catch (error) {
       setError(error.message || "An error occurred during login.");
     }
@@ -56,6 +54,7 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <>
+     
       {loading ? (
         <div>loading..</div>
       ) : (

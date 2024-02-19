@@ -21,8 +21,8 @@ export const verifyToken = (req, res, next) => {
     }
 
     req.user = decoded; // Attach user information to the request object
-    console.log(req.user); 
-    setTimeout(() => next(),2000); // this dealy is added to chck loading functionality 
+    
+    setTimeout(() => next(),5000); // this dealy is added to chck loading functionality 
     // next();
   });
 };

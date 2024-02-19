@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
+import { NavLink } from "react-router-dom";
 
 const Login = () => {
   const {logIn,user} = useAuth();
@@ -14,7 +15,8 @@ const Login = () => {
   };
 
   return (
-    <>
+    <> 
+      <NavLink to ='/home'>home</NavLink>
       <div> login </div>
       <form onSubmit={handleSubmit}>
         <input
