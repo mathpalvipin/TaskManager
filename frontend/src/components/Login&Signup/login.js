@@ -16,7 +16,6 @@ const Login = () => {
 
   return (
     <> 
-      <NavLink to ='/home'>home</NavLink>
       <div> login </div>
       <form onSubmit={handleSubmit}>
         <input

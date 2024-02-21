@@ -1,30 +1,36 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { apiLogIn, apiSignUp, apiVerifyToken } from "../services/Authservice";
-import { NavLink } from "react-router-dom";
+
 
 const AuthContext = createContext(null);
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState({ username: "", email: "" });
+  const [user, setUser] = useState({ username: "USERNAME", email: "EMAIL" });
   const [error, setError] = useState(null);
-
+const path =window.location.pathname;
   const [loading, setLoading] = useState(false);
   const verifyuser = async () => {
     setLoading(true);
-    console.log("contextfunction");
+    
+  
     const verifiedUser= await apiVerifyToken();
     if (verifiedUser?.email) {
-
-      setUser({ username: verifiedUser.username, email: verifiedUser.email });
+      const userDetails={username:verifiedUser.username , email :verifiedUser.email};
+      sessionStorage.setItem("user", JSON.stringify(userDetails));
+      setUser(userDetails);
     }
-    console.log("contextfunctionend");
-    setLoading(false);
+    
+  
+  setLoading(false);
+  
+     return ;
   };
 
   useEffect(() => {
-    // intro page will no se any delay(add at backend using timeout)
-    //as intro page don't need any verification of user.
+    if(user.email==="EMAIL"){
+      console.log(user.email);
     verifyuser();
-  }, []);
+    }
+  }, [user]);
   const signUp = async (userData) => {
     try {
       const newUser = await apiSignUp(userData);

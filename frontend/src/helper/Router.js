@@ -1,28 +1,28 @@
 import { redirect } from "react-router-dom";
-import { apiVerifyToken } from "../services/Authservice.js";
-export const ifNotUserToLogin = async () => {
-    const path = window.location.pathname;
-    const verifiedUser = await apiVerifyToken();
+
+export const routeVerifiedUser = async () => {
   
-    if (!verifiedUser.email & (path === "/home")) {
-      console.log("home", verifiedUser.email, path);
-      return redirect("/login");
-    }
+  const User = sessionStorage.getItem("user");
   
-    return true;
-  };
-  export const ifUserToHome = async () => {
-    const path = window.location.pathname;
-    console.log("routefunction");
-    const verifiedUser = await apiVerifyToken();
-    if (verifiedUser?.email) {
-      sessionStorage.setItem("user", JSON.stringify(verifiedUser));
-    }
-    console.log("routerfunctionend");
-    if (!!verifiedUser.email & (path === "/login")) {
-      return redirect("/home");
-    }
+console.log(!!User+ "loginloader");
+  if (!!User) {
+    return redirect('/app/home'); 
+  }
+
+ 
+ return 1;
+};
+export const routeNotVerifiedUser = async () => {
   
-    return true;
-  };
-  
+
+
+  const User = sessionStorage.getItem("user");
+  // console.log(params + User);
+console.log(!User +"routeNotVerifiedUser"+"  hoomeloader");
+// const url = new URL(request.url);
+
+  if (!User) {
+    return  redirect('/auth/login'); 
+  }
+ return 1;
+};

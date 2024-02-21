@@ -26,7 +26,7 @@ export const apiVerifyToken = async()=>{
     const response =await axios.get(VerifyToken,{withCredentials:true});
     
      return response.data.user;
-  }catch(error){
-    return error.response.data;
+  }catch(error){console.log(error);
+    return error.response;
   }
 }

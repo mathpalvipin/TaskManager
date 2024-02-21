@@ -11,8 +11,8 @@ const AppNavWrapper =()=>{
     return( 
     <>
    
-    <NavLink to='/app/login'> NavLogin</NavLink>
-    <NavLink to='/app/'> Navhome</NavLink> 
+    <NavLink to='/auth/login'> NavLogin</NavLink>
+    <NavLink to='/app/home'> Navhome</NavLink> 
     <NavLink to='/intro'> Navintro</NavLink> 
    
     <div>{user.email? "User"+user.usename : "MAVBAR: user Not Found"}</div>
