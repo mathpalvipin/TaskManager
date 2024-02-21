@@ -12,16 +12,16 @@ export const verifyToken = (req, res, next) => {
   const token = req.cookies.userToken;
 
   if (!token) {
-    return res.status(401).json({ message: "Unauthorized: Missing token" });
+    return   setTimeout(() =>{ res.status(401).json({ message: "Unauthorized: Missing token" })},2000);
   }
 
   JWT.verify(token, secretKey, (err, decoded) => {
     if (err) {
-      return res.status(401).json({ message: "Unauthorized: Invalid token" });
+      return  setTimeout(() =>{ res.status(401).json({ message: "Unauthorized: Missing token" })},2000);
     }
 
     req.user = decoded; // Attach user information to the request object
-    console.log(req.user); 
+    
     setTimeout(() => next(),2000); // this dealy is added to chck loading functionality 
     // next();
   });

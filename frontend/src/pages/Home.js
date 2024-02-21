@@ -1,4 +1,10 @@
+
+import { useAuth } from "../context/AuthContext";
+import { NavLink } from "react-router-dom";
 const Home =()=>{
-    return ( <div>Home Page</div>)
+    const {user}=useAuth();
+    return ( <>
+   
+    <div>Home Page{user?.email}</div> </>)
 }
 export default Home;

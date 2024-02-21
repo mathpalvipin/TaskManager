@@ -1,31 +1,36 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { apiLogIn, apiSignUp,apiVerifyToken } from "../services/Authservice";
-import { redirect } from "react-router-dom";
+import { apiLogIn, apiSignUp, apiVerifyToken } from "../services/Authservice";
 
 
 const AuthContext = createContext(null);
 export const AuthProvider = ({ children }) => {
-  
-  const [user, setUser] = useState({ username: "", email: "" });
+  const [user, setUser] = useState({ username: "USERNAME", email: "EMAIL" });
   const [error, setError] = useState(null);
-  
+const path =window.location.pathname;
   const [loading, setLoading] = useState(false);
-   const verifyuser = async () => {
-     setLoading(true);
-    const verifiedUser = await apiVerifyToken();
-     setUser({ username: verifiedUser.username, email: verifiedUser.email });
-     setLoading(false);
+  const verifyuser = async () => {
+    setLoading(true);
     
-  }
+  
+    const verifiedUser= await apiVerifyToken();
+    if (verifiedUser?.email) {
+      const userDetails={username:verifiedUser.username , email :verifiedUser.email};
+      sessionStorage.setItem("user", JSON.stringify(userDetails));
+      setUser(userDetails);
+    }
     
+  
+  setLoading(false);
+  
+     return ;
+  };
 
   useEffect(() => {
-   
-      // intro page will no se any delay(add at backend using timeout)
-      //as intro page don't need any verification of user.
-        verifyuser();
-    
-  }, []);
+    if(user.email==="EMAIL"){
+      console.log(user.email);
+    verifyuser();
+    }
+  }, [user]);
   const signUp = async (userData) => {
     try {
       const newUser = await apiSignUp(userData);
@@ -43,9 +48,8 @@ export const AuthProvider = ({ children }) => {
       const { message, ...userDetails } = loginUser;
       setUser(userDetails);
       setError(null);
- 
+
       sessionStorage.setItem("user", JSON.stringify(userDetails));
-      
     } catch (error) {
       setError(error.message || "An error occurred during login.");
     }
@@ -56,6 +60,7 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <>
+     
       {loading ? (
         <div>loading..</div>
       ) : (
