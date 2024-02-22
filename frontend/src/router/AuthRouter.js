@@ -14,21 +14,25 @@ const AuthRouter = () => {
       element: <AppNavWrapper />,
       loader: routeNotVerifiedUser,
       children: [
-        { path: "home", loader:()=>{console.log("inlinehomeloader"); return 1;}, element: <Home /> },
+        { path: "home", element: <Home /> },
         { path: "*", element: <NotFound /> },
+        {
+          path: "intro",
+          element: <IntroPage />,
+        },
       ],
     },
     {
       path: "/",
       element: <IntroPageWrapper />,
-      
+
       children: [
         {
           index: true,
           element: <IntroPage />,
         },
         {
-          path: "/intro",
+          path: "intro",
           element: <IntroPage />,
         },
         { path: "*", element: <NotFound /> },

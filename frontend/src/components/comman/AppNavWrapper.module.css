@@ -1,0 +1,31 @@
+.navbar {
+  padding: 5px 10px;
+  background-color: lightblue;
+  width: 100%;
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+}
+.nav {
+    display: flex;
+    /* float: inline-end; */
+    width: auto;
+    flex-direction: row;
+}
+
+.nav_items{
+    margin: 0px 10px
+}
+.nav_link{
+    font-size: 20px;
+}
+.nav_link:hover{
+    color:red;
+}
+.nav_link.active {
+color:white !important;;
+
+}
+.nav_link.pending{
+ font-size: 35px;
+}

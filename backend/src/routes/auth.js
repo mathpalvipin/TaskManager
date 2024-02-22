@@ -36,12 +36,16 @@ router.post("/signup", async (req, res) => {
     });
     await user.save();
     var token = tokenGenerator(user);
-    res.cookie('userToken', token, { httpOnly: true }); //set token in HTTPonly cookie ,
+    res.cookie("userToken", token, { httpOnly: true }); //set token in HTTPonly cookie ,
     // this cookie can not be read by javascript (so secure)and send with every request from frontend to backend.
-  
+
     res
       .status(201)
-      .json({ message: "User created successfully", username: user.username , email :user.email });
+      .json({
+        message: "User created successfully",
+        username: user.username,
+        email: user.email,
+      });
   } catch (error) {
     // console.error(error.code);
     if (error.code == 11000)
@@ -66,9 +70,17 @@ router.post("/login", async (req, res) => {
     }
 
     var token = tokenGenerator(user);
-    res.cookie('userToken', token, { httpOnly: true }); //set token in HTTPonly cookie ,
+    res.cookie("userToken", token, { httpOnly: true }); //set token in HTTPonly cookie ,
     // this cookie can not be read by javascript (so secure)and send with every request from frontend to backend.
-    res.status(200).json({ message:"Login sucessfully" , username: user.username,email:user.email });
+    setTimeout(() => {
+      res
+        .status(200)
+        .json({
+          messages: "Login sucessfully",
+          username: user.username,
+          email: user.email,
+        });
+    }, 2000);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
@@ -78,12 +90,19 @@ router.post("/login", async (req, res) => {
 // Middleware to verify JWT token
 
 router.get("/protected", verifyToken, (req, res) => {
-  
-  
-  res.status(200).json({ message: "This is a protected route", user: req.user });
+  res
+    .status(200)
+    .json({ message: "This is a protected route", user: req.user });
 });
 
+router.delete("/logout", (req, res) => {
+  try {
+    res.cookie("userToken", "", { expires: new Date(0) });
 
-
+  setTimeout( ()=>{res.status(200).send({ message: "User Logged out successfully" })},2000);
+  } catch (error) {
+    res.status(500).json({ error: error });
+  }
+});
 
 export default router;

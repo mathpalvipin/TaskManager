@@ -1,17 +1,26 @@
 import { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
-import { NavLink } from "react-router-dom";
+import {useNavigate } from "react-router-dom";
 
 const Login = () => {
-  const {logIn,user} = useAuth();
+  const {logIn,user,error,setLoading} = useAuth();
   const [userData, setUserData] = useState({
     username: "",
     email: "",
     password: "",
   });
+  const navigate= useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
-     logIn(userData);
+    setLoading(true);
+    await logIn(userData);
+    setLoading(false);
+    console.log(error);
+    
+    if(!error){
+      
+      navigate('/app/home');
+    }
   };
 
   return (
@@ -37,7 +46,7 @@ const Login = () => {
         ></input>
         <button type="Submit">Submit</button>
       </form>
-      <div>{user.username}</div>
+      
     </>
   );
 };

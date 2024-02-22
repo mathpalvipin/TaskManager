@@ -1,34 +1,41 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { apiLogIn, apiSignUp, apiVerifyToken } from "../services/Authservice";
-
+import {
+  apiLogIn,
+  apiSignUp,
+  apiVerifyToken,
+  apiLogout,
+} from "../services/Authservice";
+import AppNavWrapper from "../components/comman/AppNavWrapper";
+import IntroPageWrapper from "../components/comman/IntroPageNavwrapper";
 
 const AuthContext = createContext(null);
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState({ username: "USERNAME", email: "EMAIL" });
+  const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
-const path =window.location.pathname;
+  const path = window.location.pathname;
   const [loading, setLoading] = useState(false);
   const verifyuser = async () => {
     setLoading(true);
-    
-  
-    const verifiedUser= await apiVerifyToken();
+
+    const verifiedUser = await apiVerifyToken();
     if (verifiedUser?.email) {
-      const userDetails={username:verifiedUser.username , email :verifiedUser.email};
+      const userDetails = {
+        username: verifiedUser.username,
+        email: verifiedUser.email,
+      };
       sessionStorage.setItem("user", JSON.stringify(userDetails));
       setUser(userDetails);
     }
-    
-  
-  setLoading(false);
-  
-     return ;
+
+    setLoading(false);
+
+    return;
   };
 
   useEffect(() => {
-    if(user.email==="EMAIL"){
-      console.log(user.email);
-    verifyuser();
+    if (!user) {
+      console.log(user);
+      verifyuser();
     }
   }, [user]);
   const signUp = async (userData) => {
@@ -54,17 +61,22 @@ const path =window.location.pathname;
       setError(error.message || "An error occurred during login.");
     }
   };
-  const logOut = () => {
+  const logout = async () => {
+    const response = await apiLogout();
     setUser(null);
+    setError(null);
+    sessionStorage.clear("user");
+    return response;
   };
 
   return (
     <>
-     
       {loading ? (
         <div>loading..</div>
       ) : (
-        <AuthContext.Provider value={{ user, error, logIn, signUp, logOut }}>
+        <AuthContext.Provider
+          value={{ user, error, logIn, signUp, logout, setLoading }}
+        >
           {children}
         </AuthContext.Provider>
       )}

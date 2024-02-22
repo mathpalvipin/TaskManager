@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { loginURL, SignupURL } from "../config/api";
+import { loginURL, SignupURL,LogoutURL } from "../config/api";
 import { VerifyToken } from "../config/api";
 axios.defaults.withCredentials = true
 export const apiLogIn = async (credential) => {
@@ -27,6 +27,16 @@ export const apiVerifyToken = async()=>{
     
      return response.data.user;
   }catch(error){console.log(error);
+    return error.response;
+  }
+}
+
+export const  apiLogout=async()=>{
+  try{
+    const response= await axios.delete(LogoutURL,{withCredentials:true});
+    return response.data;
+  }
+  catch(error){
     return error.response;
   }
 }
