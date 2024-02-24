@@ -5,8 +5,8 @@ import {
   apiVerifyToken,
   apiLogout,
 } from "../services/Authservice";
-import AppNavWrapper from "../components/comman/AppNavWrapper";
-import IntroPageWrapper from "../components/comman/IntroPageNavwrapper";
+
+import Loader from "../components/comman/Loader";
 
 const AuthContext = createContext(null);
 export const AuthProvider = ({ children }) => {
@@ -33,11 +33,12 @@ export const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    if (!user) {
-      console.log(user);
+    console.log(user + path);
+    if (!user && !path.includes("/intro")) {
+      console.log(user + path);
       verifyuser();
     }
-  }, [user]);
+  }, [user, path]);
   const signUp = async (userData) => {
     try {
       const newUser = await apiSignUp(userData);
@@ -71,15 +72,13 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <>
-      {loading ? (
-        <div>loading..</div>
-      ) : (
-        <AuthContext.Provider
-          value={{ user, error, logIn, signUp, logout, setLoading }}
-        >
-          {children}
-        </AuthContext.Provider>
-      )}
+      {/* {user?<AppNavWrapper props={{user,logout,setLoading}}></AppNavWrapper>:<div>intro</div>} */}
+      {loading && <Loader></Loader>}
+      <AuthContext.Provider
+        value={{ user, error, logIn, signUp, logout, setLoading }}
+      >
+        {children}
+      </AuthContext.Provider>
     </>
   );
 };

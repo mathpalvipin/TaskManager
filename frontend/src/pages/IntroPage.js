@@ -4,7 +4,7 @@ const IntroPage = () => {
   return (
     <> 
    
-      <div>IntroPage</div>{" "}
+      <div>IntroPage</div>
     </>
   );
 };

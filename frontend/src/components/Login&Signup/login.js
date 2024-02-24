@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import {useNavigate } from "react-router-dom";
-
+import  Loader  from "../comman/Loader"
 const Login = () => {
-  const {logIn,user,error,setLoading} = useAuth();
+  const {logIn,user,error} = useAuth();
+  const [ loading ,setLoading] = useState(false);
   const [userData, setUserData] = useState({
     username: "",
     email: "",
@@ -14,9 +15,7 @@ const Login = () => {
     e.preventDefault();
     setLoading(true);
     await logIn(userData);
-    setLoading(false);
-    console.log(error);
-    
+    setLoading(false); 
     if(!error){
       
       navigate('/app/home');
@@ -25,7 +24,8 @@ const Login = () => {
 
   return (
     <> 
-      <div> login </div>
+    {loading && <Loader></Loader>}
+      <><div> login </div>
       <form onSubmit={handleSubmit}>
         <input
           type="email"
@@ -46,7 +46,8 @@ const Login = () => {
         ></input>
         <button type="Submit">Submit</button>
       </form>
-      
+      </>
+
     </>
   );
 };

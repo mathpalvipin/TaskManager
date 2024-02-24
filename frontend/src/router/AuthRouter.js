@@ -5,7 +5,6 @@ import Login from "../components/Login&Signup/login.js";
 import NotFound from "../components/comman/NotFound.js";
 import Home from "../pages/Home.js";
 import IntroPage from "../pages/IntroPage";
-import IntroPageWrapper from "../components/comman/IntroPageNavwrapper.js";
 import { routeVerifiedUser, routeNotVerifiedUser } from "../helper/Router.js";
 const AuthRouter = () => {
   const AuthRouter = createBrowserRouter([
@@ -24,7 +23,7 @@ const AuthRouter = () => {
     },
     {
       path: "/",
-      element: <IntroPageWrapper />,
+      element: <AppNavWrapper />,
 
       children: [
         {
@@ -40,7 +39,7 @@ const AuthRouter = () => {
     },
     {
       path: "/auth",
-      element: <IntroPageWrapper />,
+      element: <AppNavWrapper />,
       loader: routeVerifiedUser,
       children: [
         { path: "login", element: <Login /> },
