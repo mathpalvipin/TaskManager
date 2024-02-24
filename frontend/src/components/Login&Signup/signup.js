@@ -1,9 +1,12 @@
 import { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
+import { NavLink, useNavigate } from "react-router-dom";
+import Loader from "../comman/Loader";
 
 const Signup = () => {
-  const  {user,signUp}= useAuth();
-  
+  const { signUp, error } = useAuth();
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
   const [userData, setUserData] = useState({
     username: "",
     email: "",
@@ -11,11 +14,17 @@ const Signup = () => {
   });
   const handleSubmit = async (e) => {
     e.preventDefault();
-     signUp(userData);
+    setLoading(true);
+    await signUp(userData);
+    setLoading(false);
+    if (!error) {
+      navigate("/app/home");
+    }
   };
 
   return (
     <>
+      {loading && <Loader></Loader>}
       <div> Signup </div>
       <form onSubmit={handleSubmit}>
         <input
@@ -46,7 +55,11 @@ const Signup = () => {
         ></input>
         <button type="Submit">Submit</button>
       </form>
-      <div>{user.username}</div>
+      <div>
+        {" "}
+        Already have Accont Login{" "}
+        <NavLink to="/auth/login">Click here </NavLink>
+      </div>
     </>
   );
 };

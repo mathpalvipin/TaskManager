@@ -16,7 +16,7 @@ const AuthRouter = () => {
         { path: "home", element: <Home /> },
         { path: "*", element: <NotFound /> },
         {
-          path: "intro",
+          path: "AppIntro",
           element: <IntroPage />,
         },
       ],

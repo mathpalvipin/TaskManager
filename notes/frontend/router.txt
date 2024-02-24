@@ -1,3 +1,5 @@
+IMPORTANT : use navigate in component  an use redirect in loader function.
+
 https://reactrouter.com/en/main/start/tutorial
 
 this theory is old but can be used for reference use above link for latest function.
@@ -192,4 +194,9 @@ const App = () => {
 export default App;
 Clicking on the links will navigate to the specified paths.
 9. Wrapping Up:
-React Router provides powerful tools for handling navigation in your React applications. You can create dynamic and responsive user interfaces by leveraging these routing components and features. Explore the documentation for more advanced use cases and customization options.
+React Router provides powerful tools for handling navigation in your React applications. 
+You can create dynamic and responsive user interfaces by leveraging these routing components and features. 
+Explore the documentation for more advanced use cases and customization options.
+
+
+

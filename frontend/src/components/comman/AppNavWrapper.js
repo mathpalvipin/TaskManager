@@ -77,7 +77,7 @@ const AppNavWrapper = () => {
                         : ""
                     }`
                   }
-                  to="/app/intro"
+                  to="/app/AppIntro"
                 >
                   Introduction
                 </NavLink>

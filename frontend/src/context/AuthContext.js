@@ -75,7 +75,7 @@ export const AuthProvider = ({ children }) => {
       {/* {user?<AppNavWrapper props={{user,logout,setLoading}}></AppNavWrapper>:<div>intro</div>} */}
       {loading && <Loader></Loader>}
       <AuthContext.Provider
-        value={{ user, error, logIn, signUp, logout, setLoading }}
+        value={{ user, error, logIn, signUp, logout }}
       >
         {children}
       </AuthContext.Provider>

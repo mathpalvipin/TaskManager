@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
-import {useNavigate } from "react-router-dom";
+import {NavLink, useNavigate } from "react-router-dom";
 import  Loader  from "../comman/Loader"
 const Login = () => {
-  const {logIn,user,error} = useAuth();
+  const {logIn,error} = useAuth();
   const [ loading ,setLoading] = useState(false);
   const [userData, setUserData] = useState({
     username: "",
@@ -48,6 +48,7 @@ const Login = () => {
       </form>
       </>
 
+<div>Create account  <NavLink to='/auth/signup'>Clickhere</NavLink> </div>
     </>
   );
 };
