@@ -1,19 +1,17 @@
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import { useState } from "react";
+
 import classes from "./AppNavWrapper.module.css";
-import Loader from "./Loader";
 const AppNavWrapper = () => {
   const { user, logout } = useAuth();
-  const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
   const handleLogout = async (e) => {
     e.preventDefault();
     try {
-      setLoading(true);
       const res = await logout();
       console.log(res);
-      setLoading(false);
+
       navigate("/auth/login"); //user navigate inside component and redirect inside loader function of router
     } catch (e) {
       console.log(e);
@@ -23,7 +21,6 @@ const AppNavWrapper = () => {
 
   return (
     <>
-      {loading && <Loader></Loader>}
       <div className={`${classes.navbar}`}>
         <div className="navbar-logo">
           <NavLink className="logo" to="/app/home">

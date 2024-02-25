@@ -1,11 +1,10 @@
 import { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { NavLink, useNavigate } from "react-router-dom";
-import Loader from "../comman/Loader";
 
 const Signup = () => {
-  const { signUp, error } = useAuth();
-  const [loading, setLoading] = useState(false);
+  const { signUp } = useAuth();
+
   const navigate = useNavigate();
   const [userData, setUserData] = useState({
     username: "",
@@ -14,17 +13,17 @@ const Signup = () => {
   });
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    await signUp(userData);
-    setLoading(false);
-    if (!error) {
+
+    try {
+      await signUp(userData);
       navigate("/app/home");
+    } catch (error) {
+      console.log(error);
     }
   };
 
   return (
     <>
-      {loading && <Loader></Loader>}
       <div> Signup </div>
       <form onSubmit={handleSubmit}>
         <input

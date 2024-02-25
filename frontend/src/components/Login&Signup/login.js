@@ -1,31 +1,29 @@
 import { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
-import {NavLink, useNavigate } from "react-router-dom";
-import  Loader  from "../comman/Loader"
+import { NavLink, useNavigate } from "react-router-dom";
+
 const Login = () => {
-  const {logIn,error} = useAuth();
-  const [ loading ,setLoading] = useState(false);
+  const { logIn, error } = useAuth();
+
   const [userData, setUserData] = useState({
     username: "",
     email: "",
     password: "",
   });
-  const navigate= useNavigate();
+  const navigate = useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
+
     await logIn(userData);
-    setLoading(false); 
-    if(!error){
-      
-      navigate('/app/home');
+
+    if (!error) {
+      navigate("/app/home");
     }
   };
 
   return (
-    <> 
-    {loading && <Loader></Loader>}
-      <><div> login </div>
+    <>
+      <div> login </div>
       <form onSubmit={handleSubmit}>
         <input
           type="email"
@@ -46,9 +44,10 @@ const Login = () => {
         ></input>
         <button type="Submit">Submit</button>
       </form>
-      </>
 
-<div>Create account  <NavLink to='/auth/signup'>Clickhere</NavLink> </div>
+      <div>
+        Create account <NavLink to="/auth/signup">Clickhere</NavLink>{" "}
+      </div>
     </>
   );
 };

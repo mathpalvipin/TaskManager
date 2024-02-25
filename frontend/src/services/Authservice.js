@@ -6,6 +6,7 @@ axios.defaults.withCredentials = true
 export const apiLogIn = async (credential) => {
   try {
     const response = await axios.post(loginURL, credential);
+    console.log(response);
     return response.data;
   } catch (error) {
     return error.response.data;
@@ -16,7 +17,11 @@ export const apiSignUp = async (credential) => {
     const response = await axios.post(SignupURL, credential);
     return response.data;
   } catch (error) {
-    return error.response.data;
+   
+    throw new Error(error.response.data.message|| "Error While Signup ");
+
+
+
   }
 };
 

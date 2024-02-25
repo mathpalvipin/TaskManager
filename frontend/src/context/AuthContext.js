@@ -7,12 +7,15 @@ import {
 } from "../services/Authservice";
 
 import Loader from "../components/comman/Loader";
+import ErrorBox from "../components/comman/ErrorBox";
+
 
 const AuthContext = createContext(null);
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
   const path = window.location.pathname;
+  
   const [loading, setLoading] = useState(false);
   const verifyuser = async () => {
     setLoading(true);
@@ -40,40 +43,59 @@ export const AuthProvider = ({ children }) => {
     }
   }, [user, path]);
   const signUp = async (userData) => {
+    
     try {
+      setLoading(true);
       const newUser = await apiSignUp(userData);
       const { message, ...userDetails } = newUser;
       setUser(userDetails);
       setError(null);
       sessionStorage.setItem("user", JSON.stringify(userDetails));
-    } catch (error) {
-      setError(error.message || "An error occurred during Signup.");
+      setLoading(false);
+
+    } catch (err) {
+      console.log(err.message);
+      setError(err.message || "An error occurred during Signup.");
+      setLoading(false);
+      throw new Error(error.message || "An error occurred during login.");
+     
     }
+ 
   };
   const logIn = async (userData) => {
-    try {
+   
+    try { setLoading(true);
       const loginUser = await apiLogIn(userData);
       const { message, ...userDetails } = loginUser;
       setUser(userDetails);
       setError(null);
 
       sessionStorage.setItem("user", JSON.stringify(userDetails));
+      
     } catch (error) {
+      
       setError(error.message || "An error occurred during login.");
     }
+    setLoading(false);
   };
   const logout = async () => {
+    try{
+      setLoading(true);
     const response = await apiLogout();
     setUser(null);
     setError(null);
     sessionStorage.clear("user");
-    return response;
+    return response;}
+    catch(er){
+      console.log(er);
+    }
   };
 
   return (
     <>
       {/* {user?<AppNavWrapper props={{user,logout,setLoading}}></AppNavWrapper>:<div>intro</div>} */}
       {loading && <Loader></Loader>}
+      {error && <ErrorBox  message={error}></ErrorBox>}
       <AuthContext.Provider
         value={{ user, error, logIn, signUp, logout }}
       >

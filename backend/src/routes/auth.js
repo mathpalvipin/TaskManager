@@ -9,9 +9,9 @@ import cookieParser from "cookie-parser";
 
 router.post("/signup", async (req, res) => {
   try {
-    const { email, username, password } = req.body;
+    const { email, username } = req.body;
     const salt = await genSalt(10);
-    const hashedPassword = await hash(password, salt);
+    const hashedPassword = await hash(req.body.password, salt);
     //     Hashing:
 
     // Hashing is a one-way process that transforms plain text (like a password) into a fixed-length string of characters.
@@ -35,21 +35,19 @@ router.post("/signup", async (req, res) => {
       password: hashedPassword,
     });
     await user.save();
+
     var token = tokenGenerator(user);
     res.cookie("userToken", token, { httpOnly: true }); //set token in HTTPonly cookie ,
     // this cookie can not be read by javascript (so secure)and send with every request from frontend to backend.
 
-    res
-      .status(201)
-      .json({
-        message: "User created successfully",
-        username: user.username,
-        email: user.email,
-      });
+    res.status(201).json({
+      message: "User created successfully",
+      username: user.username,
+      email: user.email,
+    });
   } catch (error) {
-    // console.error(error.code);
-    if (error.code == 11000)
-      return res.status(400).send({ Error: "Email already exists." });
+    if (error.code === 11000)
+      return res.status(403).send({ message: "Email already exists." });
     res.status(500).json({ message: "Internal Server Error" });
   }
 });
@@ -73,13 +71,11 @@ router.post("/login", async (req, res) => {
     res.cookie("userToken", token, { httpOnly: true }); //set token in HTTPonly cookie ,
     // this cookie can not be read by javascript (so secure)and send with every request from frontend to backend.
     setTimeout(() => {
-      res
-        .status(200)
-        .json({
-          messages: "Login sucessfully",
-          username: user.username,
-          email: user.email,
-        });
+      res.status(200).json({
+        messages: "Login sucessfully",
+        username: user.username,
+        email: user.email,
+      });
     }, 2000);
   } catch (error) {
     console.error(error);
@@ -99,7 +95,9 @@ router.delete("/logout", (req, res) => {
   try {
     res.cookie("userToken", "", { expires: new Date(0) });
 
-  setTimeout( ()=>{res.status(200).send({ message: "User Logged out successfully" })},2000);
+    setTimeout(() => {
+      res.status(200).send({ message: "User Logged out successfully" });
+    }, 2000);
   } catch (error) {
     res.status(500).json({ error: error });
   }
