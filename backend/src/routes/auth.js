@@ -58,13 +58,13 @@ router.post("/login", async (req, res) => {
     const user = await User.findOne({ email });
 
     if (!user) {
-      return res.status(401).json({ message: "Invalid credentials" });
+      return res.status(401).json({ message: "Email don't exists" });
     }
 
     const isPasswordValid = await compare(password, user.password);
 
     if (!isPasswordValid) {
-      return res.status(401).json({ message: "Invalid credentials" });
+      return res.status(401).json({ message: "Wrong password" });
     }
 
     var token = tokenGenerator(user);
@@ -78,7 +78,7 @@ router.post("/login", async (req, res) => {
       });
     }, 2000);
   } catch (error) {
-    console.error(error);
+   
     res.status(500).json({ message: "Internal Server Error" });
   }
 });
