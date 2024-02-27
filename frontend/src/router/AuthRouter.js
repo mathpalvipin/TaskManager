@@ -5,7 +5,13 @@ import Login from "../components/Login&Signup/login.js";
 import NotFound from "../components/comman/NotFound.js";
 import Home from "../pages/Home.js";
 import IntroPage from "../pages/IntroPage";
-import { routeVerifiedUser, routeNotVerifiedUser } from "../helper/Router.js";
+import {
+  routeVerifiedUser,
+  routeNotVerifiedUser,
+  routeToIntro,
+  routeToLogin,
+  routeToHome,
+} from "../helper/Router.js";
 const AuthRouter = () => {
   const AuthRouter = createBrowserRouter([
     {
@@ -14,11 +20,12 @@ const AuthRouter = () => {
       loader: routeNotVerifiedUser,
       children: [
         { path: "home", element: <Home /> },
-        { path: "*", element: <NotFound /> },
+
         {
           path: "AppIntro",
           element: <IntroPage />,
         },
+        { path: "*", loader: routeToHome, element: <NotFound /> },
       ],
     },
     {
@@ -34,7 +41,7 @@ const AuthRouter = () => {
           path: "intro",
           element: <IntroPage />,
         },
-        { path: "*", element: <NotFound /> },
+        { path: "*", loader: routeToIntro, element: <NotFound /> },
       ],
     },
     {
@@ -45,7 +52,7 @@ const AuthRouter = () => {
         { path: "login", element: <Login /> },
         { path: "signup", element: <Signup /> },
 
-        { path: "*", element: <NotFound /> },
+        { path: "*", loader: routeToLogin, element: <NotFound /> },
       ],
     },
     { path: "*", element: <NotFound /> },

@@ -1,23 +1,25 @@
 .navbar {
-  padding: 5px 10px;
+  
   background-color: lightblue;
   width: 100%;
+  height: clamp(40px,5vh,250px);
   display: flex;
   flex-wrap: nowrap;
   justify-content: space-between;
 }
 .nav {
     display: flex;
-    /* float: inline-end; */
-    width: auto;
-    flex-direction: row;
-}
+    width: 80vw;
+ 
+    justify-content: flex-end;
+}   
 
 .nav_items{
-    margin: 0px 10px
+    margin: clamp(5px,1vh,50px) clamp(10px,2vh,100px);
+    
 }
 .nav_link{
-    font-size: 20px;
+    font-size: clamp(20px,2vh,200px);
 }
 .nav_link:hover{
     color:red;
@@ -27,5 +29,5 @@ color:white !important;;
 
 }
 .nav_link.pending{
- font-size: 35px;
+ font-size: 3vw;
 }

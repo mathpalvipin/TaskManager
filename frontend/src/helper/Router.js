@@ -25,3 +25,13 @@ export const routeNotVerifiedUser = async () => {
   }
  return 1;
 };
+
+export const routeToIntro= async()=>{
+  return redirect('/intro');
+}
+export const routeToLogin= async()=>{
+  return redirect('/auth/login');
+}
+export const routeToHome =async()=>{
+  return redirect("/app/home");
+}
