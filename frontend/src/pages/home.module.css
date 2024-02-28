@@ -1,3 +1,9 @@
 .home{
     margin-top:clamp(40px,5vh,250px);;
 }
+.operation {
+    position: fixed;
+    top :clamp(40px,5vh,250px);;
+    left: 0;
+    z-index: 100;
+}

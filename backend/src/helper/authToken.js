@@ -10,19 +10,18 @@ export const tokenGenerator = (user) => {
 export const verifyToken = (req, res, next) => {
   
   const token = req.cookies.userToken;
-
   if (!token) {
-    return   setTimeout(() =>{ res.status(401).json({ message: "Unauthorized: Missing token" })},2000);
+    return  res.status(401).json({ message: "Unauthorized: Missing token" });
   }
 
   JWT.verify(token, secretKey, (err, decoded) => {
     if (err) {
-      return  setTimeout(() =>{ res.status(401).json({ message: "Unauthorized: Missing token" })},2000);
+      return  res.status(401).json({ message: "Unauthorized: Missing token" });
     }
 
     req.user = decoded; // Attach user information to the request object
     
-    setTimeout(() => next(),2000); // this dealy is added to chck loading functionality 
+     next() // this dealy is added to chck loading functionality 
     // next();
   });
 };
