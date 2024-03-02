@@ -126,7 +126,7 @@ const AppNavWrapper = () => {
           )}
         </div>
       </div>
-      <Outlet></Outlet>
+     
     </>
   );
 };

@@ -6,3 +6,4 @@ export const VerifyToken = `${API_BASE_URL}/auth/protected`;
 export const LogoutURL = `${API_BASE_URL}/auth/logout`;
 export const CreateTaskURL = `${API_BASE_URL}/task/Create`;
 export const GetTaskURL = `${API_BASE_URL}/task/show`;
+export const EditTaskURL = `${API_BASE_URL}/task/edit`;

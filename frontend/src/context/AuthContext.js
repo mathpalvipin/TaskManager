@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
+
 import {
   apiLogIn,
   apiSignUp,
@@ -8,9 +9,11 @@ import {
 
 import Loader from "../components/comman/Loader";
 import ErrorBox from "../components/comman/ErrorBox";
+import AppNavWrapper from "../components/comman/AppNavWrapper";
 
 const AuthContext = createContext(null);
 export const AuthProvider = ({ children }) => {
+  
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
   const path = window.location.pathname;
@@ -19,25 +22,29 @@ export const AuthProvider = ({ children }) => {
   const verifyuser = async () => {
     setLoading(true);
 
-    const verifiedUser = await apiVerifyToken();
-    if (verifiedUser?.email) {
-      const userDetails = {
-        username: verifiedUser.username,
-        email: verifiedUser.email,
-      };
-      sessionStorage.setItem("user", JSON.stringify(userDetails));
-      setUser(userDetails);
+    try {
+      const verifiedUser = await apiVerifyToken();
+      if (verifiedUser?.email) {
+        const userDetails = {
+          username: verifiedUser.username,
+          email: verifiedUser.email,
+        };
+        sessionStorage.setItem("user", JSON.stringify(userDetails));
+        setUser(userDetails);
+      }
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+      setUser(null);
+      sessionStorage.removeItem("user");
+      setLoading(false);
+   
     }
-
-    setLoading(false);
-
-    return;
   };
 
   useEffect(() => {
     console.log(user + path);
-    if (!user && !path.includes("/intro")) {
-      console.log(user + path);
+    if (!user && (path.includes("/app")|| path.includes("/auth"))) {
       verifyuser();
     }
   }, [user, path]);
@@ -96,7 +103,6 @@ export const AuthProvider = ({ children }) => {
       <AuthContext.Provider
         value={{ user, error, logIn, signUp, logout, setError }}
       >
-       
         {loading && <Loader></Loader>}
         {error && <ErrorBox message={error}></ErrorBox>}
         {children}

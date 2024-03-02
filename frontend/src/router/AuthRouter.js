@@ -1,5 +1,5 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import AppNavWrapper from "../components/comman/AppNavWrapper.js";
+
 import Signup from "../components/Login&Signup/signup.js";
 import Login from "../components/Login&Signup/login.js";
 import NotFound from "../components/comman/NotFound.js";
@@ -12,12 +12,14 @@ import {
   routeToLogin,
   routeToHome,
 } from "../helper/Router.js";
+import { Layout } from "../components/comman/Layout.js";
 const AuthRouter = () => {
   const AuthRouter = createBrowserRouter([
     {
       path: "App",
-      element: <AppNavWrapper />,
-      loader: routeNotVerifiedUser,
+      element: <Layout CheckUser="true"></Layout>, //checkUser is work as protection , 
+      //if we check user and  if user is set so we redirect to home if user is not set we redirect to home
+
       children: [
         { path: "home", element: <Home /> },
 
@@ -30,7 +32,7 @@ const AuthRouter = () => {
     },
     {
       path: "/",
-      element: <AppNavWrapper />,
+      element: <Layout></Layout>,
 
       children: [
         {
@@ -46,8 +48,8 @@ const AuthRouter = () => {
     },
     {
       path: "/auth",
-      element: <AppNavWrapper />,
-      loader: routeVerifiedUser,
+      element: <Layout CheckUser="true"></Layout>,
+
       children: [
         { path: "login", element: <Login /> },
         { path: "signup", element: <Signup /> },

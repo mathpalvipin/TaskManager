@@ -29,7 +29,7 @@ export const apiVerifyToken = async () => {
     return response.data.user;
   } catch (error) {
     console.log(error);
-    return error.response;
+    throw new Error( error.message||"Invalid Token")
   }
 };
 

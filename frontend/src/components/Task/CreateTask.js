@@ -1,7 +1,6 @@
 import classes from "./CreateTask.module.css";
 import { useEffect, useState } from "react";
-
-import { ApiCreateTask } from "../../services/Taskservice";
+import { apiCreateTask } from "../../services/Taskservice";
 const CreateTask = () => {
   const [task, setTask] = useState({});
   // useEffect(()=>{
@@ -12,7 +11,8 @@ const CreateTask = () => {
     console.log(task.DateTime.slice(0, 16));
 
     setTask({ ...task, DateTime: task.DateTime.slice(0, 16) });
-    await ApiCreateTask(task);
+    await apiCreateTask(task);
+   
   };
   return (
     <div className={classes.container}>

@@ -1,20 +1,16 @@
 import classes from "./CreateTask.module.css";
 import { useEffect, useState } from "react";
 
-// import { ApiEditTask } from '../../services/Taskservice';
+import { apiEditTask } from '../../services/Taskservice';
 const EditTask = (props) => {
   const [task,setTask] = useState(props.task);
   
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // await ApiCreateTask(task);
+    await apiEditTask(task);
   };
-  useEffect(()=>{
-    console.log(task);
-   const DateTime=new Date(task.DateTime);
-   setTask(DateTime);
-  },[])
+ 
   return (
     <div className={classes.editercontainer}>
       <div className={classes.title}> Edit </div>
