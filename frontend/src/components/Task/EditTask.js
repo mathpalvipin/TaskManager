@@ -3,13 +3,21 @@ import { useEffect, useState } from "react";
 
 import { apiEditTask } from '../../services/Taskservice';
 const EditTask = (props) => {
-  const [task,setTask] = useState(props.task);
-  
+  const [task,setTask] = useState(props?.task);
+  const updateTasks=props?.updateTasks;
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    await apiEditTask(task);
+    try{
+     const updatedtask=await apiEditTask(task);
+      updateTasks(updatedtask); 
+    }catch (e){
+      alert("unable to update" +e.message);
+    }
+    
   };
+  useEffect(()=>{
+    setTask(props.task) //net to set task when props change
+  },[props]);
  
   return (
     <div className={classes.editercontainer}>

@@ -48,7 +48,7 @@ router.post("/edit", verifyToken, async (req, res) => {
       task
     );
     const updatedTask= await Task.findOne({UserId: id, _id: task._id });
-    res.status(200).json({ Updatedtask: updatedTask });
+    res.status(200).json(updatedTask);
   } catch (e) {
     res.status(500).json({ message: "Internal Server Error" });
   }

@@ -7,6 +7,7 @@ const ShowTask = () => {
   const [isloading, setLoading] = useState(true);
   const [isEditTask, setIsEditTask] = useState(false);
   const [SelectedTask, setSelectedTask] = useState(false);
+  const [refresh,setrefresh]= useState(0);
   const getTask = async () => {
     try{const TaskByUser = await apiGetTask();
     setTasks(TaskByUser);}
@@ -16,14 +17,28 @@ const ShowTask = () => {
 
     setLoading(false);
   };
- 
+  const updateTasks=(task)=>{
+    const index= Tasks.find(t=>t._id===task._id);
+     
+     if(index && index!==-1){
+      const updatedTasks= Tasks;
+      updatedTasks[index]=task;
+      setTasks(updatedTasks);
+      setSelectedTask(task);
+      setrefresh(pre=>pre+1); 
+     }else{
+      return alert("no record Found");
+     }
+    
+  }
   const selectTask =(task)=>{
     setSelectedTask(task);
     setIsEditTask(true);
   }
   useEffect(() => {
     getTask();
-  }, []);
+   
+  }, [refresh]);
   return (
     <div className={classes.container}>
       
@@ -41,7 +56,7 @@ const ShowTask = () => {
           
           );
         })}
-        {isEditTask&& <EditTask task={SelectedTask}></EditTask>}
+        {isEditTask&& <EditTask task={SelectedTask} updateTasks={updateTasks}></EditTask>}
     </div>
   );
 };
