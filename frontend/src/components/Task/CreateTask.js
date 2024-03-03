@@ -1,18 +1,23 @@
 import classes from "./CreateTask.module.css";
 import { useEffect, useState } from "react";
 import { apiCreateTask } from "../../services/Taskservice";
-const CreateTask = () => {
+const CreateTask = ({AddTaskToList}) => {
+  
   const [task, setTask] = useState({});
   // useEffect(()=>{
   //     console.log(task);
   // },[task]);
   const handleSubmit = async (e) => {
     e.preventDefault();
+   try{
     console.log(task.DateTime.slice(0, 16));
 
     setTask({ ...task, DateTime: task.DateTime.slice(0, 16) });
     await apiCreateTask(task);
-   
+    AddTaskToList(task);
+   }catch(e){
+    alert(e+"unable to create Task");
+   }
   };
   return (
     <div className={classes.container}>
