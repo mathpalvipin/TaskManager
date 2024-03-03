@@ -24,3 +24,7 @@ npm install express mongoose bcrypt cors jsonwebtoken
 
 ## refer the youtube video for HTTPonly cookie setup
  https://www.youtube.com/watch?v=a5Krfkfl9MM&ab_channel=RahulAhire  
+
+
+## send props and function between child and parent
+https://stackoverflow.com/questions/37949981/call-child-method-from-parent
