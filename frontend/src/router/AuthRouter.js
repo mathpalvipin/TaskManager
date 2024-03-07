@@ -5,6 +5,7 @@ import Login from "../components/Login&Signup/login.js";
 import NotFound from "../components/comman/NotFound.js";
 import Home from "../pages/Home.js";
 import IntroPage from "../pages/IntroPage";
+import Page1 from "../pages/Page1.js";
 import {
   routeToIntro,
   routeToLogin,
@@ -20,6 +21,7 @@ const AuthRouter = () => {
 
       children: [
         { path: "home", element: <Home /> },
+        { path: "page1", element: <Page1 /> },
 
         {
           path: "AppIntro",

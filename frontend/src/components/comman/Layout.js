@@ -2,7 +2,7 @@ import { Outlet, useNavigate } from "react-router-dom";
 import AppNavWrapper from "./AppNavWrapper";
 import { useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
-
+import classes from "./comman.module.css"
 export const Layout = ({ CheckUser }) => {
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -26,7 +26,7 @@ export const Layout = ({ CheckUser }) => {
   return (
     <>
       <AppNavWrapper></AppNavWrapper>
-      <Outlet></Outlet>
+      <div className={classes.outlet} ><Outlet  ></Outlet></div>
     </>
   );
 };

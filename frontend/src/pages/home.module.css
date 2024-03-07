@@ -1,6 +1,4 @@
-.home{
-    margin-top:clamp(40px,5vh,250px);;
-}
+
 .operation {
     position: fixed;
     top :clamp(40px,5vh,250px);;

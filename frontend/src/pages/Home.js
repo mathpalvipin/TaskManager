@@ -11,8 +11,8 @@ const Home = () => {
   
 
   return (
-    <div className={classes.home}>
-      <div className="classes.displaycontainer">
+    <div >
+      <div >
         <div className={classes.operation}>
           <div>Home Page{user?.email}</div>
           <button onClick={() => setIsCreating(!isCreating)}>Create</button>

@@ -6,7 +6,7 @@ import {
 } from "../services/Taskservice";
 
 const initialState = {
-  Tasks: [{}],
+  Tasks: [],
   FetchLoading: false,
   CreateLoading: false,
   UpdateLoading: false,
