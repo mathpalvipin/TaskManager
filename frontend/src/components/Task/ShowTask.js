@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import classes from "./ShowTask.module.css";
-import { apiGetTask } from "../../services/Taskservice.js";
 import EditTask from "./EditTask.js";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,67 +8,32 @@ import Loader from "../comman/Loader.js";
 const ShowTask = React.forwardRef((props, ref) => {
   const dispatch = useDispatch();
   const Tasks = useSelector((state) => state.Tasks);
-  const isloading = useSelector((state) => state.loading);
-  const [isEditTask, setIsEditTask] = useState(false);
-  const [SelectedTask, setSelectedTask] = useState(false);
-  const getTask = () => {
+  const isloading = useSelector((state) => state.FetchLoading);
+  const [SelectedTask, setSelectedTask] = useState(null);
+  const getTask =useCallback(() => { 
+    // Memoization ensures that the function's reference remains consistent between renders unless its dependencies change.
+    //memorize the fucntin using usecallback which make the getTask stable 
+    //  effect doesn't trigger unnecessarily
     try {
       dispatch(getTasks());
+       
     } catch (error) {
-      console.log(error);
+      alert(error.message+"Erro while fetching Task");
     }
-
-    // setLoading(false);
-  };
-  const updateTasks = (task) => {
-    const updatedTasks = Tasks.map((t) => {
-      // If the task id matches, toggle the completed status
-
-      if (t._id === task._id) {
-        return task;
-      }
-
-      // Otherwise, return the original task
-      return t;
-    });
-    // Update the state with the modified array
-    // setTasks([...updatedTasks]);
-    setIsEditTask(false);
-    ///
-    // };
-    //   const index = Tasks.find((t) => t._id === task._id);
-
-    //   if (index && index !== -1) {
-    //     const updatedTasks = Tasks;
-    //     updatedTasks[index] = task;
-    //     setTasks(updatedTasks);
-    //    // updating state using setTasks(updatedTask) doesn't trigger a re-render but setTasks([...tasks, task]) does,
-    //    // it might be because React is not detecting the change in the state.
-    //     setSelectedTask(task);
-    //     // setrefresh((pre) => pre + 1);
-    //   } else {
-    //     return alert("no record Found");
-    //   }
-  };
-
-  const AddTaskToList = (task) => {
-    // setTasks([...Tasks, task]);
-  };
-  React.useImperativeHandle(ref, () => ({
-    AddTaskToList: AddTaskToList,
-  }));
+     // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[]);
 
   const selectTask = (task) => {
     setSelectedTask(task);
-    setIsEditTask(true);
   };
   useEffect(() => {
     getTask();
-  }, []);
+  }, [getTask]);
   return (
     <div className={classes.container}>
       {isloading && <Loader text="loading Tasks"></Loader>}
-      {!isloading && !Tasks &&
+      {!isloading &&
+        Tasks &&
         Tasks.map((task) => {
           return (
             <div className={classes.TaskItems} key={task._id}>
@@ -77,12 +41,12 @@ const ShowTask = React.forwardRef((props, ref) => {
               <div className={classes.TaskType}>{task.TaskType}</div>
               <div className={classes.DateTime}>{task.DateTime}</div>
               <button onClick={() => selectTask(task)}>Edit</button>
+            
             </div>
           );
         })}
-      {isEditTask && (
-        <EditTask task={SelectedTask} updateTasks={updateTasks}></EditTask>
-      )}
+       {SelectedTask && <EditTask SelectedTask={SelectedTask} key={SelectedTask._id}></EditTask>}
+
     </div>
   );
 });

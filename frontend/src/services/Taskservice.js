@@ -1,9 +1,10 @@
 import axios from "axios";
-import { CreateTaskURL,GetTaskURL,EditTaskURL } from "../config/api";
+import { CreateTaskURL,GetTaskURL,UpdateTaskURL } from "../config/api";
 
 export const apiCreateTask=async (taskDetails)=>{
    try{ const response  = await axios.post(CreateTaskURL,taskDetails);
-    console.log(response);
+    console.log(response.data);
+    return response.data;
 }
 catch(e){
     console.log(e);
@@ -22,10 +23,10 @@ export const apiGetTask= async()=>{
     }
 }
 
-export const apiEditTask= async(task)=>{
+export const apiUpdateTask= async(task)=>{
     try{
        
-        const response =await axios.post(EditTaskURL,task);
+        const response =await axios.post(UpdateTaskURL,task);
         console.log(response.data);
         return response.data;
     }

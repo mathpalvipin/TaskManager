@@ -1,22 +1,15 @@
 import { useAuth } from "../context/AuthContext";
-import { NavLink, RouterProvider } from "react-router-dom";
 import classes from "./home.module.css";
-import { useRef, useState } from "react";
-import CreateForm from "../components/Task/CreateTask";
+import { useState } from "react";
+import CreateTask from "../components/Task/CreateTask";
 import ShowTask from "../components/Task/ShowTask";
 
 const Home = () => {
   const { user } = useAuth();
- const ShowTaskref= useRef(null);
+ 
   const [isCreating, setIsCreating] = useState(false);
-const AddTaskToList=(task)=>{
-  console.log(task);
-  console.log(ShowTaskref);
- try{ ShowTaskref.current.AddTaskToList(task)}
- catch(e){
-  console.log(e);
- }
-}
+  
+
   return (
     <div className={classes.home}>
       <div className="classes.displaycontainer">
@@ -26,9 +19,9 @@ const AddTaskToList=(task)=>{
          
         </div>
         <div>
-         {isCreating && <CreateForm AddTaskToList={AddTaskToList}></CreateForm>}
+         {isCreating && <CreateTask setIsCreating={setIsCreating} ></CreateTask>}
 
-          <ShowTask ref={ShowTaskref}></ShowTask>
+          <ShowTask ></ShowTask>
         </div>
       </div>
     </div>

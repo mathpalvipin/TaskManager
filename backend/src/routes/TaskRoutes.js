@@ -19,7 +19,9 @@ router.post("/Create", verifyToken, async (req, res) => {
       UserId: id,
     });
     await task.save();
+   setTimeout(() => {
     res.status(200).json(task);
+   }, 1000); 
   } catch (e) {
     res.status(500).json({ message: "Internal Server Error" });
   }
@@ -33,7 +35,7 @@ router.get("/show", verifyToken, async (req, res) => {
     const Tasks = await Task.find({ UserId: id });
    setTimeout(() => {
     res.status(200).json(Tasks);
-   }, 2000);
+   }, 1000);
   } catch (e) {
     res.status(500).json({ message: "Internal Server Error" });
   }
@@ -50,7 +52,9 @@ router.post("/edit", verifyToken, async (req, res) => {
       task
     );
     const updatedTask= await Task.findOne({UserId: id, _id: task._id });
-    res.status(200).json(updatedTask);
+ setTimeout(() => {
+  res.status(200).json(updatedTask);
+ }, 1000);  
   } catch (e) {
     res.status(500).json({ message: "Internal Server Error" });
   }

@@ -1,26 +1,26 @@
+import { useDispatch, useSelector } from "react-redux";
 import classes from "./CreateTask.module.css";
 import { useEffect, useState } from "react";
+import { updateTask } from "../../store/TodoSlice";
+import Loader from "../comman/Loader";
 
-import { apiEditTask } from '../../services/Taskservice';
-const EditTask = (props) => {
-  const [task,setTask] = useState(props?.task);
-  const updateTasks=props?.updateTasks;
+const EditTask = ({SelectedTask}) => {
+  const dispatch= useDispatch();
+  const isloading = useSelector(state=>state.UpdateLoading)
+  const [task,setTask] = useState(SelectedTask);
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try{
-     const updatedtask=await apiEditTask(task);
-      updateTasks(updatedtask); 
-    }catch (e){
-      alert("unable to update" +e.message);
-    }
+ await  dispatch(updateTask(task));
     
   };
-  useEffect(()=>{
-    setTask(props.task) //net to set task when props change
-  },[props]);
+ // Update the local state if the prop changes
+ useEffect(() => {
+  setTask(SelectedTask);
+}, [SelectedTask]);
  
   return (
-    <div className={classes.editercontainer}>
+    <> {isloading && <Loader text="Updating Tasks"></Loader>}
+       <div className={classes.editercontainer}>
       <div className={classes.title}> Edit </div>
       <div>
         <form onSubmit={handleSubmit} className={classes.form}>
@@ -56,6 +56,8 @@ const EditTask = (props) => {
         </form>
       </div>
     </div>
+    </>
+
   );
 };
 

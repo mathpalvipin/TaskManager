@@ -6,8 +6,6 @@ import NotFound from "../components/comman/NotFound.js";
 import Home from "../pages/Home.js";
 import IntroPage from "../pages/IntroPage";
 import {
-  routeVerifiedUser,
-  routeNotVerifiedUser,
   routeToIntro,
   routeToLogin,
   routeToHome,

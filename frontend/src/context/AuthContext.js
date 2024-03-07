@@ -9,7 +9,6 @@ import {
 
 import Loader from "../components/comman/Loader";
 import ErrorBox from "../components/comman/ErrorBox";
-import AppNavWrapper from "../components/comman/AppNavWrapper";
 
 const AuthContext = createContext(null);
 export const AuthProvider = ({ children }) => {

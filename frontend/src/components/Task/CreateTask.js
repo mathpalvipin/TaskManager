@@ -1,61 +1,69 @@
 import classes from "./CreateTask.module.css";
-import { useEffect, useState } from "react";
-import { apiCreateTask } from "../../services/Taskservice";
-const CreateTask = ({AddTaskToList}) => {
-  
-  const [task, setTask] = useState({});
-  // useEffect(()=>{
-  //     console.log(task);
-  // },[task]);
+import { useDispatch, useSelector } from "react-redux";
+import Loader from "../comman/Loader";
+import { createTask } from "../../store/TodoSlice";
+import { useState } from "react";
+const CreateTask = ({ setIsCreating }) => {
+  const isloading = useSelector((state) => state.CreateLoading);
+  const dispatch = useDispatch();
+  const [task, setTask] = useState({
+    TaskName: "",
+    TaskType: "",
+    DateTime: "",
+  });
   const handleSubmit = async (e) => {
     e.preventDefault();
-   try{
-    console.log(task.DateTime.slice(0, 16));
+    try {
+      console.log(task.DateTime.slice(0, 16));
+      await dispatch(
+        createTask({ ...task, DateTime: task.DateTime.slice(0, 16) })
+      ); // await make the function wait to dispatch function execute completly
 
-    setTask({ ...task, DateTime: task.DateTime.slice(0, 16) });
-    await apiCreateTask(task);
-    AddTaskToList(task);
-   }catch(e){
-    alert(e+"unable to create Task");
-   }
+      setIsCreating(false);
+    } catch (e) {
+      alert(e + "unable to Create Task");
+    }
   };
   return (
-    <div className={classes.container}>
-      <div className={classes.title}> login </div>
-      <div>
-        <form onSubmit={handleSubmit} className={classes.form}>
-          <input
-            className={classes.input}
-            type="datetime-local"
-            name="Datetime"
-            value={task.DateTime}
-            placeholder="Datetime"
-            onChange={(e) => setTask({ ...task, DateTime: e.target.value })}
-          ></input>
-          <input
-            className={classes.input}
-            type="text"
-            name="TaskType"
-            value={task.TaskType}
-            placeholder="Type"
-            onChange={(e) => setTask({ ...task, TaskType: e.target.value })}
-          ></input>
+    <>
+      {isloading && <Loader text="Creating Task"></Loader>}
+      <div className={classes.container}>
+        <div className={classes.title}> login </div>
+        <div>
+          <form onSubmit={handleSubmit} className={classes.form}>
+            <input
+              className={classes.input}
+              type="datetime-local"
+              name="Datetime"
+              value={task.DateTime}
+              placeholder="Datetime"
+              onChange={(e) => setTask({ ...task, DateTime: e.target.value })}
+            ></input>
+            <input
+              className={classes.input}
+              type="text"
+              name="TaskType"
+              value={task.TaskType}
+              placeholder="Type"
+              onChange={(e) => setTask({ ...task, TaskType: e.target.value })}
+            ></input>
 
-          <input
-            className={classes.input}
-            type="text"
-            name="TaskName"
-            value={task.TaskName}
-            placeholder="Taskname"
-            onChange={(e) => setTask({ ...task, TaskName: e.target.value })}
-          ></input>
+            <input
+              className={classes.input}
+              type="text"
+              name="TaskName"
+              value={task.TaskName}
+              placeholder="Taskname"
+              onChange={(e) => setTask({ ...task, TaskName: e.target.value })}
+            ></input>
 
-          <button className={classes.button} type="Submit">
-            Create
-          </button>
-        </form>
+            <button className={classes.button} type="Submit">
+              Create
+            </button>
+          </form>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
