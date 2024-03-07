@@ -28,3 +28,16 @@ npm install express mongoose bcrypt cors jsonwebtoken
 
 ## send props and function between child and parent
 https://stackoverflow.com/questions/37949981/call-child-method-from-parent
+
+## Redux 
+https://www.youtube.com/watch?v=1i04-A7kfFI&ab_channel=ChaiaurCode
+Redux Toolkit is available as a package on NPM for use with a module bundler or in a Node application:
+
+```
+npm install @reduxjs/toolkit
+```
+If you need React bindings:
+```
+npm install react-redux
+```
+The package includes a precompiled ESM build that can be used as a <script type="module"> tag directly in the browser.

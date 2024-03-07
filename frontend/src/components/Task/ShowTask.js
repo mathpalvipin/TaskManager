@@ -3,27 +3,29 @@ import classes from "./ShowTask.module.css";
 import { apiGetTask } from "../../services/Taskservice.js";
 import EditTask from "./EditTask.js";
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getTasks } from "../../store/TodoSlice.js";
+import Loader from "../comman/Loader.js";
 const ShowTask = React.forwardRef((props, ref) => {
-  const [Tasks, setTasks] = useState([]);
-  const [isloading, setLoading] = useState(true);
+  const dispatch = useDispatch();
+  const Tasks = useSelector((state) => state.Tasks);
+  const isloading = useSelector((state) => state.loading);
   const [isEditTask, setIsEditTask] = useState(false);
   const [SelectedTask, setSelectedTask] = useState(false);
-  const getTask = async () => {
+  const getTask = () => {
     try {
-      const TaskByUser = await apiGetTask();
-      setTasks(TaskByUser);
+      dispatch(getTasks());
     } catch (error) {
       console.log(error);
     }
 
-    setLoading(false);
+    // setLoading(false);
   };
   const updateTasks = (task) => {
-    const updatedTasks = Tasks.map(t => {
+    const updatedTasks = Tasks.map((t) => {
       // If the task id matches, toggle the completed status
-      
-      if (t._id === task._id) {
 
+      if (t._id === task._id) {
         return task;
       }
 
@@ -31,27 +33,27 @@ const ShowTask = React.forwardRef((props, ref) => {
       return t;
     });
     // Update the state with the modified array
-    setTasks([...updatedTasks]);
-  setIsEditTask(false);
-    ///  
-  // };
-  //   const index = Tasks.find((t) => t._id === task._id);
+    // setTasks([...updatedTasks]);
+    setIsEditTask(false);
+    ///
+    // };
+    //   const index = Tasks.find((t) => t._id === task._id);
 
-  //   if (index && index !== -1) {
-  //     const updatedTasks = Tasks;
-  //     updatedTasks[index] = task;
-  //     setTasks(updatedTasks);
-  //    // updating state using setTasks(updatedTask) doesn't trigger a re-render but setTasks([...tasks, task]) does,
-  //    // it might be because React is not detecting the change in the state.
-  //     setSelectedTask(task);
-  //     // setrefresh((pre) => pre + 1);
-  //   } else {
-  //     return alert("no record Found");
-  //   }
+    //   if (index && index !== -1) {
+    //     const updatedTasks = Tasks;
+    //     updatedTasks[index] = task;
+    //     setTasks(updatedTasks);
+    //    // updating state using setTasks(updatedTask) doesn't trigger a re-render but setTasks([...tasks, task]) does,
+    //    // it might be because React is not detecting the change in the state.
+    //     setSelectedTask(task);
+    //     // setrefresh((pre) => pre + 1);
+    //   } else {
+    //     return alert("no record Found");
+    //   }
   };
 
   const AddTaskToList = (task) => {
-    setTasks([...Tasks, task]);
+    // setTasks([...Tasks, task]);
   };
   React.useImperativeHandle(ref, () => ({
     AddTaskToList: AddTaskToList,
@@ -66,7 +68,8 @@ const ShowTask = React.forwardRef((props, ref) => {
   }, []);
   return (
     <div className={classes.container}>
-      {!isloading &&
+      {isloading && <Loader text="loading Tasks"></Loader>}
+      {!isloading && !Tasks &&
         Tasks.map((task) => {
           return (
             <div className={classes.TaskItems} key={task._id}>

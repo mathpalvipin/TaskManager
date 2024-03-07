@@ -31,7 +31,9 @@ router.get("/show", verifyToken, async (req, res) => {
     const user = await User.findOne({ email: email });
     const id = user._id.valueOf();
     const Tasks = await Task.find({ UserId: id });
+   setTimeout(() => {
     res.status(200).json(Tasks);
+   }, 2000);
   } catch (e) {
     res.status(500).json({ message: "Internal Server Error" });
   }

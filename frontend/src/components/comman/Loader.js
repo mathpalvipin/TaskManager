@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import classes from './Loader.module.css'
 
-const Loader =()=>{
+const Loader =({text})=>{
  
     useEffect(()=>{
         console.log("loading Loader")
@@ -9,7 +9,8 @@ const Loader =()=>{
   return (
     <>
     <div className={classes.loading_overlay}>
-    <div className={classes.loader}></div>
+      
+    {text}    <div className={classes.loader}></div>
     </div> 
     </>
   )
