@@ -21,3 +21,11 @@
     background-color: lightgoldenrodyellow;
    
 }
+.calender{
+    width: 30vw;
+    background-color: blue;
+position: fixed;
+top: clamp(80px,10vh,320px);  ;
+right: 0;
+
+}

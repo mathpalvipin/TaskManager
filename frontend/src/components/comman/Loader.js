@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import classes from './Loader.module.css'
+import classes from './comman.module.css'
 
 const Loader =({text})=>{
  

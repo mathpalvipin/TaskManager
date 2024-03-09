@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { updateTask } from "../../store/TodoSlice";
 import Loader from "../comman/Loader";
 
-const EditTask = ({SelectedTask}) => {
+const EditTask = ({SelectedTask,closeCreatbox}) => {
   const dispatch= useDispatch();
   const isloading = useSelector(state=>state.UpdateLoading)
   const [task,setTask] = useState(SelectedTask);
@@ -23,6 +23,7 @@ const EditTask = ({SelectedTask}) => {
        <div className={classes.editercontainer}>
       <div className={classes.title}> Edit </div>
       <div>
+        <button onClick={closeCreatbox}>close</button>
         <form onSubmit={handleSubmit} className={classes.form}>
           <input
             className={classes.input}

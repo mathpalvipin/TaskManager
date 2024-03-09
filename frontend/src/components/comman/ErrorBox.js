@@ -1,4 +1,4 @@
-import classes from "./ErrorBox.module.css";
+import classes from "./comman.module.css";
 import { useAuth } from "../../context/AuthContext.js";
 const ErrorBox = (props) => {
   const { setError } = useAuth();

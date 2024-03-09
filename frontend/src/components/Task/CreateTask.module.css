@@ -22,7 +22,7 @@
     padding: 10px;
     height: auto;
     position: fixed;
-    top: clamp(80px,10vh,320px);
+    bottom: 0;
     right: 0;
     z-index: 200;
 }
