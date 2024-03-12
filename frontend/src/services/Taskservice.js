@@ -15,7 +15,10 @@ export const apiGetTask= async()=>{
     try{
         const response =await axios.get(GetTaskURL);
         console.log(response.data );
-        return response.data;
+        const data= response.data;
+    data.sort((a,b)=>{return a.DateTime.localeCompare(b.DateTime)})
+
+        return data;
     }
     catch(e){
        

@@ -1,27 +1,33 @@
-import { useAuth } from "../context/AuthContext";
 import classes from "./home.module.css";
 import { useState } from "react";
-import CreateTask from "../components/Task/CreateTask";
 import ShowTask from "../components/Task/ShowTask";
+import Calender from "../components/comman/Calender";
 
 const Home = () => {
-  const { user } = useAuth();
- 
-  const [isCreating, setIsCreating] = useState(false);
-  
+  const [currentDate, setCurrentDate] = useState(new Date());
 
   return (
-    <div >
-      <div >
-        <div className={classes.operation}>
-          <div>Home Page{user?.email}</div>
-          <button onClick={() => setIsCreating(!isCreating)}>Create</button>
-         
-        </div>
+    <div>
+      <div
+        className={`${classes.CalenderContainer} 
+       fixed right-0  z-50 flex h-full w-full flex-col justify-center bg-cyan-300  sm:w-3/6 `}
+      >
+        <Calender
+          currentDate={currentDate}
+          changeCurrentDate={setCurrentDate}
+        ></Calender>
+      </div>
+      <div>
         <div>
-         {isCreating && <CreateTask setIsCreating={setIsCreating} ></CreateTask>}
-
-          <ShowTask ></ShowTask>
+          <div
+            className={`${classes.showContainer} 
+        left-0 z-10 w-3/6 `}
+          >
+            <ShowTask
+              currentDate={currentDate}
+             
+            ></ShowTask>
+          </div>
         </div>
       </div>
     </div>

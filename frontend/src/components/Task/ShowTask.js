@@ -1,25 +1,23 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import classes from "./ShowTask.module.css";
 import EditTask from "./EditTask.js";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getTasks } from "../../store/TodoSlice.js";
+import { getTasks } from "../../store/TaskSlice.js";
 import Loader from "../comman/Loader.js";
-import Calender from "../comman/Calender.js";
-const ShowTask = React.forwardRef((props, ref) => {
-
+import { format } from "date-fns";
+const ShowTask = ({ currentDate, setCurrentDate }) => {
   const dispatch = useDispatch();
   const Tasks = useSelector((state) => state.Tasks);
   const isloading = useSelector((state) => state.FetchLoading);
   const [SelectedTask, setSelectedTask] = useState(null);
-  const [currentDate,setCurrentDate] = useState();
-
-  const getTask = useCallback(() => {
+ 
+  const getTask = useCallback(async() => {
     // Memoization ensures that the function's reference remains consistent between renders unless its dependencies change.
     //memorize the fucntin using usecallback which make the getTask stable
     //  effect doesn't trigger unnecessarily
     try {
-      dispatch(getTasks());
+    await dispatch(getTasks()); 
     } catch (error) {
       alert(error.message + "Erro while fetching Task");
     }
@@ -27,29 +25,36 @@ const ShowTask = React.forwardRef((props, ref) => {
   }, []);
 
   const selectTask = (task) => {
+    console.log(task);
     setSelectedTask(task);
   };
   useEffect(() => {
     getTask();
   }, [getTask]);
+
   return (
     <div className={classes.container}>
-     
-    <div  class="fixed top-10  z-10 mt-2 flex h-2/4 
-      w-full flex-col items-center justify-center 
-    bg-slate-400 text-white  shadow-2xl shadow-black sm:h-2/4 sm:w-3/4 max-w-2xl">
-      <Calender currentDate ={currentDate} changeCurrentDate={setCurrentDate}></Calender>
-      </div>
       {isloading && <Loader text="loading Tasks"></Loader>}
       {!isloading &&
         Tasks.length > 0 &&
         Tasks.map((task) => {
+          let date = format(currentDate, "yyyy-MM-dd");
+          const hightlight = task.DateTime?.includes(date);
+       
           return (
-            <div className={classes.TaskItems} key={task._id}>
+            <div id={task._id}
+              className={`${classes.TaskItems}  ${hightlight ? "bg-cyan-100" : "bg-slate-200"}`}
+              key={task._id}
+            >
               <div className={classes.TaskName}>{task.TaskName}</div>
               <div className={classes.TaskType}>{task.TaskType}</div>
               <div className={classes.DateTime}>{task.DateTime}</div>
-              <button onClick={() => selectTask(task)}>Edit</button>
+              <button
+                className="roundedon m-1 bg-blue-300 px-2 py-1 font-bold rounded-md text-white hover:bg-blue-500"
+                onClick={() => selectTask(task)}
+              >
+                Edit
+              </button>
             </div>
           );
         })}
@@ -62,5 +67,5 @@ const ShowTask = React.forwardRef((props, ref) => {
       )}
     </div>
   );
-});
+};
 export default ShowTask;

@@ -1,9 +1,12 @@
 import classes from "./CreateTask.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "../comman/Loader";
-import { createTask } from "../../store/TodoSlice";
+import { createTask } from "../../store/TaskSlice";
 import { useState } from "react";
-const CreateTask = ({ setIsCreating }) => {
+import { IoMdCloseCircle } from "react-icons/io";
+import { useEffect } from "react";
+import {format} from "date-fns"
+const CreateTask = ({ currentDate,setIsCreating }) => {
   const isloading = useSelector((state) => state.CreateLoading);
   const dispatch = useDispatch();
   const [task, setTask] = useState({
@@ -24,11 +27,17 @@ const CreateTask = ({ setIsCreating }) => {
       alert(e + "unable to Create Task");
     }
   };
+  useEffect(()=>{
+    let date=format(currentDate,"yyyy-MM-dd");
+    date+="T00:00"
+    setTask({...task,DateTime:date});
+  },[]);
   return (
     <>
+    <IoMdCloseCircle className="absolute top-0 right-0 size-10 z-50"  onClick={()=>setIsCreating(false)}/>
       {isloading && <Loader text="Creating Task"></Loader>}
       <div className={classes.container}>
-        <div className={classes.title}> login </div>
+      
         <div>
           <form onSubmit={handleSubmit} className={classes.form}>
             <input

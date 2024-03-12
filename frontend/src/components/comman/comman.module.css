@@ -1,6 +1,6 @@
 .outlet{
-    
     margin-top:clamp(40px,5vh,250px);
+    height: auto;
 }
 .navbar {
     position: fixed;

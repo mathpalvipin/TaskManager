@@ -30,7 +30,7 @@ export const createTask = createAsyncThunk(
     } catch (e) {
       return e.message;
     }
-  }
+  },
 );
 export const updateTask = createAsyncThunk("Tasks/updateTask", async (task) => {
   try {
@@ -76,9 +76,11 @@ const TaskReducer = createSlice({
       })
       .addCase(updateTask.fulfilled, (state, action) => {
         state.UpdateLoading = false;
-        const index= state.Tasks.findIndex(t=>action.payload._id===t._id);
-        if(index!==-1){
-          state.Tasks[index]=action.payload;
+        const index = state.Tasks.findIndex(
+          (t) => action.payload._id === t._id,
+        );
+        if (index !== -1) {
+          state.Tasks[index] = action.payload;
         }
         state.error = null;
       })

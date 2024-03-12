@@ -1,6 +1,6 @@
 .container{
     width: 100%;
-    position: relative;
+    position:relative;
     top: 0;
     display: flex;
     height: auto;
@@ -18,14 +18,6 @@
     margin: 2vh 2vh;
     padding: 10px;
     border:1px solid black;
-    background-color: lightgoldenrodyellow;
-   
-}
-.calender{
-    width: 30vw;
-    background-color: blue;
-position: fixed;
-top: clamp(80px,10vh,320px);  ;
-right: 0;
 
+   
 }

@@ -1,4 +1,5 @@
 // import classes from "./comman.module.css";
+import { GrPowerReset } from "react-icons/gr";
 import {
   add,
   sub,
@@ -9,12 +10,14 @@ import {
   setDate,
 } from "date-fns";
 import Cell from "./Cell.js";
+import CreateTask from "../Task/CreateTask.js"
+import { useState } from "react";
 
 const Calender = ({ changeCurrentDate, currentDate = new Date() }) => {
   const StartDay = startOfMonth(currentDate);
   const EndDay = endOfMonth(currentDate);
   const noOfDays = differenceInDays(EndDay, StartDay) + 1;
-
+  const [isCreating ,setIsCreating]= useState(false);
   const prefixDays = StartDay.getDay();
   const suffixDays = 6 - EndDay.getDay();
   const preMonth = () => {
@@ -36,11 +39,19 @@ const Calender = ({ changeCurrentDate, currentDate = new Date() }) => {
   };
   const daysofweeks = ["Sun", "Mon", "Tue", "Wed", "Thr", "Fri", "Sat"];
   return (
-    < >
-      <h1> Calender</h1>
-      <div>{format(currentDate, "dd LLLL yyyy")}</div>
-      <div class="h-5/6 w-5/6 border-l border-t  border-black bg-slate-100 text-black">
-        <div className="grid h-full w-full grid-cols-7">
+    <>
+    {isCreating && <CreateTask currentDate={currentDate} setIsCreating={setIsCreating} class='z-200'></CreateTask>}
+      <div className="flex flex-row justify-evenly items-center">
+        <h1> Calender- {format(currentDate, "dd LLLL yyyy")} </h1>
+        <GrPowerReset
+          onClick={() => changeCurrentDate(new Date())}
+          className="size-5"
+        />
+        <button onClick={()=>setIsCreating(true)} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2  m-1 rounded">Create Task</button>
+
+      </div>
+      <div class="h-full  bg-cyan-100 ">
+        <div className="grid h-full grid-cols-7">
           <Cell onClick={preYear}>{"<<"}</Cell>
           <Cell onClick={preMonth}>{"<"}</Cell>
           <Cell className="col-span-3">{format(currentDate, "LLLL yyyy")}</Cell>
@@ -55,8 +66,13 @@ const Calender = ({ changeCurrentDate, currentDate = new Date() }) => {
           {Array.from({ length: noOfDays }).map((_, index) => {
             const date = index + 1;
             const isActive = currentDate.getDate() === date;
+            
             return (
-              <Cell isActive={isActive} onClick={() => setCurrentDate(date)}>
+              <Cell
+                key={date}
+                isActive={isActive}
+                onClick={() => setCurrentDate(date)}
+              >
                 {date}
               </Cell>
             );
@@ -67,7 +83,7 @@ const Calender = ({ changeCurrentDate, currentDate = new Date() }) => {
           })}
         </div>
       </div>
-</>
+    </>
   );
 };
 
