@@ -1,23 +1,25 @@
 .container{
     width: 100%;
-    position:relative;
-    top: 0;
     display: flex;
-    height: auto;
     justify-content: space-evenly;
     align-items: center;
     flex-direction: column;
+    overflow: hidden;
+    padding: 2vh 0 10vh 0 ;
 }
 
-.TaskItems{
-    width: 50%;
+.TaskItem{
+    width: 80%;
     display: flex;
     align-items: center;
-    justify-content: space-around;
-    flex-direction: column;
-    margin: 2vh 2vh;
-    padding: 10px;
+    flex-direction: row;
+    justify-content: space-between ;
+   height: auto;
+    margin: 1vh 1vh;
+    padding: 5px;
     border:1px solid black;
+    overflow: hidden;
+   
 
    
 }

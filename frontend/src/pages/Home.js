@@ -7,21 +7,21 @@ const Home = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
 
   return (
-    <div>
+    <div  className={classes.HomeContainer}>
       <div
         className={`${classes.CalenderContainer} 
-       fixed right-0  z-50 flex h-full w-full flex-col justify-center bg-cyan-300  sm:w-3/6 `}
+       fixed right-0  z-50 flex h-full w-full flex-col justify-center bg-cyan-300  sm:w-3/6  md:w-4/6  xl:w-5/6`}
       >
         <Calender
           currentDate={currentDate}
           changeCurrentDate={setCurrentDate}
         ></Calender>
       </div>
-      <div>
-        <div>
+     
+       
           <div
             className={`${classes.showContainer} 
-        left-0 z-10 w-3/6 `}
+       fixed  left-0 z-10 w-full sm:w-3/6  md:w-2/6 xl:w-1/6 `}
           >
             <ShowTask
               currentDate={currentDate}
@@ -29,8 +29,8 @@ const Home = () => {
             ></ShowTask>
           </div>
         </div>
-      </div>
-    </div>
+      
+   
   );
 };
 export default Home;

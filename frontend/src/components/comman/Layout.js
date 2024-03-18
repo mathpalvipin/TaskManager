@@ -24,9 +24,9 @@ export const Layout = ({ CheckUser }) => {
   }, [user, CheckUser]);
 
   return (
-    <>
-      <AppNavWrapper></AppNavWrapper>
-      <div className={classes.outlet} ><Outlet  ></Outlet></div>
-    </>
+    <div className={classes.AppContainer}>
+      <div className={classes.Navbar}><AppNavWrapper ></AppNavWrapper> </div> 
+      <div className={classes.outlet}  ><Outlet  ></Outlet></div>
+      </div>
   );
 };

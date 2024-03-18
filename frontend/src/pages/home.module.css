@@ -1,15 +1,12 @@
-
-.operation {
-    position: fixed;
-    top :clamp(40px,5vh,250px);;
-    left: 0;
-    z-index: 100;
+.HomeContainer{
+    height: 100%;
+    width: 100%;
 }
+
 .CalenderContainer{
     height: -webkit-fill-available;
 }
 .showContainer{
    height: 100vh;
     overflow: auto;
-    
 }

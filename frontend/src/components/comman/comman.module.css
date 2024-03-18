@@ -1,88 +1,99 @@
-.outlet{
-    margin-top:clamp(40px,5vh,250px);
-    height: auto;
+.AppContainer {
+  height: 100vh;
+  width: 100%;
+  flex-direction: column;
+}
+.outlet {
+  position: fixed;
+ top:clamp(40px, 5vh, 250px) ;
+  height: calc(100vh - clamp(40px, 5vh, 250px));
+  width: 100%;
+}
+.Navbar{
+  height: clamp(40px, 5vh, 250px);
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 100;
+  
 }
 .navbar {
-    position: fixed;
-    top:0;
-    background-color: lightblue;
-    width: 100%;
-    height: clamp(40px,5vh,250px);
-    display: flex;
-    flex-wrap: nowrap;
-    justify-content: space-between;
-    z-index: 9999;
-  }
-  .nav {
-      display: flex;
-      width: 80vw;
-   
-      justify-content: flex-end;
-  }   
-  
-  .nav_items{
-      margin: clamp(5px,1vh,50px) clamp(10px,2vh,100px);
-      
-  }
-  .nav_link{
-      font-size: clamp(20px,2vh,200px);
-  }
-  .nav_link:hover{
-      color:red;
-  }
-  .nav_link.active {
-  color:white !important;;
-  
-  }
-  .nav_link.pending{
-   font-size: 3vw;
-  }
+  /* position: fixed; */
+  /* top: 0; */
+  background-color: lightblue;
+  width: 100%;
+  height:100%;
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  /* z-index: -9; */
+}
+.nav {
+  display: flex;
+  width: 80vw;
+  justify-content: flex-end;
+}
 
-  
-.overlays{
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* semi-transparent black overlay */
-    display:  flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999; 
+.nav_items {
+  margin: clamp(5px, 1vh, 50px) clamp(10px, 2vh, 100px);
+}
+.nav_link {
+  font-size: clamp(20px, 2vh, 200px);
+}
+.nav_link:hover {
+  color: red;
+}
+.nav_link.active {
+  color: white !important;
+}
+.nav_link.pending {
+  font-size: 3vw;
+}
 
-
+.overlays {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* semi-transparent black overlay */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
 }
 .loading_overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* semi-transparent black overlay */
-    display:  flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999; /* Ensure it's on top of everything */
-  }
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* semi-transparent black overlay */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999; /* Ensure it's on top of everything */
+}
 .loader {
-    border: 16px solid #f3f3f3; /* Light grey */
-    border-top: 16px solid #3498db; /* Blue */
-    border-radius: 50%;
-    width: 120px;
-    height: 120px;
-    animation: spin 2s linear infinite;
-  }
-  
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
+  border: 16px solid #f3f3f3; /* Light grey */
+  border-top: 16px solid #3498db; /* Blue */
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  animation: spin 2s linear infinite;
+}
 
-  .Calender_Container{
-    max-width: 200;
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
   }
-  
-  .Calender{
-    
+  100% {
+    transform: rotate(360deg);
   }
+}
+
+.Calender_Container {
+  max-width: 200;
+}
+
+
