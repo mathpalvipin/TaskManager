@@ -29,6 +29,27 @@ router.post("/Create", verifyToken, async (req, res) => {
 
 router.get("/show", verifyToken, async (req, res) => {
   try {
+    const start= req.query.start;
+    const end= req.query.end;
+  
+    if(start&&end){
+      
+      const email = req.user?.email; //get user email  by token set in cookie httponly
+      const user = await User.findOne({ email: email });
+      const id = user._id.valueOf();
+      const startDateString = start+"T00:00";
+      const endDateString = end+"T23:59";
+      const Tasks = await Task.find({ UserId: id , DateTime: {
+        $gte: startDateString,
+        $lte: endDateString
+      }});
+  
+  console.log(Tasks);
+     setTimeout(() => {
+      res.status(200).json(Tasks);
+     }, 1000);
+    }
+    else{
     const email = req.user?.email; //get user email  by token set in cookie httponly
     const user = await User.findOne({ email: email });
     const id = user._id.valueOf();
@@ -36,6 +57,7 @@ router.get("/show", verifyToken, async (req, res) => {
    setTimeout(() => {
     res.status(200).json(Tasks);
    }, 1000);
+  }
   } catch (e) {
     res.status(500).json({ message: "Internal Server Error" });
   }

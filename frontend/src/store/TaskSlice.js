@@ -12,9 +12,11 @@ const initialState = {
   UpdateLoading: false,
   error: null,
 };
-export const getTasks = createAsyncThunk("Tasks/getTasks", async () => {
+export const getTasks = createAsyncThunk("Tasks/getTasks", async (date) => {
   try {
-    const tasks = await apiGetTask();
+    console.log(date);
+    const tasks = await apiGetTask(date.start,date.end);
+    
     return tasks;
   } catch (e) {
     return e.message;

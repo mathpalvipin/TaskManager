@@ -11,9 +11,10 @@ catch(e){
     return e;
 }
 }
-export const apiGetTask= async()=>{
+export const apiGetTask= async(start ,end )=>{
     try{
-        const response =await axios.get(GetTaskURL);
+        const response =await axios.get(GetTaskURL+`?start=${start}&end=${end}`);
+        // const response =await axios.get(GetTaskURL);
         
         const data= response.data;
     data.sort((a,b)=>{return a.DateTime.localeCompare(b.DateTime)})
@@ -25,7 +26,20 @@ export const apiGetTask= async()=>{
      throw new Error(e.message||"Error while fetching task of user");
     }
 }
+export const apiGetTaskbyMonth= async()=>{
+    try{
+        const response =await axios.get(GetTaskURL+"?Month=2024-04");
+        
+        const data= response.data;
+    data.sort((a,b)=>{return a.DateTime.localeCompare(b.DateTime)})
 
+        return data;
+    }
+    catch(e){
+       
+     throw new Error(e.message||"Error while fetching task of user");
+    }
+}
 export const apiUpdateTask= async(task)=>{
     try{
        
