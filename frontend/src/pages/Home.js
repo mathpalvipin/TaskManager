@@ -10,7 +10,7 @@ const Home = () => {
     <div  className={classes.HomeContainer}>
       <div
         className={`${classes.CalenderContainer} 
-       fixed right-0  z-50 flex h-full w-full flex-col justify-center bg-cyan-300  sm:w-3/6  md:w-4/6  xl:w-5/6`}
+       fixed right-0  z-10 flex h-full w-full flex-col justify-center bg-cyan-300  sm:w-3/6  md:w-4/6  xl:w-5/6`}
       >
         <Calender
           currentDate={currentDate}
