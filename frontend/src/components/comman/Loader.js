@@ -10,7 +10,7 @@ const Loader =({text})=>{
     <>
     <div className={classes.loading_overlay}>
       
-    {text}    <div className={classes.loader}></div>
+    <div className={classes.loadertext}>{text}    </div> <div className={classes.loader}></div>
     </div> 
     </>
   )
