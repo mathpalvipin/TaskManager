@@ -41,7 +41,7 @@ const ShowTask =  ({ currentDate, setCurrentDate }) => {
   const { isFetching: isloading  ,isError ,error } = useQuery({
     queryKey: ["tasks", yearmonth],
     queryFn: async () => await apiGetTask( start, end ),
-    staleTime:10000,
+    staleTime:1000*60*60*24 ,
     });
   
 
