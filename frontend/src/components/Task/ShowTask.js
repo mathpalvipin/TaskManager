@@ -8,7 +8,7 @@ import { apiGetTask } from "../../services/Taskservice.js";
 import Loader from "../comman/Loader.js";
 import ErrorBox from "../comman/ErrorBox.js";
 //Date -fns
-import { endOfMonth, startOfMonth, format, getMonth, getYear } from "date-fns";
+import { endOfMonth, startOfMonth, format } from "date-fns";
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
@@ -19,14 +19,12 @@ const DateToString = (date) => {
 
 //React-query
 
-const ShowTask =  ({ currentDate, setCurrentDate }) => {
+const ShowTask =  ({ currentDate, setCurrentDate ,yearmonth}) => {
   const dispatch = useDispatch();
   const queryClient = useQueryClient();
   const start = DateToString(startOfMonth(currentDate));
   const end = DateToString(endOfMonth(currentDate));
-  const month = getMonth(currentDate) + 1;
-  const year = getYear(currentDate);
-  const yearmonth = year + "-" + month;
+
   console.log(yearmonth);
 
   //redux
@@ -88,6 +86,8 @@ const ShowTask =  ({ currentDate, setCurrentDate }) => {
           SelectedTask={SelectedTask}
           key={SelectedTask._id}
           closeCreatbox={() => selectTask(null)}
+          yearmonth={yearmonth}
+          setCurrentDate={setCurrentDate}
         ></EditTask>
       )}
    

@@ -2,10 +2,12 @@ import classes from "./home.module.css";
 import {  useState } from "react";
 import ShowTask from "../components/Task/ShowTask";
 import Calender from "../components/comman/Calender";
-
+import {  getMonth, getYear } from "date-fns";
 const Home = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
- 
+  const month = getMonth(currentDate) + 1;
+  const year = getYear(currentDate);
+  const yearmonth = year + "-" + month;
   return (
     <div  className={classes.HomeContainer}>
       <div
@@ -15,6 +17,7 @@ const Home = () => {
         <Calender
           currentDate={currentDate}
           setCurrentDate={setCurrentDate}
+          yearmonth={yearmonth}
         ></Calender>
       </div>
      
@@ -25,7 +28,8 @@ const Home = () => {
           >
             <ShowTask
               currentDate={currentDate}
-             
+             yearmonth={yearmonth}
+             setCurrentDate={setCurrentDate}
             ></ShowTask>
           </div>
         </div>

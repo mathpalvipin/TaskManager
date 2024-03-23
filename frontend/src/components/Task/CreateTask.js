@@ -8,12 +8,9 @@ import { useEffect } from "react";
 import { format } from "date-fns";
 import { getMonth, getYear } from "date-fns";
 import { apiCreateTask } from "../../services/Taskservice";
-import {
-  useMutation,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { setTasks } from "../../store/TaskSlice";
-const CreateTask = ({ currentDate, setIsCreating,setCurrentDate }) => {
+const CreateTask = ({ currentDate, setIsCreating, setCurrentDate }) => {
   const dispatch = useDispatch();
   const queryClient = useQueryClient();
   const Tasks = useSelector((state) => state.Tasks);
@@ -28,16 +25,14 @@ const CreateTask = ({ currentDate, setIsCreating,setCurrentDate }) => {
     DateTime: "",
   });
   const mutation = useMutation({
-    mutationFn: async () => {
+    mutationFn: async (task) => {
       return await apiCreateTask(task);
     },
     onSuccess: async (data) => {
       console.log(data);
-      const index= Tasks.findIndex(t=> t.DateTime>data.DateTime );
-      console.log(index);
-      const TempTasks =[...Tasks];
-      TempTasks.splice(index, 0,data);
-      
+      const TempTasks = [...Tasks];
+      const index = TempTasks.findIndex((t) => t.DateTime > data.DateTime);
+      TempTasks.splice(index, 0, data);
       queryClient.setQueryData(["tasks", yearmonth], TempTasks);
       dispatch(setTasks(TempTasks));
     },
@@ -49,7 +44,6 @@ const CreateTask = ({ currentDate, setIsCreating,setCurrentDate }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      
       setIsLoading(true);
       await mutation.mutateAsync({
         ...task,
