@@ -64,6 +64,7 @@ const ShowTask =  ({ currentDate, setCurrentDate }) => {
   useEffect(() => {
     console.log(Tasks);
     fetchTasks();
+
   }, [yearmonth ,fetchTasks]);
 
   useEffect(() => {
@@ -75,6 +76,7 @@ const ShowTask =  ({ currentDate, setCurrentDate }) => {
       const scrollto = selectedDiv[0];
 
       scrollto?.scrollIntoView({ behavior: "smooth", block: "start" });
+      
     }
   }, [Tasks, currentDate]);
 

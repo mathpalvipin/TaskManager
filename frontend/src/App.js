@@ -11,6 +11,7 @@ import store from "./store/Store.js";
 import AuthRouter from "./router/AuthRouter.js";
 
 //reactquery
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
 const queryClient = new QueryClient();
 
@@ -23,7 +24,7 @@ function App() {
             <AuthRouter></AuthRouter>
           </AuthProvider>
         </Provider>
-      
+        <ReactQueryDevtools initialIsOpen={true} />
       </QueryClientProvider>
     </>
   );

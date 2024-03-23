@@ -4,6 +4,11 @@ https://blog.openreplay.com/enhancing-performance-with-react-query-caching/
 ## react-Query 
 https://tanstack.com/query/latest/docs/framework/react/guides/queries
 
+in react Query 
+Note 
+first update the cached the using of that cached update the Redux store , 
+because if you update the store the component re-render and update the store with the cached value
+
 
 Deciding whether to cache data in the frontend or backend depends on various factors such as the nature of the data, application architecture, performance requirements, and security considerations. Here's a comparison to help you decide:
 
