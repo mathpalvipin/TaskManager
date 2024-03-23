@@ -1,0 +1,14 @@
+link 
+https://www.geeksforgeeks.org/what-is-the-difference-between-array-slice-and-array-splice-in-javascript/
+
+Syntax:
+
+slice():
+const new_array = array_name.slice(s, e)
+create new array 
+
+
+
+splice():
+array_name.splice(i, n, item 1, item 2, .....item n)
+overwrite array 

@@ -94,7 +94,7 @@ const ShowTask =  ({ currentDate, setCurrentDate }) => {
       <div className={classes.container} ref={showContainerRef}>
         {isloading && <Loader text="loading Tasks"></Loader>}
         {!isloading &&
-          Tasks.length > 1 &&
+          Tasks.length > 0 &&
           Tasks.map((task) => {
             let date = format(currentDate, "yyyy-MM-dd");
             const hightlight = task.DateTime?.includes(date);

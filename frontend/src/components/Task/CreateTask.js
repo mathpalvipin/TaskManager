@@ -13,7 +13,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { setTasks } from "../../store/TaskSlice";
-const CreateTask = ({ currentDate, setIsCreating }) => {
+const CreateTask = ({ currentDate, setIsCreating,setCurrentDate }) => {
   const dispatch = useDispatch();
   const queryClient = useQueryClient();
   const Tasks = useSelector((state) => state.Tasks);
@@ -33,8 +33,13 @@ const CreateTask = ({ currentDate, setIsCreating }) => {
     },
     onSuccess: async (data) => {
       console.log(data);
-      queryClient.setQueryData(["tasks", yearmonth], [...Tasks, data]);
-      dispatch(setTasks([...Tasks, data]));
+      const index= Tasks.findIndex(t=> t.DateTime>data.DateTime );
+      console.log(index);
+      const TempTasks =[...Tasks];
+      TempTasks.splice(index, 0,data);
+      
+      queryClient.setQueryData(["tasks", yearmonth], TempTasks);
+      dispatch(setTasks(TempTasks));
     },
     onError: (error) => {
       console.log(error);
@@ -44,11 +49,13 @@ const CreateTask = ({ currentDate, setIsCreating }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      
       setIsLoading(true);
       await mutation.mutateAsync({
         ...task,
         DateTime: task.DateTime.slice(0, 16),
       });
+      setCurrentDate(new Date(task.DateTime));
 
       // await make the function wait to dispatch function execute completly
     } catch (e) {

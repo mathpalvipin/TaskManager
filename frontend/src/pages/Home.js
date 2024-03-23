@@ -14,7 +14,7 @@ const Home = () => {
       >
         <Calender
           currentDate={currentDate}
-          changeCurrentDate={setCurrentDate}
+          setCurrentDate={setCurrentDate}
         ></Calender>
       </div>
      

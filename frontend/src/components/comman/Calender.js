@@ -13,7 +13,7 @@ import Cell from "./Cell.js";
 import CreateTask from "../Task/CreateTask.js"
 import { useState } from "react";
 
-const Calender = ({ changeCurrentDate, currentDate = new Date() }) => {
+const Calender = ({ setCurrentDate, currentDate = new Date() }) => {
   const StartDay = startOfMonth(currentDate);
   const EndDay = endOfMonth(currentDate);
   const noOfDays = differenceInDays(EndDay, StartDay) + 1;
@@ -21,30 +21,30 @@ const Calender = ({ changeCurrentDate, currentDate = new Date() }) => {
   const prefixDays = StartDay.getDay();
   const suffixDays = 6 - EndDay.getDay();
   const preMonth = () => {
-    changeCurrentDate(sub(currentDate, { months: 1 }));
+    setCurrentDate(sub(currentDate, { months: 1 }));
   };
   const nextMonth = () => {
-    changeCurrentDate(add(currentDate, { months: 1 }));
+    setCurrentDate(add(currentDate, { months: 1 }));
   };
   const preYear = () => {
-    changeCurrentDate(sub(currentDate, { years: 1 }));
+    setCurrentDate(sub(currentDate, { years: 1 }));
   };
   const nextYear = () => {
-    changeCurrentDate(add(currentDate, { years: 1 }));
+    setCurrentDate(add(currentDate, { years: 1 }));
   };
 
-  const setCurrentDate = (date) => {
+  const changeDate = (date) => {
     const newdate = setDate(currentDate, date);
-    changeCurrentDate(newdate);
+    setCurrentDate(newdate);
   };
   const daysofweeks = ["Sun", "Mon", "Tue", "Wed", "Thr", "Fri", "Sat"];
   return (
     <>
-    {isCreating && <CreateTask currentDate={currentDate} setIsCreating={setIsCreating} class='z-200'></CreateTask>}
+    {isCreating && <CreateTask currentDate={currentDate} setIsCreating={setIsCreating} setCurrentDate={setCurrentDate} class='z-200'></CreateTask>}
       <div className="flex flex-row justify-evenly items-center">
         <h1> Calender- {format(currentDate, "dd LLLL yyyy")} </h1>
         <GrPowerReset
-          onClick={() => changeCurrentDate(new Date())}
+          onClick={() => setCurrentDate(new Date())}
           className="size-5"
         />
         <button onClick={()=>setIsCreating(true)} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2  m-1 rounded">Create Task</button>
@@ -71,7 +71,7 @@ const Calender = ({ changeCurrentDate, currentDate = new Date() }) => {
               <Cell
                 key={date}
                 isActive={isActive}
-                onClick={() => setCurrentDate(date)}
+                onClick={() => changeDate(date)}
               >
                 {date}
               </Cell>
