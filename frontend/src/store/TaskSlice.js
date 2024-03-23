@@ -5,6 +5,7 @@ import {
   apiUpdateTask,
 } from "../services/Taskservice";
 
+
 const initialState = {
   Tasks: [],
   FetchLoading: false,
@@ -12,28 +13,27 @@ const initialState = {
   UpdateLoading: false,
   error: null,
 };
-export const getTasks = createAsyncThunk("Tasks/getTasks", async (date) => {
-  try {
-    console.log(date);
-    const tasks = await apiGetTask(date.start,date.end);
-    
-    return tasks;
-  } catch (e) {
-    return e.message;
-  }
-});
-export const createTask = createAsyncThunk(
-  "Tasks/createTasks",
-  async (task) => {
-    try {
-      const CreatedTask = await apiCreateTask(task);
-      console.log(CreatedTask);
-      return CreatedTask;
-    } catch (e) {
-      return e.message;
-    }
-  },
-);
+// export const getTasks = createAsyncThunk("Tasks/getTasks", async (date) => {
+//   try {
+//     console.log(date);
+//      const data=await apiGetTask(date.start,date.end);
+//     return data;
+//   } catch (e) {
+//     return e.message;
+//   }
+// });
+// export const createTask = createAsyncThunk(
+//   "Tasks/createTasks",
+//   async (task) => {
+//     try {
+//       const CreatedTask = await apiCreateTask(task);
+//       console.log(CreatedTask);
+//       return CreatedTask;
+//     } catch (e) {
+//       return e.message;
+//     }
+//   },
+// );
 export const updateTask = createAsyncThunk("Tasks/updateTask", async (task) => {
   try {
     const updatedtask = await apiUpdateTask(task);
@@ -46,33 +46,49 @@ export const updateTask = createAsyncThunk("Tasks/updateTask", async (task) => {
 const TaskReducer = createSlice({
   name: "Tasks",
   initialState,
-  reducers: {},
+  reducers: {
+    // getTasks : async (state,action)=>{
+    //   try {
+    //         console.log(action.payload);
+    //         const tasks = await apiGetTask(action.payload.start,action.payload.end);
+    //         console.log(tasks);
+    //         return tasks;
+    //       } catch (e) {
+    //         return e.message;
+    //       }
+    // }
+    setTasks : (state,action)=>{
+      state.Tasks=action.payload;
+    }
+    
+  },
   extraReducers: (builder) => {
     builder
-      .addCase(getTasks.pending, (state, action) => {
-        state.FetchLoading = true;
-      })
-      .addCase(getTasks.fulfilled, (state, action) => {
-        state.FetchLoading = false;
-        state.Tasks = action.payload;
-        state.error = null;
-      })
-      .addCase(getTasks.rejected, (state, action) => {
-        state.FetchLoading = false;
-        state.error = action.error.message;
-      })
-      .addCase(createTask.pending, (state, action) => {
-        state.CreateLoading = true;
-      })
-      .addCase(createTask.fulfilled, (state, action) => {
-        state.CreateLoading = false;
-        state.Tasks.push(action.payload);
-        state.error = null;
-      })
-      .addCase(createTask.rejected, (state, action) => {
-        state.CreateLoading = false;
-        state.error = action.error.message;
-      })
+      // .addCase(getTasks.pending, (state, action) => {
+      //   state.FetchLoading = true;
+      // })
+      // .addCase(getTasks.fulfilled, (state, action) => {
+      //   state.FetchLoading = false;
+      //   state.Tasks = action.payload;
+      //   state.error = null;
+      // })
+      // .addCase(getTasks.rejected, (state, action) => {
+      //   state.FetchLoading = false;
+      //   state.error = action.error.message;
+      // })
+      //  .addCase(createTask.pending, (state, action) => {
+      //   state.CreateLoading = true;
+      // })
+      // .addCase(createTask.fulfilled, (state, action) => {
+      //   state.CreateLoading = false;
+      //   state.Tasks.push(action.payload); 
+      //   state.error = null;
+        
+      // })
+      // .addCase(createTask.rejected, (state, action) => {
+      //   state.CreateLoading = false;
+      //   state.error = action.error.message;
+      // })
       .addCase(updateTask.pending, (state, action) => {
         state.UpdateLoading = true;
       })
@@ -92,5 +108,5 @@ const TaskReducer = createSlice({
       });
   },
 });
-
+ export const {setTasks}=TaskReducer.actions;
 export default TaskReducer.reducer;

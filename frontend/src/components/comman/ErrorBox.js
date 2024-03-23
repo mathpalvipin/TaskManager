@@ -1,8 +1,8 @@
 import classes from "./comman.module.css";
 import { useAuth } from "../../context/AuthContext.js";
-const ErrorBox = (props) => {
+const ErrorBox = ({message}) => {
   const { setError } = useAuth();
-  const Error = props.message;
+
   const handlerClose = () => {
     setError(null);
   };
@@ -10,7 +10,7 @@ const ErrorBox = (props) => {
   return (
     <div className={classes.overlays}>
       <div className={classes.errorbox}>
-        <div className={classes.errormessage}>{Error}</div>
+        <div className={classes.errormessage}>{message}</div>
         <button onClick={handlerClose}> close</button>
       </div>
     </div>

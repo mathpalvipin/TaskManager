@@ -5,39 +5,70 @@ import { createTask } from "../../store/TaskSlice";
 import { useState } from "react";
 import { IoMdCloseCircle } from "react-icons/io";
 import { useEffect } from "react";
-import {format} from "date-fns"
-const CreateTask = ({ currentDate,setIsCreating }) => {
-  const isloading = useSelector((state) => state.CreateLoading);
+import { format } from "date-fns";
+import { getMonth, getYear } from "date-fns";
+import { apiCreateTask } from "../../services/Taskservice";
+import {
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
+import { setTasks } from "../../store/TaskSlice";
+const CreateTask = ({ currentDate, setIsCreating }) => {
   const dispatch = useDispatch();
+  const queryClient = useQueryClient();
+  const Tasks = useSelector((state) => state.Tasks);
+  const month = getMonth(currentDate) + 1;
+  const year = getYear(currentDate);
+  const yearmonth = year + "-" + month;
+  const [isloading, setIsLoading] = useState(false);
+  // const dispatch = useDispatch();
   const [task, setTask] = useState({
     TaskName: "",
     TaskType: "",
     DateTime: "",
   });
+  const mutation = useMutation({
+    mutationFn: async () => {
+      return await apiCreateTask(task);
+    },
+    onSuccess: async (data) => {
+      console.log(data);
+      queryClient.setQueryData(["tasks", yearmonth], [...Tasks, data]);
+      dispatch(setTasks([...Tasks, data]));
+    },
+    onError: (error) => {
+      console.log(error);
+      throw new error("mutation on createtask failed", error);
+    },
+  });
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      console.log(task.DateTime.slice(0, 16));
-      await dispatch(
-        createTask({ ...task, DateTime: task.DateTime.slice(0, 16) })
-      ); // await make the function wait to dispatch function execute completly
+      setIsLoading(true);
+      await mutation.mutateAsync({
+        ...task,
+        DateTime: task.DateTime.slice(0, 16),
+      });
 
-      setIsCreating(false);
+      // await make the function wait to dispatch function execute completly
     } catch (e) {
       alert(e + "unable to Create Task");
     }
+    setIsLoading(false);
   };
-  useEffect(()=>{
-    let date=format(currentDate,"yyyy-MM-dd");
-    date+="T00:00"
-    setTask({...task,DateTime:date});
-  },[]);
+  useEffect(() => {
+    let date = format(currentDate, "yyyy-MM-dd");
+    date += "T00:00";
+    setTask({ ...task, DateTime: date });
+  }, []);
   return (
     <>
-    <IoMdCloseCircle className="absolute top-0 right-0 size-10 z-50"  onClick={()=>setIsCreating(false)}/>
+      <IoMdCloseCircle
+        className="absolute right-0 top-0 z-50 size-10"
+        onClick={() => setIsCreating(false)}
+      />
       {isloading && <Loader text="Creating Task"></Loader>}
       <div className={classes.container}>
-      
         <div>
           <form onSubmit={handleSubmit} className={classes.form}>
             <input
