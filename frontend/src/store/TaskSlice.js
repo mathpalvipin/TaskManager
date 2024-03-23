@@ -5,6 +5,7 @@ import {
   apiUpdateTask,
 } from "../services/Taskservice";
 
+
 const initialState = {
   Tasks: [],
   FetchLoading: false,
@@ -15,9 +16,8 @@ const initialState = {
 export const getTasks = createAsyncThunk("Tasks/getTasks", async (date) => {
   try {
     console.log(date);
-    const tasks = await apiGetTask(date.start,date.end);
-    
-    return tasks;
+     const data=await apiGetTask(date.start,date.end);
+    return data;
   } catch (e) {
     return e.message;
   }
@@ -46,7 +46,21 @@ export const updateTask = createAsyncThunk("Tasks/updateTask", async (task) => {
 const TaskReducer = createSlice({
   name: "Tasks",
   initialState,
-  reducers: {},
+  reducers: {
+    // getTasks : async (state,action)=>{
+    //   try {
+    //         console.log(action.payload);
+    //         const tasks = await apiGetTask(action.payload.start,action.payload.end);
+    //         console.log(tasks);
+    //         return tasks;
+    //       } catch (e) {
+    //         return e.message;
+    //       }
+    // }
+    setTasks : (state,action)=>{
+      state.Tasks=action.payload;
+    }
+  },
   extraReducers: (builder) => {
     builder
       .addCase(getTasks.pending, (state, action) => {
@@ -61,7 +75,7 @@ const TaskReducer = createSlice({
         state.FetchLoading = false;
         state.error = action.error.message;
       })
-      .addCase(createTask.pending, (state, action) => {
+       .addCase(createTask.pending, (state, action) => {
         state.CreateLoading = true;
       })
       .addCase(createTask.fulfilled, (state, action) => {
@@ -92,5 +106,5 @@ const TaskReducer = createSlice({
       });
   },
 });
-
+ export const {setTasks}=TaskReducer.actions;
 export default TaskReducer.reducer;

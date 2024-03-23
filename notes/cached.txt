@@ -1,3 +1,10 @@
+##link 
+https://blog.openreplay.com/enhancing-performance-with-react-query-caching/
+
+## react-Query 
+https://tanstack.com/query/latest/docs/framework/react/guides/queries
+
+
 Deciding whether to cache data in the frontend or backend depends on various factors such as the nature of the data, application architecture, performance requirements, and security considerations. Here's a comparison to help you decide:
 
 Caching in the Backend:
@@ -30,3 +37,15 @@ Data Sensitivity: Consider the sensitivity of the data being cached. Sensitive d
 Performance Requirements: Evaluate the performance requirements of your application. Backend caching may be more suitable for high-performance applications with stringent latency requirements, while frontend caching may suffice for less demanding scenarios.
 Offline Access: If offline access is a critical requirement, frontend caching becomes essential to ensure a seamless user experience.
 Hybrid Approach: In some cases, a hybrid approach where data is cached both in the frontend and backend may provide the best balance between performance, scalability, and data consistency.
+
+
+
+
+cacheTime	
+The default time is five minutes.	'
+Users can see data stored in the cache but with a silent background fetch to update data in the cache.
+used if data change frequently
+staleTime
+The default time is zero.
+Users can see data stored in the cache but without background fetch.
+uesd if data don't chage frequently we setup time to 

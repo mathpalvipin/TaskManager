@@ -1,46 +1,70 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import classes from "./ShowTask.module.css";
 import EditTask from "./EditTask.js";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getTasks } from "../../store/TaskSlice.js";
+import { getTasks, setTasks } from "../../store/TaskSlice.js";
+import { apiGetTask } from "../../services/Taskservice.js";
 import Loader from "../comman/Loader.js";
-import { endOfMonth, startOfMonth, format, getMonth } from "date-fns";
+import ErrorBox from "../comman/ErrorBox.js";
+//Date -fns
+import { endOfMonth, startOfMonth, format, getMonth, getYear } from "date-fns";
+
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+
 const DateToString = (date) => {
   // console.log(format(date, "yyyy-MM-dd"));
   return format(date, "yyyy-MM-dd");
 };
-const ShowTask = ({ currentDate, setCurrentDate }) => {
+
+//React-query
+
+const ShowTask =  ({ currentDate, setCurrentDate }) => {
   const dispatch = useDispatch();
-  
+  const queryClient = useQueryClient();
   const start = DateToString(startOfMonth(currentDate));
   const end = DateToString(endOfMonth(currentDate));
-  const month = getMonth(currentDate)+1;
-  console.log(month+start+end);
-  const Tasks = useSelector((state) => state.Tasks);
+  const month = getMonth(currentDate) + 1;
+  const year = getYear(currentDate);
+  const yearmonth = year + "-" + month;
+  console.log(yearmonth);
 
-  const isloading = useSelector((state) => state.FetchLoading);
+  //redux
+  const Tasks = useSelector((state) => state.Tasks);
+  // const isloading = useSelector((state) => state.FetchLoading);
+
   const [SelectedTask, setSelectedTask] = useState(null);
   const showContainerRef = useRef();
-  const getTask = useCallback(async () => {
-    // Memoization ensures that the function's reference remains consistent between renders unless its dependencies change.
-    //memorize the fucntin using usecallback which make the getTask stable
-    //  effect doesn't trigger unnecessarily
-    try {
-      await dispatch(getTasks({ start, end }));
-    } catch (error) {
-      alert(error.message + "Erro while fetching Task");
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [month]);
+
+
+ //react-query;
+  const { isFetching: isloading  ,isError ,error } = useQuery({
+    queryKey: ["tasks", yearmonth],
+    queryFn: async () => await apiGetTask( start, end ),
+    staleTime:10000,
+    });
+  
 
   const selectTask = (task) => {
-    console.log(task);
     setSelectedTask(task);
   };
+
+  const fetchTasks = async () => {
+    try {
+      const data = await queryClient.ensureQueryData({
+        queryKey: ["tasks",yearmonth],
+        queryFn: () => apiGetTask( start, end ),
+      });
+    await  dispatch(setTasks(data));
+  
+    } catch (e) {
+      alert(e + "unable to fetch tasks");
+    }
+  };
   useEffect(() => {
-    getTask();
-  }, [getTask]);
+    console.log(Tasks);
+    fetchTasks();
+  }, [yearmonth ,fetchTasks]);
 
   useEffect(() => {
     const selectedDiv = showContainerRef?.current?.querySelectorAll(
@@ -56,6 +80,7 @@ const ShowTask = ({ currentDate, setCurrentDate }) => {
 
   return (
     <>
+    {isError &&<ErrorBox message={error}></ErrorBox>}
       {SelectedTask && (
         <EditTask
           SelectedTask={SelectedTask}
@@ -63,11 +88,11 @@ const ShowTask = ({ currentDate, setCurrentDate }) => {
           closeCreatbox={() => selectTask(null)}
         ></EditTask>
       )}
-
+   
       <div className={classes.container} ref={showContainerRef}>
         {isloading && <Loader text="loading Tasks"></Loader>}
         {!isloading &&
-          Tasks.length > 0 &&
+          Tasks.length > 1 &&
           Tasks.map((task) => {
             let date = format(currentDate, "yyyy-MM-dd");
             const hightlight = task.DateTime?.includes(date);
