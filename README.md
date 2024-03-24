@@ -19,9 +19,15 @@ https://create-react-app.dev/docs/adding-typescript/
 mkdir backend
 cd backend
 npm init -y
-npm install express mongoose bcrypt cors jsonwebtoken
+npm install express mongoose bcrypt cors jsonwebtoken body-parser dotenv
 ```
 
+###frontend 
+
+```npx create-react-app my-app
+cd my-app
+npm start
+```
 ## refer the youtube video for HTTPonly cookie setup
  https://www.youtube.com/watch?v=a5Krfkfl9MM&ab_channel=RahulAhire  
 
