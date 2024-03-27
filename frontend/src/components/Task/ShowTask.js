@@ -19,7 +19,7 @@ const DateToString = (date) => {
 
 //React-query
 
-const ShowTask =  ({ currentDate, setCurrentDate ,yearmonth}) => {
+const ShowTask = ({ currentDate, setCurrentDate, yearmonth }) => {
   const dispatch = useDispatch();
   const queryClient = useQueryClient();
   const start = DateToString(startOfMonth(currentDate));
@@ -34,14 +34,16 @@ const ShowTask =  ({ currentDate, setCurrentDate ,yearmonth}) => {
   const [SelectedTask, setSelectedTask] = useState(null);
   const showContainerRef = useRef();
 
-
- //react-query;
-  const { isFetching: isloading  ,isError ,error } = useQuery({
+  //react-query;
+  const {
+    isFetching: isloading,
+    isError,
+    error,
+  } = useQuery({
     queryKey: ["tasks", yearmonth],
-    queryFn: async () => await apiGetTask( start, end ),
-    staleTime:1000*60*60*24 ,
-    });
-  
+    queryFn: async () => await apiGetTask(start, end),
+    staleTime: 1000 * 60 * 60 * 24,
+  });
 
   const selectTask = (task) => {
     setSelectedTask(task);
@@ -50,11 +52,10 @@ const ShowTask =  ({ currentDate, setCurrentDate ,yearmonth}) => {
   const fetchTasks = async () => {
     try {
       const data = await queryClient.ensureQueryData({
-        queryKey: ["tasks",yearmonth],
-        queryFn: () => apiGetTask( start, end ),
+        queryKey: ["tasks", yearmonth],
+        queryFn: () => apiGetTask(start, end),
       });
-    await  dispatch(setTasks(data));
-  
+      await dispatch(setTasks(data));
     } catch (e) {
       alert(e + "unable to fetch tasks");
     }
@@ -62,8 +63,7 @@ const ShowTask =  ({ currentDate, setCurrentDate ,yearmonth}) => {
   useEffect(() => {
     console.log(Tasks);
     fetchTasks();
-
-  }, [yearmonth ,fetchTasks]);
+  }, [yearmonth, fetchTasks]);
 
   useEffect(() => {
     const selectedDiv = showContainerRef?.current?.querySelectorAll(
@@ -74,13 +74,12 @@ const ShowTask =  ({ currentDate, setCurrentDate ,yearmonth}) => {
       const scrollto = selectedDiv[0];
 
       scrollto?.scrollIntoView({ behavior: "smooth", block: "start" });
-      
     }
   }, [Tasks, currentDate]);
 
   return (
     <>
-    {isError &&<ErrorBox message={error}></ErrorBox>}
+      {isError && <ErrorBox message={error}></ErrorBox>}
       {SelectedTask && (
         <EditTask
           SelectedTask={SelectedTask}
@@ -90,30 +89,40 @@ const ShowTask =  ({ currentDate, setCurrentDate ,yearmonth}) => {
           setCurrentDate={setCurrentDate}
         ></EditTask>
       )}
-   
+
       <div className={classes.container} ref={showContainerRef}>
         {isloading && <Loader text="loading Tasks"></Loader>}
         {!isloading &&
           Tasks.length > 0 &&
-          Tasks.map((task) => {
-            let date = format(currentDate, "yyyy-MM-dd");
+          Tasks.map((task, index) => {
+            var date = format(currentDate, "yyyy-MM-dd");
             const hightlight = task.DateTime?.includes(date);
             // console.log(hightlight ,!scrollref?.current )
-
+            var showDate=true;
+            var currDate=format(task.DateTime,'yyyy-MM-dd');
+            if(index>0){
+              var prevDate=format(Tasks[index-1].DateTime,'yyyy-MM-dd');
+              showDate=prevDate.localeCompare(currDate)?true:false;
+          }
             return (
+              <React.Fragment key={task.id}>
+             {showDate && (
+                <div className={`w-full bg-slate-400 ${classes.stickyDate}`}>
+                  {format(task.DateTime, "yyyy-MM-dd")}
+                </div>
+              )}
               <div
                 id={task._id}
                 data-name={hightlight ? "highlighted" : null}
                 className={`${classes.TaskItem}   ${hightlight ? "highlighted bg-cyan-100" : "bg-slate-200"}`}
                 key={task._id}
               >
+              
                 <div className="flex-col">
-                  {" "}
                   <div className={classes.TaskName}>{task.TaskName}</div>
                   <div className={classes.TaskType}>{task.TaskType}</div>
                 </div>
                 <div className="flex-col">
-                  {" "}
                   <div className={classes.DateTime}>{task.DateTime}</div>
                   <button
                     className="roundedon m-1 rounded-md bg-blue-300 px-2 py-1 font-bold text-white hover:bg-blue-500"
@@ -123,7 +132,7 @@ const ShowTask =  ({ currentDate, setCurrentDate ,yearmonth}) => {
                   </button>
                 </div>
               </div>
-            );
+              </React.Fragment>);
           })}
       </div>
     </>

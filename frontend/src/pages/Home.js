@@ -12,7 +12,7 @@ const Home = () => {
     <div  className={classes.HomeContainer}>
       <div
         className={`${classes.CalenderContainer} 
-       fixed right-0  z-10 flex h-full w-full flex-col justify-center bg-cyan-300  sm:w-3/6  md:w-4/6  xl:w-5/6`}
+       fixed right-0  z-10 flex h-full w-full flex-col justify-center bg-cyan-300  sm:w-3/6  md:w-9/12 `}
       >
         <Calender
           currentDate={currentDate}
@@ -24,7 +24,7 @@ const Home = () => {
        
           <div
             className={`${classes.showContainer} 
-       fixed  left-0 z-10 w-full sm:w-3/6  md:w-2/6 xl:w-1/6 `}
+       fixed  left-0 z-10 w-full sm:w-3/6  md:w-3/12 `}
           >
             <ShowTask
               currentDate={currentDate}

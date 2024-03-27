@@ -12,7 +12,7 @@ router.post("/Create", verifyToken, async (req, res) => {
     const id = user._id.valueOf();
 
     const { TaskName, TaskType, DateTime } = req.body;
-    const task = new Task({
+   const task = new Task({
       TaskName: TaskName,
       TaskType: TaskType,
       DateTime: DateTime,
@@ -44,7 +44,7 @@ router.get("/show", verifyToken, async (req, res) => {
         $lte: endDateString
       }});
   
-  console.log(Tasks);
+
      setTimeout(() => {
       res.status(200).json(Tasks);
      }, 1000);

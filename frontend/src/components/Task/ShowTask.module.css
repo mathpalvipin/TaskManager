@@ -1,11 +1,12 @@
 .container{
     width: 100%;
     display: flex;
+ 
     justify-content: space-evenly;
     align-items: center;
     flex-direction: column;
     overflow: hidden;
-    padding: 2vh 0 10vh 0 ;
+    padding: 0 0 10vh 0 ;
     z-index: 100;
 }
 
@@ -23,4 +24,8 @@
    
 
    
+}
+.stickyDate{
+    position: sticky;
+    top: 0;
 }
