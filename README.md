@@ -48,6 +48,9 @@ npm install react-redux
 ```
 The package includes a precompiled ESM build that can be used as a <script type="module"> tag directly in the browser.
 
+## icons 
+https://react-icons.github.io/react-icons/
+
 calender : https://www.youtube.com/watch?v=s9-K02CP8hw&ab_channel=DailyWebCoding
 
 tailwind css
@@ -56,3 +59,8 @@ https://tailwindcss.com/docs/installation
 
 ## React Query 
 https://tanstack.com/query/latest/docs/framework/react/guides/queries
+
+
+UI initial ->
+![alt text](image.png)
+
