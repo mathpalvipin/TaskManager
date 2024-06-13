@@ -22,9 +22,12 @@ const AppNavWrapper = () => {
   return (
     <>
       <div className={`${classes.navbar}`}>
-        <div className="navbar-logo">
-          <NavLink className="logo" to="/app/home">
-            LOGO
+        <div className={`${classes.nav_items}`}>
+          <NavLink
+            className="logo fond-bold text-shadow font-serif text-xl"
+            to="/app/home"
+          >
+            Calender
           </NavLink>
         </div>
         <div className={`${classes.nav}`}>
@@ -38,8 +41,8 @@ const AppNavWrapper = () => {
                       isPending
                         ? `${classes.pending}`
                         : isActive
-                        ? `${classes.active}`
-                        : ""
+                          ? `${classes.active}`
+                          : ""
                     }`
                   }
                   to="/app/page1"
@@ -54,8 +57,8 @@ const AppNavWrapper = () => {
                       isPending
                         ? `${classes.pending}`
                         : isActive
-                        ? `${classes.active}`
-                        : ""
+                          ? `${classes.active}`
+                          : ""
                     }`
                   }
                   to="/app/home"
@@ -70,8 +73,8 @@ const AppNavWrapper = () => {
                       isPending
                         ? `${classes.pending}`
                         : isActive
-                        ? `${classes.active}`
-                        : ""
+                          ? `${classes.active}`
+                          : ""
                     }`
                   }
                   to="/app/AppIntro"
@@ -80,11 +83,14 @@ const AppNavWrapper = () => {
                 </NavLink>
               </div>
               <div className={`${classes.nav_items}`}>
-                {user ? user.username : "User"}
+                <div className={`${classes.nav_link}`}>
+                  {" "}
+                  {user ? user.username : "User"}{" "}
+                </div>
               </div>
               <div className={`${classes.nav_items}`}>
                 <button className={classes.button} onClick={handleLogout}>
-                  Logout
+                  <div className={`${classes.nav_link}`}> Logout </div>
                 </button>
               </div>
             </>
@@ -97,8 +103,8 @@ const AppNavWrapper = () => {
                       isPending
                         ? `${classes.pending}`
                         : isActive
-                        ? `${classes.active}`
-                        : ""
+                          ? `${classes.active}`
+                          : ""
                     }`
                   }
                   to="/intro"
@@ -113,8 +119,8 @@ const AppNavWrapper = () => {
                       isPending
                         ? `${classes.pending}`
                         : isActive
-                        ? `${classes.active}`
-                        : ""
+                          ? `${classes.active}`
+                          : ""
                     }`
                   }
                   to="/auth/login"
@@ -126,7 +132,6 @@ const AppNavWrapper = () => {
           )}
         </div>
       </div>
-     
     </>
   );
 };
