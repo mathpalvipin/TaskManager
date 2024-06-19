@@ -98,6 +98,17 @@ const ShowTask = ({ currentDate, setCurrentDate, yearmonth }) => {
     <>
       {isError && <ErrorBox message={error}></ErrorBox>}
       {isError && <ErrorBox message={error}></ErrorBox>}
+      {showBox && showBox === "ViewBox" && (
+        <ViewTask
+          SelectedTask={SelectedTask}
+          key={SelectedTask._id}
+          closeViewbox={() => {
+            selectTask(null);
+            setShowBox(null);
+          }}
+          open={showBox === "ViewBox"}
+        ></ViewTask>
+      )}
       {isError && <ErrorBox message={error}></ErrorBox>}
       {showBox && showBox === "ViewBox" && (
         <ViewTask
