@@ -24,7 +24,7 @@ function App() {
             <AuthRouter></AuthRouter>
           </AuthProvider>
         </Provider>
-        <ReactQueryDevtools initialIsOpen={true} />
+        <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </>
   );

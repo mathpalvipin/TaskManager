@@ -4,9 +4,9 @@ const Cell = ({ children, className, onClick,isActive=false }) => {
     <div
       onClick={onClick}
       className={`${className ? className : ""}
-      ${!!onClick && !isActive ?"hover:bg-blue-200":"" }
-      ${isActive ?"bg-blue-400 text-white":"" }
-       flex h-auto items-center justify-center border-b border-r border-black text-sm md:text-2xl xl:text-3xl `}
+      ${!!onClick && !isActive ?"hover:bg-primary-200":"" }
+      ${isActive ?"bg-primary-500 text-white":"" }
+     w-auto h-auto flex items-center justify-center rounded-full m-3 text-md `}
     >
       {children}
     </div>

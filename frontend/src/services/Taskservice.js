@@ -18,7 +18,6 @@ export const apiGetTask= async(start ,end )=>{
         
         const data= response.data;
     data.sort((a,b)=>{return a.DateTime.localeCompare(b.DateTime)})
-
         return data;
     }
     catch(e){

@@ -10,7 +10,15 @@ import { getMonth, getYear } from "date-fns";
 import { apiCreateTask } from "../../services/Taskservice";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { setTasks } from "../../store/TaskSlice";
-const CreateTask = ({ currentDate, setIsCreating, setCurrentDate }) => {
+import {
+  Button,
+  Dialog,
+  DialogHeader,
+  DialogBody,
+  DialogFooter,
+} from "@material-tailwind/react";
+const TaskTypes = ["Daily", "Weekly", "Monthly", "Yearly", "BirthDay"];
+const CreateTask = ({ currentDate, setIsCreating, setCurrentDate, open }) => {
   const dispatch = useDispatch();
   const queryClient = useQueryClient();
   const Tasks = useSelector((state) => state.Tasks);
@@ -19,9 +27,10 @@ const CreateTask = ({ currentDate, setIsCreating, setCurrentDate }) => {
   const yearmonth = year + "-" + month;
   const [isloading, setIsLoading] = useState(false);
   // const dispatch = useDispatch();
+
   const [task, setTask] = useState({
     TaskName: "",
-    TaskType: "",
+    TaskType: TaskTypes[0],
     DateTime: "",
   });
   const mutation = useMutation({
@@ -56,6 +65,7 @@ const CreateTask = ({ currentDate, setIsCreating, setCurrentDate }) => {
       alert(e + "unable to Create Task");
     }
     setIsLoading(false);
+    setIsCreating(false);
   };
   useEffect(() => {
     let date = format(currentDate, "yyyy-MM-dd");
@@ -64,46 +74,80 @@ const CreateTask = ({ currentDate, setIsCreating, setCurrentDate }) => {
   }, []);
   return (
     <>
-      <IoMdCloseCircle
-        className="absolute right-0 top-0 z-50 size-10"
-        onClick={() => setIsCreating(false)}
-      />
       {isloading && <Loader text="Creating Task"></Loader>}
-      <div className={classes.container}>
-        <div>
-          <form onSubmit={handleSubmit} className={classes.form}>
-            <input
-              className={classes.input}
-              type="datetime-local"
-              name="Datetime"
-              value={task.DateTime}
-              placeholder="Datetime"
-              onChange={(e) => setTask({ ...task, DateTime: e.target.value })}
-            ></input>
-            <input
-              className={classes.input}
-              type="text"
-              name="TaskType"
-              value={task.TaskType}
-              placeholder="Type"
-              onChange={(e) => setTask({ ...task, TaskType: e.target.value })}
-            ></input>
-
-            <input
-              className={classes.input}
-              type="text"
-              name="TaskName"
-              value={task.TaskName}
-              placeholder="Taskname"
-              onChange={(e) => setTask({ ...task, TaskName: e.target.value })}
-            ></input>
-
-            <button className={classes.button} type="Submit">
-              Create
-            </button>
+      <Dialog
+        size="xs"
+        open={open}
+        handler={() => setIsCreating(false)}
+        animate={{
+          mount: { scale: 1, y: 0 },
+          unmount: { scale: 0.9, y: -100 },
+        }}
+        className="px-10 py-5 "
+      >
+        <DialogHeader className="font-sansitems-center mb-4 p-0 font-sans text-2xl font-bold leading-5">
+          Update Task
+        </DialogHeader>
+        <DialogBody className="p-0 ">
+          <form onSubmit={handleSubmit}>
+            <div>
+              {" "}
+              <label className="text-md font-sans  ">Date Time</label>
+              <input
+                className={`${classes.input} border-2 focus:border-primary-500 `}
+                type="datetime-local"
+                name="Datetime"
+                value={task.DateTime}
+                placeholder="Datetime"
+                onChange={(e) => setTask({ ...task, DateTime: e.target.value })}
+              ></input>
+            </div>
+            <div>
+              {" "}
+              <label className="text-md font-sans ">Task Name</label>
+              <input
+                className={`${classes.input} border-2 focus:border-primary-500`}
+                type="text"
+                name="TaskName"
+                value={task.TaskName}
+                placeholder="Taskname"
+                onChange={(e) => setTask({ ...task, TaskName: e.target.value })}
+              ></input>
+            </div>
+            <div>
+              {" "}
+              <label className="text-md font-sans  ">Task Name</label>
+              <select
+                name="Task type"
+                defaultValue={task.TaskType}
+                className={`${classes.input} border-2 focus:border-primary-500`}
+                onChange={(e) => setTask({ ...task, TaskType: e.target.value })}
+              >
+                {TaskTypes.map((type) => (
+                  <option value={type}>{type}</option>
+                ))}
+              </select>
+            </div>
+            <div className="mt-2 flex justify-end">
+              {" "}
+              <Button
+                variant="text"
+                color="red"
+                onClick={() => setIsCreating(false)}
+                className="mr-1"
+              >
+                <span>Cancel</span>
+              </Button>
+              <button
+                type="submit"
+                class="border-1 rounded-lg bg-primary-500 px-4 py-2 font-sans tracking-wide text-white shadow-md"
+              >
+                <span>create</span>
+              </button>
+            </div>
           </form>
-        </div>
-      </div>
+        </DialogBody>
+      </Dialog>
     </>
   );
 };
