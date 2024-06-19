@@ -108,7 +108,7 @@ const ShowTask = ({ currentDate, setCurrentDate, yearmonth }) => {
           open={showBox === "ViewBox"}
         ></ViewTask>
       )}
-      {showBox && showBox === "EditBox" && (
+      {showBox && showBox === "EditttBox" && (
         <EditTask
           SelectedTask={SelectedTask}
           key={SelectedTask._id}
