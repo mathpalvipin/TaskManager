@@ -97,6 +97,8 @@ const ShowTask = ({ currentDate, setCurrentDate, yearmonth }) => {
   return (
     <>
       {isError && <ErrorBox message={error}></ErrorBox>}
+      {isError && <ErrorBox message={error}></ErrorBox>}
+      {isError && <ErrorBox message={error}></ErrorBox>}
       {showBox && showBox === "ViewBox" && (
         <ViewTask
           SelectedTask={SelectedTask}
