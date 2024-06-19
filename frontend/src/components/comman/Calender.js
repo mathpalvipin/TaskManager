@@ -1,5 +1,8 @@
-// import classes from "./comman.module.css";
+import { MdOutlineArrowForwardIos } from "react-icons/md";
+import { TfiControlForward } from "react-icons/tfi";
 import { GrPowerReset } from "react-icons/gr";
+import { TfiControlBackward } from "react-icons/tfi";
+import { MdOutlineArrowBackIos } from "react-icons/md";
 import {
   add,
   sub,
@@ -10,14 +13,14 @@ import {
   setDate,
 } from "date-fns";
 import Cell from "./Cell.js";
-import CreateTask from "../Task/CreateTask.js"
+import CreateTask from "../Task/CreateTask.js";
 import { useState } from "react";
 
 const Calender = ({ setCurrentDate, currentDate = new Date() }) => {
   const StartDay = startOfMonth(currentDate);
   const EndDay = endOfMonth(currentDate);
   const noOfDays = differenceInDays(EndDay, StartDay) + 1;
-  const [isCreating ,setIsCreating]= useState(false);
+  const [isCreating, setIsCreating] = useState(false);
   const prefixDays = StartDay.getDay();
   const suffixDays = 6 - EndDay.getDay();
   const preMonth = () => {
@@ -40,25 +43,42 @@ const Calender = ({ setCurrentDate, currentDate = new Date() }) => {
   const daysofweeks = ["Sun", "Mon", "Tue", "Wed", "Thr", "Fri", "Sat"];
   return (
     <>
-    {isCreating && <CreateTask currentDate={currentDate} setIsCreating={setIsCreating} setCurrentDate={setCurrentDate} class='z-200'></CreateTask>}
-      <div className="flex flex-row justify-evenly items-center">
-        <h1> Calender- {format(currentDate, "dd LLLL yyyy")} </h1>
-        <GrPowerReset
+      {isCreating && (
+        <CreateTask
+          currentDate={currentDate}
+          setIsCreating={setIsCreating}
+          open= {isCreating}
+          setCurrentDate={setCurrentDate}
+          class="z-200"
+        ></CreateTask>
+      )}
+      <div className=" flex flex-col h-full w-auto ">
+      <div className="flex items-center justify-between mx-3 bg-white h-12 ">
+       <div className="flex justify-center items-center "> 
+        <h1 className="text-2xl leading-5 mr-2 items-center  font-bold font-sans">{format(currentDate, "dd  LLLL  yyyy")} </h1>
+        <button
+          onClick={() => setIsCreating(true)}
+          className="m-1 rounded-md px-2 py-1  bg-primary-500  text-white hover:bg-primary-600"
+        >
+          Create Task
+        </button>
+        </div>
+       
+        <div className="cursor-pointer flex">
+        <GrPowerReset className="m-1 size-4 hover:scale-110 "
           onClick={() => setCurrentDate(new Date())}
-          className="size-5"
+          
         />
-        <button onClick={()=>setIsCreating(true)} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2  m-1 rounded">Create Task</button>
-
+        <span className="m-1 hover:scale-110 " onClick={preYear}><TfiControlBackward /></span>
+        <span className="m-1 hover:scale-110" onClick={preMonth}><MdOutlineArrowBackIos /></span>
+        <span className="m-1 hover:scale-110" onClick={nextMonth}><MdOutlineArrowForwardIos /></span>
+        <span className="m-1 hover:scale-110"onClick={nextYear}><TfiControlForward /></span>
+        </div>
       </div>
-      <div class="h-full  bg-cyan-100 ">
-        <div className="grid h-full grid-cols-7">
-          <Cell onClick={preYear}>{"<<"}</Cell>
-          <Cell onClick={preMonth}>{"<"}</Cell>
-          <Cell className="col-span-3">{format(currentDate, "LLLL yyyy")}</Cell>
-          <Cell onClick={nextMonth}>{">"}</Cell>
-          <Cell onClick={nextYear}>{">>"}</Cell>
+      <div class="h-[calc(100%-3rem)] w-auto border-2 mx-3 mb-3 rounded-md shadow-md ">
+        <div className="grid h-full grid-cols-7 ">
           {daysofweeks.map((day) => {
-            return <Cell>{day}</Cell>;
+            return <Cell className="text-primary-500 font-bold">{day}</Cell>;
           })}
           {Array.from({ length: prefixDays }).map((_, index) => {
             return <Cell key={index}></Cell>;
@@ -66,13 +86,13 @@ const Calender = ({ setCurrentDate, currentDate = new Date() }) => {
           {Array.from({ length: noOfDays }).map((_, index) => {
             const date = index + 1;
             const isActive = currentDate.getDate() === date;
-            
+
             return (
               <Cell
                 key={date}
                 isActive={isActive}
                 onClick={() => changeDate(date)}
-              >
+                              >
                 {date}
               </Cell>
             );
@@ -83,8 +103,10 @@ const Calender = ({ setCurrentDate, currentDate = new Date() }) => {
           })}
         </div>
       </div>
-    </>
+      </div>
+      </>
   );
+
 };
 
 export default Calender;

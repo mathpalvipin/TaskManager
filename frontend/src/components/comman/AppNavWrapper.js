@@ -1,7 +1,8 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-
+import { IoIosNotificationsOutline } from "react-icons/io";
 import classes from "./comman.module.css";
+import UserLogo from "./UserLogo";
 const AppNavWrapper = () => {
   const { user, logout } = useAuth();
 
@@ -21,114 +22,69 @@ const AppNavWrapper = () => {
 
   return (
     <>
-      <div className={`${classes.navbar}`}>
-        <div className={`${classes.nav_items}`}>
+      <div className="z-10 flex h-full w-full bg-white ">
+        <div className="text-shadow justify-left ml-4 flex w-full items-center pt-2 font-logo text-2xl">
+          <NavLink to="/app/home">Task Manager</NavLink>
+        </div>
+        <div className={`${classes.nav}`}>
           <NavLink
-            className="logo fond-bold text-shadow font-serif text-xl"
+            className={({ isActive, isPending }) =>
+              `flex h-full w-auto items-center  justify-center p-4 font-body   ${
+                isPending
+                  ? ""
+                  : isActive
+                    ? `border-b-4 border-primary-500 font-bold  text-primary-500 hover:text-primary-600 hover:border-primary-600 `
+                    : ""
+              }  `
+            }
             to="/app/home"
           >
             Calender
           </NavLink>
+          <NavLink
+            className={({ isActive, isPending }) =>
+              `flex h-full w-auto items-center  justify-center px-4  font-body   ${
+                isPending
+                  ? ""
+                  : isActive
+                    ? ` border-b-4 border-primary-500 font-bold  text-primary-500   hover:text-primary-600 hover:border-primary-600`
+                    : ""
+              }  `
+            }
+            to="/app/page1"
+          >
+            Github
+          </NavLink>
         </div>
-        <div className={`${classes.nav}`}>
+        <div className="flex ">
           {user ? (
             <>
-              {" "}
-              <div className={`${classes.nav_items}`}>
-                <NavLink
-                  className={({ isActive, isPending }) =>
-                    `${classes.nav_link}  ${
-                      isPending
-                        ? `${classes.pending}`
-                        : isActive
-                          ? `${classes.active}`
-                          : ""
-                    }`
-                  }
-                  to="/app/page1"
-                >
-                  Page 1
-                </NavLink>
+              <div className="flex h-full items-center justify-center px-2 font-body text-xl ">
+                <IoIosNotificationsOutline />
               </div>
-              <div className={`${classes.nav_items}`}>
-                <NavLink
-                  className={({ isActive, isPending }) =>
-                    `${classes.nav_link}  ${
-                      isPending
-                        ? `${classes.pending}`
-                        : isActive
-                          ? `${classes.active}`
-                          : ""
-                    }`
-                  }
-                  to="/app/home"
-                >
-                  Home
-                </NavLink>
-              </div>{" "}
-              <div className={`${classes.nav_items}`}>
-                <NavLink
-                  className={({ isActive, isPending }) =>
-                    `${classes.nav_link}  ${
-                      isPending
-                        ? `${classes.pending}`
-                        : isActive
-                          ? `${classes.active}`
-                          : ""
-                    }`
-                  }
-                  to="/app/AppIntro"
-                >
-                  Introduction
-                </NavLink>
-              </div>
-              <div className={`${classes.nav_items}`}>
-                <div className={`${classes.nav_link}`}>
-                  {" "}
-                  {user ? user.username : "User"}{" "}
+
+              <div className="flex items-center justify-center ">
+                <UserLogo name="Vipin Mathpal"></UserLogo>
+                <div className="w-full text-nowrap px-2 text-sm">
+                  Vipin Mathpal
                 </div>
-              </div>
-              <div className={`${classes.nav_items}`}>
-                <button className={classes.button} onClick={handleLogout}>
-                  <div className={`${classes.nav_link}`}> Logout </div>
-                </button>
               </div>
             </>
           ) : (
-            <>
-              <div className={classes.nav_items}>
-                <NavLink
-                  className={({ isActive, isPending }) =>
-                    `${classes.nav_link}  ${
-                      isPending
-                        ? `${classes.pending}`
-                        : isActive
-                          ? `${classes.active}`
-                          : ""
-                    }`
-                  }
-                  to="/intro"
-                >
-                  Intro
-                </NavLink>
-              </div>
-              <div className={classes.nav_items}>
-                <NavLink
-                  className={({ isActive, isPending }) =>
-                    `${classes.nav_link}  ${
-                      isPending
-                        ? `${classes.pending}`
-                        : isActive
-                          ? `${classes.active}`
-                          : ""
-                    }`
-                  }
-                  to="/auth/login"
-                >
-                  login
-                </NavLink>
-              </div>
-            </>
+            <NavLink
+              className={({ isActive, isPending }) =>
+                `flex h-full w-auto items-center  justify-center px-4  font-body   ${
+                  isPending
+                    ? ""
+                    : isActive
+                      ? ` border-b-4 border-primary-500 font-bold  text-primary-500 `
+                      : ""
+                }  `
+              }
+              to="/auth/login"
+            >
+              login/Signup
+            </NavLink>
           )}
         </div>
       </div>

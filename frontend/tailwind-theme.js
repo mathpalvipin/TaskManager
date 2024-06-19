@@ -1,7 +1,7 @@
 
 /* Export date: 13-06-2024 20:52:02 */
-module.exports = {
-  "theme": {
+
+export const theme ={
     "colors": {
       "white": "#FFFFFF",
       "black": "#000000",
@@ -278,6 +278,7 @@ module.exports = {
       },
       "fontFamily": {
         "heading": "Epilogue",
+        "logo": ['"Aguafina Script"', 'cursive'],
         "body": "Inter"
       },
       "width": {
@@ -359,4 +360,4 @@ module.exports = {
       }
     }
   }
-}
+

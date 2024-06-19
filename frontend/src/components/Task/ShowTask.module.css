@@ -32,3 +32,12 @@
     top: 0;
     z-index: 20;
 }
+
+.noscrollbar::-webkit-scrollbar {
+    display: none; /* For Chrome, Safari, and Opera */
+}
+.noscrollbar {
+    -ms-overflow-style: none;  /* For Internet Explorer and Edge */
+    scrollbar-width: none;     /* For Firefox */
+}
+
