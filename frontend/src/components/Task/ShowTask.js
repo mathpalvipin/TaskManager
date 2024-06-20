@@ -8,7 +8,7 @@ import { setTasks } from "../../store/TaskSlice.js";
 import { MdModeEdit } from "react-icons/md";
 import { MdDelete } from "react-icons/md";
 import { GrView } from "react-icons/gr";
-import { apiGetTask } from "../../services/Taskservice.js";
+import { apiGetTask,apiDeleteTask } from "../../services/Taskservice.js";
 import Loader from "../comman/Loader.js";
 import ErrorBox from "../comman/ErrorBox.js";
 import { showDate } from "../../helper/helperfunction.js";
@@ -16,7 +16,7 @@ import { showDate } from "../../helper/helperfunction.js";
 
 import { endOfMonth, startOfMonth, format } from "date-fns";
 
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { Card, Typography } from "@material-tailwind/react";
 
@@ -39,8 +39,6 @@ const ShowTask = ({ currentDate, setCurrentDate, yearmonth }) => {
   const queryClient = useQueryClient();
   const start = DateToString(startOfMonth(currentDate));
   const end = DateToString(endOfMonth(currentDate));
-
-  console.log(yearmonth);
 
   //redux
   const Tasks = useSelector((state) => state.Tasks);
@@ -82,6 +80,27 @@ const ShowTask = ({ currentDate, setCurrentDate, yearmonth }) => {
     fetchTasks();
   }, [yearmonth, fetchTasks]);
 
+  //delete task
+  const deleteTask = useMutation({
+    mutationFn: async (id) => {
+      return await apiDeleteTask(id);
+    },
+    onSuccess: async (id) => {
+     
+      console.log("delete from :",Tasks , "delete",id);
+      const removeindex = Tasks.findIndex((t) => t._id === id);
+      console.log(removeindex);
+      
+      if (removeindex !== -1) {
+        const updatedTasks = [...Tasks.slice(0, removeindex), ...Tasks.slice(removeindex + 1)];
+         queryClient.setQueryData(["tasks", yearmonth], updatedTasks);
+         dispatch(setTasks(updatedTasks));
+      }
+      
+     
+    },
+  });
+
   // useEffect(() => {
   //   const selectedDiv = showContainerRef?.current?.querySelectorAll(
   //     '[data-name="highlighted"]',
@@ -106,6 +125,7 @@ const ShowTask = ({ currentDate, setCurrentDate, yearmonth }) => {
             setShowBox(null);
           }}
           open={showBox === "ViewBox"}
+          deleteTask= {deleteTask}
         ></ViewTask>
       )}
       {showBox && showBox === "EditBox" && (
@@ -154,7 +174,6 @@ const ShowTask = ({ currentDate, setCurrentDate, yearmonth }) => {
             {Tasks.length > 0 ? (
               Tasks.map(({ _id, TaskName, TaskType, DateTime }, index) => {
                 const classes = "px-4 py-2";
-                console.log(TaskName);
                 return (
                   <tr key={_id} className="h-2 w-full even:bg-blue-gray-50/50">
                     <td
@@ -206,14 +225,20 @@ const ShowTask = ({ currentDate, setCurrentDate, yearmonth }) => {
                             setShowBox("EditBox");
                           }}
                         />
-                        <MdDelete />
+                        <MdDelete
+                          onClick={() => { deleteTask.mutateAsync({id:_id});
+                            
+                          }}
+                        />
                       </Typography>
                     </td>
                   </tr>
                 );
               })
             ) : (
-              <div className="w-full text-nowrap p-1 ">No Task Present Create.....</div>
+              <div className="w-full text-nowrap p-1 ">
+                No Task Present Create.....
+              </div>
             )}
           </tbody>
         </table>

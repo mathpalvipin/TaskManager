@@ -1,5 +1,5 @@
 import axios from "axios";
-import { CreateTaskURL,GetTaskURL,UpdateTaskURL } from "../config/api";
+import { CreateTaskURL,GetTaskURL,UpdateTaskURL,DeleteTaskURL } from "../config/api";
 
 export const apiCreateTask=async (taskDetails)=>{
    try{ const response  = await axios.post(CreateTaskURL,taskDetails);
@@ -50,4 +50,15 @@ export const apiUpdateTask= async(task)=>{
         console.log(e)
         return e;
     }
+}
+export const apiDeleteTask = async (id)=>{
+     try{
+        console.log(id);
+        const response = await axios.post(DeleteTaskURL,id);
+        return response.data;
+
+     }
+     catch(e){
+        return e;
+     }
 }

@@ -27,7 +27,7 @@ const EditTask = ({
   const Tasks = useSelector((state) => state.Tasks);
   const [isloading, setIsLoading] = useState(false);
   const [task, setTask] = useState(SelectedTask);
-  const mutation = useMutation({
+  const createTask = useMutation({
     mutationFn: async (task) => {
       return await apiUpdateTask(task);
     },
@@ -38,10 +38,11 @@ const EditTask = ({
       if (removeindex !== -1) {
         TempTasks.splice(removeindex, 1);
       }
-      const addindex = TempTasks.findIndex((t) => t.DateTime > data.DateTime);
-
+      let addindex = TempTasks.findIndex((t) => t.DateTime > data.DateTime);
+      if (addindex === -1) {
+        addindex = TempTasks.length;
+      }
       TempTasks.splice(addindex, 0, data);
-
       queryClient.setQueryData(["tasks", yearmonth], TempTasks);
       dispatch(setTasks(TempTasks));
     },
@@ -54,7 +55,7 @@ const EditTask = ({
     e.preventDefault();
     try {
       setIsLoading(true);
-      await mutation.mutateAsync({
+      await createTask.mutateAsync({
         ...task,
         DateTime: task.DateTime.slice(0, 16),
       });
@@ -138,9 +139,8 @@ const EditTask = ({
                 <span>Cancel</span>
               </Button>
               <button
-              type="submit"
+                type="submit"
                 class="border-1 rounded-lg bg-primary-500 px-4 py-2 font-sans tracking-wide text-white shadow-md"
-                
               >
                 <span>Update</span>
               </button>

@@ -3,9 +3,10 @@ import {
   Dialog,
   DialogHeader,
   DialogBody,
+  select,
 } from "@material-tailwind/react";
 import { showDate } from "../../helper/helperfunction";
-const ViewTask = ({ SelectedTask, closeViewbox, open }) => {
+const ViewTask = ({ SelectedTask, closeViewbox, open ,deleteTask}) => {
    
   return (
     <>
@@ -35,14 +36,19 @@ const ViewTask = ({ SelectedTask, closeViewbox, open }) => {
             </div>
           )}
           <div className="flex justify-end">
-            <Button
-              variant="text"
-              color="red"
+            <button
+        
               onClick={() => closeViewbox()}
-              className="mr-1"
+              className="mr-1 rounded-md shadow-md px-4 py-1 bg-black text-white "
             >
               <span>Back</span>
-            </Button>
+            </button>
+            <button
+              onClick={() =>{ deleteTask.mutateAsync({id:SelectedTask._id}); closeViewbox();}}
+              className=" rounded-md shadow-md px-4 py-1 bg-danger-550 text-white"
+            >
+              <span>Delete</span>
+            </button>
           </div>
         </DialogBody>
       </Dialog>

@@ -40,7 +40,10 @@ const CreateTask = ({ currentDate, setIsCreating, setCurrentDate, open }) => {
     onSuccess: async (data) => {
       console.log(data);
       const TempTasks = [...Tasks];
-      const index = TempTasks.findIndex((t) => t.DateTime > data.DateTime);
+      let index = TempTasks.findIndex((t) => t.DateTime > data.DateTime);
+      if (index === -1) {
+        index = TempTasks.length;
+    }
       TempTasks.splice(index, 0, data);
       queryClient.setQueryData(["tasks", yearmonth], TempTasks);
       dispatch(setTasks(TempTasks));

@@ -12,16 +12,16 @@ router.post("/Create", verifyToken, async (req, res) => {
     const id = user._id.valueOf();
 
     const { TaskName, TaskType, DateTime } = req.body;
-   const task = new Task({
+    const task = new Task({
       TaskName: TaskName,
       TaskType: TaskType,
       DateTime: DateTime,
       UserId: id,
     });
     await task.save();
-   setTimeout(() => {
-    res.status(200).json(task);
-   }, 1000); 
+    setTimeout(() => {
+      res.status(200).json(task);
+    }, 1000);
   } catch (e) {
     res.status(500).json({ message: "Internal Server Error" });
   }
@@ -29,35 +29,35 @@ router.post("/Create", verifyToken, async (req, res) => {
 
 router.get("/show", verifyToken, async (req, res) => {
   try {
-    const start= req.query.start;
-    const end= req.query.end;
-  
-    if(start&&end){
-      
+    const start = req.query.start;
+    const end = req.query.end;
+
+    if (start && end) {
       const email = req.user?.email; //get user email  by token set in cookie httponly
       const user = await User.findOne({ email: email });
       const id = user._id.valueOf();
-      const startDateString = start+"T00:00";
-      const endDateString = end+"T23:59";
-      const Tasks = await Task.find({ UserId: id , DateTime: {
-        $gte: startDateString,
-        $lte: endDateString
-      }});
-  
+      const startDateString = start + "T00:00";
+      const endDateString = end + "T23:59";
+      const Tasks = await Task.find({
+        UserId: id,
+        DateTime: {
+          $gte: startDateString,
+          $lte: endDateString,
+        },
+      });
 
-     setTimeout(() => {
-      res.status(200).json(Tasks);
-     }, 1000);
+      setTimeout(() => {
+        res.status(200).json(Tasks);
+      }, 1000);
+    } else {
+      const email = req.user?.email; //get user email  by token set in cookie httponly
+      const user = await User.findOne({ email: email });
+      const id = user._id.valueOf();
+      const Tasks = await Task.find({ UserId: id });
+      setTimeout(() => {
+        res.status(200).json(Tasks);
+      }, 1000);
     }
-    else{
-    const email = req.user?.email; //get user email  by token set in cookie httponly
-    const user = await User.findOne({ email: email });
-    const id = user._id.valueOf();
-    const Tasks = await Task.find({ UserId: id });
-   setTimeout(() => {
-    res.status(200).json(Tasks);
-   }, 1000);
-  }
   } catch (e) {
     res.status(500).json({ message: "Internal Server Error" });
   }
@@ -69,16 +69,26 @@ router.post("/edit", verifyToken, async (req, res) => {
     const user = await User.findOne({ email: email });
     const id = user._id.valueOf();
     const task = req.body;
-     await Task.findOneAndUpdate(
-      { UserId: id, _id: task._id },
-      task
-    );
-    const updatedTask= await Task.findOne({UserId: id, _id: task._id });
- setTimeout(() => {
-  res.status(200).json(updatedTask);
- }, 1000);  
+    await Task.findOneAndUpdate({ UserId: id, _id: task._id }, task);
+    const updatedTask = await Task.findOne({ UserId: id, _id: task._id });
+    setTimeout(() => {
+      res.status(200).json(updatedTask);
+    }, 1000);
   } catch (e) {
     res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+router.post("/delete", verifyToken, async(req, res)=> {
+  try {
+    const id = req.body.id;
+    
+    const task=  await Task.findOneAndDelete({_id:id});
+    console.log(task);
+    if(!task)
+      return res.status(400).json({message:"Task not found"});
+    return res.status(200).json(id);
+  } catch (err) {
+    return err;
   }
 });
 

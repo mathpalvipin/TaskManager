@@ -7,3 +7,4 @@ export const LogoutURL = `${API_BASE_URL}/auth/logout`;
 export const CreateTaskURL = `${API_BASE_URL}/task/Create`;
 export const GetTaskURL = `${API_BASE_URL}/task/show`;
 export const UpdateTaskURL = `${API_BASE_URL}/task/edit`;
+export const DeleteTaskURL = `${API_BASE_URL}/task/delete`;
