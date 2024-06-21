@@ -6,21 +6,19 @@ import {
   apiVerifyToken,
   apiLogout,
 } from "../services/Authservice";
-
+import { useNavigate } from 'react-router-dom';
 import Loader from "../components/comman/Loader";
 import ErrorBox from "../components/comman/ErrorBox";
 
 const AuthContext = createContext(null);
 export const AuthProvider = ({ children }) => {
-  
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
   const path = window.location.pathname;
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const verifyuser = async () => {
-    setLoading(true);
-
+    
     try {
       const verifiedUser = await apiVerifyToken();
       if (verifiedUser?.email) {
@@ -31,22 +29,20 @@ export const AuthProvider = ({ children }) => {
         sessionStorage.setItem("user", JSON.stringify(userDetails));
         setUser(userDetails);
       }
-      setLoading(false);
+     
     } catch (error) {
       console.log(error);
       setUser(null);
       sessionStorage.removeItem("user");
-      setLoading(false);
+
    
     }
   };
 
   useEffect(() => {
-    console.log(user + path);
-    if (!user && (path.includes("/app")|| path.includes("/auth"))) {
-      verifyuser();
-    }
-  }, [user, path]);
+    (async ()=>{await verifyuser();})();
+    setLoading(false);
+  }, [path]);
   const signUp = async (userData) => {
     try {
       setLoading(true);
@@ -98,7 +94,7 @@ export const AuthProvider = ({ children }) => {
   return (
     <>
       {/* {user?<AppNavWrapper props={{user,logout,setLoading}}></AppNavWrapper>:<div>intro</div>} */}
-
+       {loading ? <Loader> </Loader>:<>
       <AuthContext.Provider
         value={{ user, error, logIn, signUp, logout, setError }}
       >
@@ -107,6 +103,8 @@ export const AuthProvider = ({ children }) => {
         {children}
       </AuthContext.Provider>
     </>
+       }
+       </>
   );
 };
 export const useAuth = () => {
