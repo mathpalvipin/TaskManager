@@ -9,17 +9,16 @@ import {
 import { useNavigate } from 'react-router-dom';
 import Loader from "../components/comman/Loader";
 import ErrorBox from "../components/comman/ErrorBox";
+import { setISODay } from "date-fns";
 
 const AuthContext = createContext(null);
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
-  const path = window.location.pathname;
-
-  const [loading, setLoading] = useState(true);
+const [isLoading, setIsLoading]=useState(true);
   const verifyuser = async () => {
-    
     try {
+     
       const verifiedUser = await apiVerifyToken();
       if (verifiedUser?.email) {
         const userDetails = {
@@ -27,41 +26,38 @@ export const AuthProvider = ({ children }) => {
           email: verifiedUser.email,
         };
         sessionStorage.setItem("user", JSON.stringify(userDetails));
+        if(JSON.stringify(user)!==JSON.stringify(userDetails))
         setUser(userDetails);
       }
      
+
     } catch (error) {
       console.log(error);
       setUser(null);
       sessionStorage.removeItem("user");
-
-   
+       
     }
   };
 
-  useEffect(() => {
-    (async ()=>{await verifyuser();})();
-    setLoading(false);
-  }, [path]);
   const signUp = async (userData) => {
     try {
-      setLoading(true);
+      
       const newUser = await apiSignUp(userData);
       const { message, ...userDetails } = newUser;
       setUser(userDetails);
       setError(null);
       sessionStorage.setItem("user", JSON.stringify(userDetails));
-      setLoading(false);
+    
     } catch (err) {
       console.log(err.message);
       setError(err.message || "An error occurred during Signup.");
-      setLoading(false);
+      
       throw new Error(error.message || "An error occurred during login.");
     }
   };
   const logIn = async (userData) => {
     try {
-      setLoading(true);
+      
       const loginUser = await apiLogIn(userData);
       const { messages, ...userDetails } = loginUser;
       console.log(userDetails);
@@ -72,13 +68,13 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       console.log(error);
       setError(error.message || "An error occurred during login.");
-      setLoading(false);
+      
     }
-    setLoading(false);
+   
   };
   const logout = async () => {
     try {
-      setLoading(true);
+     
       const response = await apiLogout();
       setUser(null);
       setError(null);
@@ -86,25 +82,27 @@ export const AuthProvider = ({ children }) => {
       return response;
     } catch (error) {
       setError(error.message || "Unable to logout from system");
-      setLoading(false);
+      
     }
-    setLoading(false);
+   
   };
+  useEffect(()=>{
+    (async()=>{ await verifyuser(); setIsLoading(false);})();
+  
+  },[]);
 
   return (
     <>
       {/* {user?<AppNavWrapper props={{user,logout,setLoading}}></AppNavWrapper>:<div>intro</div>} */}
-       {loading ? <Loader> </Loader>:<>
+      {isLoading ? <Loader></Loader> :
       <AuthContext.Provider
-        value={{ user, error, logIn, signUp, logout, setError }}
-      >
-        {loading && <Loader></Loader>}
-        {error && <ErrorBox message={error}></ErrorBox>}
+        value={{ user, error, logIn, signUp, logout, setError,verifyuser }}
+      > {error && <ErrorBox message={error}></ErrorBox>}
         {children}
       </AuthContext.Provider>
+}
     </>
-       }
-       </>
+
   );
 };
 export const useAuth = () => {
