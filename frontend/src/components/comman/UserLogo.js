@@ -2,8 +2,19 @@ import { AvatarComponent } from 'avatar-initials';
 
 export default function UserLogo({name}) {
     const userName = name.split(' ');
-    const firstName= userName[0];
-    const lastName = userName[1];
+    console.log(userName);
+    let firstName;
+    let lastName;
+    if(userName.length >1){
+     firstName= userName[0];
+     lastName = userName[1];
+    }
+     else {firstName= name[0];
+     lastName = "*";
+     }
+     firstName = firstName.toUpperCase();
+     lastName = lastName.toUpperCase();
+
   // ...
   return (
     <div className={`w-10 h-10 flex self-center items-center justify-between relative`}>

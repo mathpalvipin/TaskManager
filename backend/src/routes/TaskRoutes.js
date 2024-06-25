@@ -73,7 +73,7 @@ router.post("/edit", verifyToken, async (req, res) => {
     const updatedTask = await Task.findOne({ UserId: id, _id: task._id });
     setTimeout(() => {
       res.status(200).json(updatedTask);
-    }, 1000);
+    }, 2000);
   } catch (e) {
     res.status(500).json({ message: "Internal Server Error" });
   }
@@ -86,7 +86,10 @@ router.post("/delete", verifyToken, async(req, res)=> {
     console.log(task);
     if(!task)
       return res.status(400).json({message:"Task not found"});
-    return res.status(200).json(id);
+    setTimeout(() => {
+      return res.status(200).json(id);
+    }, 1500);
+    
   } catch (err) {
     return err;
   }

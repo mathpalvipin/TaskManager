@@ -27,7 +27,7 @@ const EditTask = ({
   const Tasks = useSelector((state) => state.Tasks);
   const [isloading, setIsLoading] = useState(false);
   const [task, setTask] = useState(SelectedTask);
-  const createTask = useMutation({
+  const editTask = useMutation({
     mutationFn: async (task) => {
       return await apiUpdateTask(task);
     },
@@ -55,7 +55,7 @@ const EditTask = ({
     e.preventDefault();
     try {
       setIsLoading(true);
-      await createTask.mutateAsync({
+      await editTask.mutateAsync({
         ...task,
         DateTime: task.DateTime.slice(0, 16),
       });
@@ -74,7 +74,7 @@ const EditTask = ({
 
   return (
     <>
-      {isloading && <Loader text="Updating Tasks"></Loader>}
+      
       <Dialog
         size="xs"
         open={open}
@@ -138,12 +138,13 @@ const EditTask = ({
               >
                 <span>Cancel</span>
               </Button>
-              <button
-                type="submit"
-                class="border-1 rounded-lg bg-primary-500 px-4 py-2 font-sans tracking-wide text-white shadow-md"
+              <Button disabled={!!editTask.isPending}
+              loading={!!editTask.isPending}
+              type="submit"
+                className={`${!!editTask.isPending ? " ":" " } border-1 rounded-lg bg-primary-500 px-4 py-2 font-sans tracking-wide text-white shadow-md`} 
               >
                 <span>Update</span>
-              </button>
+              </Button>
             </div>
           </form>
         </DialogBody>

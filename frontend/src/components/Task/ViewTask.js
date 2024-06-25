@@ -6,8 +6,7 @@ import {
   select,
 } from "@material-tailwind/react";
 import { showDate } from "../../helper/helperfunction";
-const ViewTask = ({ SelectedTask, closeViewbox, open ,deleteTask}) => {
-   
+const ViewTask = ({ SelectedTask, closeViewbox, open, deleteTask }) => {
   return (
     <>
       <Dialog
@@ -25,7 +24,7 @@ const ViewTask = ({ SelectedTask, closeViewbox, open ,deleteTask}) => {
         </DialogHeader>
         <DialogBody className="p-0 ">
           {SelectedTask && (
-            <div className="rounded border-2 p-2 mb-2 shadow-md text-black">
+            <div className="mb-2 rounded border-2 p-2 text-black shadow-md">
               <p>Task Title: {SelectedTask.TaskName}</p>
               <div className=" mt-4 flex w-full justify-between px-10   ">
                 <div className="mb-1 mr-2 h-fit rounded-xl bg-yellow-50 px-4 py-2 text-xs tracking-wider  text-yellow-800">
@@ -36,19 +35,24 @@ const ViewTask = ({ SelectedTask, closeViewbox, open ,deleteTask}) => {
             </div>
           )}
           <div className="flex justify-end">
-            <button
-        
+            <Button
               onClick={() => closeViewbox()}
-              className="mr-1 rounded-md shadow-md px-4 py-1 bg-black text-white "
+              className="mr-1 rounded-md bg-black px-4 py-2 text-white shadow-md "
             >
               <span>Back</span>
-            </button>
-            <button
-              onClick={() =>{ deleteTask.mutateAsync({id:SelectedTask._id}); closeViewbox();}}
-              className=" rounded-md shadow-md px-4 py-1 bg-danger-550 text-white"
+            </Button>
+
+            <Button
+              disabled={!!deleteTask.isPending}
+              loading={!!deleteTask.isPending}
+              onClick={async() => {
+               await deleteTask.mutateAsync({ id: SelectedTask._id });
+                closeViewbox();
+              }}
+              className={`${!!deleteTask.isPending ? " " : " "} text-white rounded-md bg-danger-550 px-4 py-2 shadow-md`}
             >
               <span>Delete</span>
-            </button>
+            </Button>
           </div>
         </DialogBody>
       </Dialog>

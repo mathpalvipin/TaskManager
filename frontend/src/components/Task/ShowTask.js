@@ -46,6 +46,7 @@ const ShowTask = ({ currentDate, setCurrentDate, yearmonth }) => {
 
   const [SelectedTask, setSelectedTask] = useState(null);
   const [showBox, setShowBox] = useState(null);
+  const [deleting , setdeleting] = useState(null);
   const showContainerRef = useRef();
 
   //react-query;
@@ -72,7 +73,7 @@ const ShowTask = ({ currentDate, setCurrentDate, yearmonth }) => {
       console.log("fetch task", data);
       await dispatch(setTasks(data));
     } catch (e) {
-      alert(e + "unable to fetch tasks");
+      console.log("error fetching Task " ,error.message);
     }
   };
   useEffect(() => {
@@ -90,16 +91,31 @@ const ShowTask = ({ currentDate, setCurrentDate, yearmonth }) => {
       console.log("delete from :",Tasks , "delete",id);
       const removeindex = Tasks.findIndex((t) => t._id === id);
       console.log(removeindex);
+      setdeleting(null);
       
       if (removeindex !== -1) {
         const updatedTasks = [...Tasks.slice(0, removeindex), ...Tasks.slice(removeindex + 1)];
          queryClient.setQueryData(["tasks", yearmonth], updatedTasks);
          dispatch(setTasks(updatedTasks));
+        
       }
       
      
     },
+    onError: (error) => {
+      console.log(error);
+      setdeleting(null);
+      throw new Error(error, "unable to deleting Task ");
+    },
   });
+ const  handleDelete=async (id)=>{
+  setdeleting(id);
+  await deleteTask.mutateAsync({id:id});
+
+   }
+  useEffect(()=>{
+    console.log(deleteTask.isLoading);
+  },[deleteTask]);
 
   // useEffect(() => {
   //   const selectedDiv = showContainerRef?.current?.querySelectorAll(
@@ -171,11 +187,11 @@ const ShowTask = ({ currentDate, setCurrentDate, yearmonth }) => {
             </tr>
           </thead>
           <tbody className="w-full">
-            {Tasks.length > 0 ? (
+           {!isloading ?  ( Tasks.length > 0 ? (
               Tasks.map(({ _id, TaskName, TaskType, DateTime }, index) => {
                 const classes = "px-4 py-2";
                 return (
-                  <tr key={_id} className="h-2 w-full even:bg-blue-gray-50/50">
+                  <tr key={_id} className="h-2 w-full even:bg-blue-gray-50/50 ">
                     <td
                       className={`${classes}   w-[30%] overflow-hidden text-wrap`}
                     >
@@ -214,22 +230,23 @@ const ShowTask = ({ currentDate, setCurrentDate, yearmonth }) => {
                         className="flex justify-evenly font-medium"
                       >
                         <GrView
+                         className=" hover:scale-125"
                           onClick={() => {
+                             
                             selectTask(Tasks[index]);
                             setShowBox("ViewBox");
                           }}
                         />
-                        <MdModeEdit
+                        <MdModeEdit className=" hover:scale-125"
                           onClick={() => {
                             selectTask(Tasks[index]);
                             setShowBox("EditBox");
                           }}
                         />
-                        <MdDelete
-                          onClick={() => { deleteTask.mutateAsync({id:_id});
-                            
-                          }}
+                        <MdDelete  className={`${deleting&& deleting===_id ? "animate-bounce scale-200 bg-red-400 " : ""}  hover:bg-red-400 hover:scale-125 border-1 rounded-md  `}
+                          onClick={()=>handleDelete(_id)}
                         />
+                       
                       </Typography>
                     </td>
                   </tr>
@@ -237,9 +254,11 @@ const ShowTask = ({ currentDate, setCurrentDate, yearmonth }) => {
               })
             ) : (
               <div className="w-full text-nowrap p-1 ">
-                No Task Present Create.....
+                No Task Present.
               </div>
-            )}
+            )
+            ):(<div className="w-full text-nowrap p-1 "> loding.....</div>
+             ) }
           </tbody>
         </table>
       </Card>

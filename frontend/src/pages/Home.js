@@ -11,7 +11,7 @@ const Home = () => {
   const yearmonth = year + "-" + month;
   return (
     <>
-      <div className="flex h-full w-full">
+      <div className="flex h-full w-full mt-3">
         <div className={` w-3/6 h-full    mx-8 }`}>
           <ShowTask
             currentDate={currentDate}
