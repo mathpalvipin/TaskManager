@@ -2,10 +2,10 @@ import express from "express";
 import { connect } from "mongoose";
 import bodyParser from "body-parser";
 import cors from "cors";
-import authRoutes from "./routes/AuthRoutes.js";
-import { mongoURI } from "./config/config.js";
+import authRoutes from "./src/routes/AuthRoutes.js";
+import { mongoURI } from "./src/config/config.js";
 import  cookieParser from "cookie-parser";
-import TaskRoutes from "./routes/TaskRoutes.js"
+import TaskRoutes from "./src/routes/TaskRoutes.js"
 
 const app = express();
 const PORT = process.env.PORT || 5000;

@@ -1,7 +1,6 @@
 import classes from "./CreateTask.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "../comman/Loader";
-import { createTask } from "../../store/TaskSlice";
 import { useState } from "react";
 import { IoMdCloseCircle } from "react-icons/io";
 import { useEffect } from "react";
@@ -17,7 +16,8 @@ import {
   DialogBody,
   DialogFooter,
 } from "@material-tailwind/react";
-const TaskTypes = ["Daily", "Weekly", "Monthly", "Yearly", "BirthDay"];
+import { useAuth } from "../../context/AuthContext";
+const TaskTypes = ["OneTime","Daily", "Weekly", "Monthly", "Yearly", "BirthDay"];
 const CreateTask = ({ currentDate, setIsCreating, setCurrentDate, open }) => {
   const dispatch = useDispatch();
   const queryClient = useQueryClient();
@@ -25,7 +25,7 @@ const CreateTask = ({ currentDate, setIsCreating, setCurrentDate, open }) => {
   const month = getMonth(currentDate) + 1;
   const year = getYear(currentDate);
   const yearmonth = year + "-" + month;
-  const [isloading, setIsLoading] = useState(false);
+  const {user}= useAuth();
   // const dispatch = useDispatch();
 
   const [task, setTask] = useState({
@@ -33,17 +33,21 @@ const CreateTask = ({ currentDate, setIsCreating, setCurrentDate, open }) => {
     TaskType: TaskTypes[0],
     DateTime: "",
   });
-  const mutation = useMutation({
+  const createTask = useMutation({
     mutationFn: async (task) => {
       return await apiCreateTask(task);
     },
     onSuccess: async (data) => {
-      console.log(data);
-      const TempTasks = [...Tasks];
-      const index = TempTasks.findIndex((t) => t.DateTime > data.DateTime);
-      TempTasks.splice(index, 0, data);
-      queryClient.setQueryData(["tasks", yearmonth], TempTasks);
-      dispatch(setTasks(TempTasks));
+      // console.log(data);
+      queryClient.invalidateQueries("tasks");
+    //   const TempTasks = [...Tasks];
+    //   let index = TempTasks.findIndex((t) => t.task?.DateTime > data?.task?.DateTime);
+    //   if (index === -1) {
+    //     index = TempTasks.length;
+    // }
+    //   TempTasks.splice(index, 0, data);
+    //   queryClient.setQueryData(["tasks",user.id, yearmonth], TempTasks);
+    //   dispatch(setTasks(TempTasks));
     },
     onError: (error) => {
       console.log(error);
@@ -53,8 +57,7 @@ const CreateTask = ({ currentDate, setIsCreating, setCurrentDate, open }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      setIsLoading(true);
-      await mutation.mutateAsync({
+      await createTask.mutateAsync({
         ...task,
         DateTime: task.DateTime.slice(0, 16),
       });
@@ -64,7 +67,7 @@ const CreateTask = ({ currentDate, setIsCreating, setCurrentDate, open }) => {
     } catch (e) {
       alert(e + "unable to Create Task");
     }
-    setIsLoading(false);
+    
     setIsCreating(false);
   };
   useEffect(() => {
@@ -74,7 +77,7 @@ const CreateTask = ({ currentDate, setIsCreating, setCurrentDate, open }) => {
   }, []);
   return (
     <>
-      {isloading && <Loader text="Creating Task"></Loader>}
+     
       <Dialog
         size="xs"
         open={open}
@@ -90,6 +93,33 @@ const CreateTask = ({ currentDate, setIsCreating, setCurrentDate, open }) => {
         </DialogHeader>
         <DialogBody className="p-0 ">
           <form onSubmit={handleSubmit}>
+           
+            <div>
+              {" "}
+              <label className="text-md font-sans ">Task Name</label>
+              <input
+                className={`${classes.input} border-2 focus:border-primary-500 font-thin`}
+                type="text"
+                name="TaskName"
+                value={task.TaskName}
+                placeholder="Taskname"
+                onChange={(e) => setTask({ ...task, TaskName: e.target.value })}
+              ></input>
+            </div>
+            <div>
+              {" "}
+              <label className="text-md font-sans  ">Task Type</label>
+              <select
+                name="Task type"
+                defaultValue={task.TaskType}
+                className={`${classes.input} border-2 focus:border-primary-500`}
+                onChange={(e) => setTask({ ...task, TaskType: e.target.value })}
+              >
+                {TaskTypes.map((type) => (
+                  <option value={type}>{type}</option>
+                ))}
+              </select>
+            </div>
             <div>
               {" "}
               <label className="text-md font-sans  ">Date Time</label>
@@ -102,32 +132,6 @@ const CreateTask = ({ currentDate, setIsCreating, setCurrentDate, open }) => {
                 onChange={(e) => setTask({ ...task, DateTime: e.target.value })}
               ></input>
             </div>
-            <div>
-              {" "}
-              <label className="text-md font-sans ">Task Name</label>
-              <input
-                className={`${classes.input} border-2 focus:border-primary-500`}
-                type="text"
-                name="TaskName"
-                value={task.TaskName}
-                placeholder="Taskname"
-                onChange={(e) => setTask({ ...task, TaskName: e.target.value })}
-              ></input>
-            </div>
-            <div>
-              {" "}
-              <label className="text-md font-sans  ">Task Name</label>
-              <select
-                name="Task type"
-                defaultValue={task.TaskType}
-                className={`${classes.input} border-2 focus:border-primary-500`}
-                onChange={(e) => setTask({ ...task, TaskType: e.target.value })}
-              >
-                {TaskTypes.map((type) => (
-                  <option value={type}>{type}</option>
-                ))}
-              </select>
-            </div>
             <div className="mt-2 flex justify-end">
               {" "}
               <Button
@@ -138,12 +142,14 @@ const CreateTask = ({ currentDate, setIsCreating, setCurrentDate, open }) => {
               >
                 <span>Cancel</span>
               </Button>
-              <button
-                type="submit"
-                class="border-1 rounded-lg bg-primary-500 px-4 py-2 font-sans tracking-wide text-white shadow-md"
+  
+              <Button disabled={!!createTask.isPending}
+              loading={!!createTask.isPending}
+              type="submit"
+                className={`${!!createTask.isPending ? " ":" " } border-1 rounded-lg bg-primary-500 px-4 py-2 font-sans tracking-wide text-white shadow-md`} 
               >
-                <span>create</span>
-              </button>
+                <span>Create</span>
+              </Button>
             </div>
           </form>
         </DialogBody>

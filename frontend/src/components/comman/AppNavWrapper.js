@@ -3,6 +3,9 @@ import { useAuth } from "../../context/AuthContext";
 import { IoIosNotificationsOutline } from "react-icons/io";
 import classes from "./comman.module.css";
 import UserLogo from "./UserLogo";
+import { IoLogOutOutline } from "react-icons/io5";
+import { Tooltip } from "@material-tailwind/react";
+
 const AppNavWrapper = () => {
   const { user, logout } = useAuth();
 
@@ -33,7 +36,7 @@ const AppNavWrapper = () => {
                 isPending
                   ? ""
                   : isActive
-                    ? `border-b-4 border-primary-500 font-bold  text-primary-500 hover:text-primary-600 hover:border-primary-600 `
+                    ? `border-b-4 border-primary-500 font-bold  text-primary-500 hover:border-primary-600 hover:text-primary-600 `
                     : ""
               }  `
             }
@@ -47,7 +50,7 @@ const AppNavWrapper = () => {
                 isPending
                   ? ""
                   : isActive
-                    ? ` border-b-4 border-primary-500 font-bold  text-primary-500   hover:text-primary-600 hover:border-primary-600`
+                    ? ` border-b-4 border-primary-500 font-bold  text-primary-500   hover:border-primary-600 hover:text-primary-600`
                     : ""
               }  `
             }
@@ -64,10 +67,20 @@ const AppNavWrapper = () => {
               </div>
 
               <div className="flex items-center justify-center ">
-                <UserLogo name="Vipin Mathpal"></UserLogo>
-                <div className="w-full text-nowrap px-2 text-sm">
-                  Vipin Mathpal
+                  <UserLogo name={user.username}></UserLogo>
+                <div className="w-full text-nowrap pl-2 text-sm">
+                 {user.username}
                 </div>
+              </div>
+              <div className="flex items-center  ">
+                <Tooltip content="Logout">
+                  <div
+                    className="w-full cursor-auto text-nowrap  px-2 text-2xl "
+                    onClick={handleLogout}
+                  >
+                    <IoLogOutOutline />
+                  </div>
+                </Tooltip>
               </div>
             </>
           ) : (

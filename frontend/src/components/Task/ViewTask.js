@@ -3,10 +3,11 @@ import {
   Dialog,
   DialogHeader,
   DialogBody,
+  select,
 } from "@material-tailwind/react";
 import { showDate } from "../../helper/helperfunction";
-const ViewTask = ({ SelectedTask, closeViewbox, open }) => {
-   
+const ViewTask = ({ SelectedTask, closeViewbox, open, deleteTask }) => {
+  const task = SelectedTask?.task;
   return (
     <>
       <Dialog
@@ -14,7 +15,7 @@ const ViewTask = ({ SelectedTask, closeViewbox, open }) => {
         open={open}
         handler={() => closeViewbox()}
         animate={{
-          mount: { scale: 1, y: 0 },
+          mount: { scale:    1, y: 0 },
           unmount: { scale: 0.9, y: -100 },
         }}
         className="px-10 py-5 "
@@ -23,25 +24,35 @@ const ViewTask = ({ SelectedTask, closeViewbox, open }) => {
           Task Details
         </DialogHeader>
         <DialogBody className="p-0 ">
-          {SelectedTask && (
-            <div className="rounded border-2 p-2 mb-2 shadow-md text-black">
-              <p>Task Title: {SelectedTask.TaskName}</p>
+          {task && (
+            <div className="mb-2 rounded border-2 p-2 text-black shadow-md">
+              <p>Task Title: {task.TaskName}</p>
               <div className=" mt-4 flex w-full justify-between px-10   ">
                 <div className="mb-1 mr-2 h-fit rounded-xl bg-yellow-50 px-4 py-2 text-xs tracking-wider  text-yellow-800">
-                  {SelectedTask.TaskType}
+                  {task.TaskType}
                 </div>
-                <p>{showDate(SelectedTask.DateTime)}</p>
+                <p>{showDate(task.DateTime)}</p>
               </div>
             </div>
           )}
           <div className="flex justify-end">
             <Button
-              variant="text"
-              color="red"
               onClick={() => closeViewbox()}
-              className="mr-1"
+              className="mr-1 rounded-md bg-black px-4 py-2 text-white shadow-md "
             >
               <span>Back</span>
+            </Button>
+
+            <Button
+              disabled={!!deleteTask.isPending}
+              loading={!!deleteTask.isPending}
+              onClick={async() => {
+               await deleteTask.mutateAsync({ id: SelectedTask._id });
+                closeViewbox();
+              }}
+              className={`${!!deleteTask.isPending ? " " : " "} text-white rounded-md bg-danger-550 px-4 py-2 shadow-md`}
+            >
+              <span>Delete</span>
             </Button>
           </div>
         </DialogBody>

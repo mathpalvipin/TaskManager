@@ -8,7 +8,7 @@ import { AuthProvider } from "./context/AuthContext";
 import store from "./store/Store.js";
 
 //router
-import AuthRouter from "./router/AuthRouter.js";
+import Router from "./router/Router.js";
 
 //reactquery
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
@@ -21,7 +21,7 @@ function App() {
       <QueryClientProvider client={queryClient}>
         <Provider store={store}>
           <AuthProvider>
-            <AuthRouter></AuthRouter>
+            <Router></Router>
           </AuthProvider>
         </Provider>
         <ReactQueryDevtools initialIsOpen={false} />
