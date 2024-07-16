@@ -37,6 +37,7 @@ const [isVerifing, setIsVerifing]=useState(true);
       
       }else{
         queryClient.invalidateQueries("tasks");
+        setUser(null);
       }
       setIsVerifing(false);
       
@@ -50,14 +51,15 @@ const [isVerifing, setIsVerifing]=useState(true);
     }
   };
 
-  useQuery({
-    queryKey: ["verifyUser"],
-    queryFn: async () => await verifyuser(),
-    staleTime: 0,
-    refetchIntervalInBackground:true,
-    refetchInterval: 1000 * 60 * 60 ,
-    refetchOnWindowFocus: false,
-  });
+ const {refetch :verify} =  useQuery({
+      queryKey: ["verifyUser"],
+      queryFn: async () => await verifyuser(),
+      staleTime: 0,
+      refetchIntervalInBackground:true,
+      refetchInterval: 1000 * 60 * 60 ,
+      refetchOnWindowFocus: false,
+      retry: 2,
+    });
   //   useQuery('verifyUser', verifyuser, {
   //   refetchInterval: 1000 * 60 * 60, // Refetch every hour
   //   refetchOnWindowFocus: true, // Refetch when window gains focus
@@ -127,7 +129,7 @@ const [isVerifing, setIsVerifing]=useState(true);
       {isVerifing ? <Loader className="z-50"></Loader> :(
      <> {isLoading && <Loader className="z-50"></Loader> }
       <AuthContext.Provider
-        value={{ user, error, logIn, signUp, logout, setError,verifyuser }}
+        value={{ user, error, logIn, signUp, logout, setError,verify }}
       > 
       {/* {error && <ErrorBox message={error}></ErrorBox>} */}
         {children}
