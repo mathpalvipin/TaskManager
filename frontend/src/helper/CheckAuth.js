@@ -4,12 +4,12 @@ import { useAuth } from "../context/AuthContext";
 import Loader from "../components/comman/Loader";
 const RequireAuth = ({ children }) => {
   const navigate = useNavigate();
-  const { user,verifyuser } = useAuth();
+  const { user,verify } = useAuth();
   const [isloading, setIsLoading] = useState(true);
   const path = window.location.pathname;
   useEffect(() => {
     setIsLoading(true); 
-    (async()=>{ await verifyuser();})();
+    // (async()=>{ await verify();})();
     console.log("checkauth:",user, path);
     if (!user && path.includes("/app")) {
       navigate("/auth/login");
