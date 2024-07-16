@@ -70,6 +70,7 @@ const ShowTask = ({ currentDate, setCurrentDate, yearmonth }) => {
   const {isFetchin: allUserLoading ,isError:errorInFetchingUser }= useQuery ({
     queryKey:['users'],
     queryFn: async () => {const data= await apiAllUser(); setUsers(data); return data; },
+    
     staleTime: 1000 * 60 * 60 * 24,
   })
   const fetchUsers = async () => {
@@ -113,22 +114,10 @@ const ShowTask = ({ currentDate, setCurrentDate, yearmonth }) => {
       return await apiDeleteTask(id);
     },
     onSuccess: async (id) => {
-     
       console.log("delete from :",Tasks , "delete",id);
-      const removeindex = Tasks.findIndex((t) => t._id === id);
-     
-      console.log(removeindex);
+      queryClient.invalidateQueries("tasks");
       setdeleting(null);
-      
-      if (removeindex !== -1) {
-        const updatedTasks = [...Tasks.slice(0, removeindex), ...Tasks.slice(removeindex + 1)];
-         queryClient.setQueryData(["tasks",user.id, yearmonth], updatedTasks);
-         dispatch(setTasks(updatedTasks));
-        
-      }
-      
       toast.success("Task deleted successfully");
-     
     },
     onError: (error) => {
       setdeleting(null);

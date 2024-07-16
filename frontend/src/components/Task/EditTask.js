@@ -3,8 +3,8 @@ import classes from "./CreateTask.module.css";
 import { useEffect, useState } from "react";
 import { apiUpdateTask } from "../../services/Taskservice";
 import Loader from "../comman/Loader";
-import { IoMdCloseCircle } from "react-icons/io";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+
+import { useMutation, useQueryClient  } from "@tanstack/react-query";
 import { setTasks } from "../../store/TaskSlice";
 import {
   Button,
@@ -35,18 +35,19 @@ const EditTask = ({
     },
     onSuccess: async (data) => {
       console.log(data);
-      const TempTasks = [...Tasks];
-      const removeindex = TempTasks.findIndex((t) => data._id === t._id);
-      if (removeindex !== -1) {
-        TempTasks.splice(removeindex, 1);
-      }
-      let addindex = TempTasks.findIndex((t) => t?.task?.DateTime > data?.task?.DateTime);
-      if (addindex === -1) {
-        addindex = TempTasks.length;
-      }
-      TempTasks.splice(addindex, 0, data);
-      queryClient.setQueryData(["tasks",user.id, yearmonth], TempTasks);
-      dispatch(setTasks(TempTasks));
+      queryClient.invalidateQueries("tasks");
+      // const TempTasks = [...Tasks];
+      // const removeindex = TempTasks.findIndex((t) => data._id === t._id);
+      // if (removeindex !== -1) {
+      //   TempTasks.splice(removeindex, 1);
+      // }
+      // let addindex = TempTasks.findIndex((t) => t?.task?.DateTime > data?.task?.DateTime);
+      // if (addindex === -1) {
+      //   addindex = TempTasks.length;
+      // }
+      // TempTasks.splice(addindex, 0, data);
+      // queryClient.setQueryData(["tasks",user.id, yearmonth], TempTasks);
+      // dispatch(setTasks(TempTasks));
     },
     onError: (error) => {
       console.log(error);

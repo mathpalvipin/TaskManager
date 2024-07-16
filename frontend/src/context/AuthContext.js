@@ -10,14 +10,17 @@ import { useNavigate } from 'react-router-dom';
 import Loader from "../components/comman/Loader";
 // import ErrorBox from "../components/comman/ErrorBox";
 import { toast } from 'react-toastify';
+import { useQuery ,useQueryClient } from "@tanstack/react-query";
 
 
 const AuthContext = createContext(null);
 export const AuthProvider = ({ children }) => {
+  const queryClient = useQueryClient();
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
 const [isLoading, setIsLoading]=useState(true);
 const [isVerifing, setIsVerifing]=useState(true);
+
   const verifyuser = async () => {
     try {
       setIsVerifing(true);
@@ -31,17 +34,34 @@ const [isVerifing, setIsVerifing]=useState(true);
         sessionStorage.setItem("user", JSON.stringify(userDetails));
         if(JSON.stringify(user)!==JSON.stringify(userDetails))
         setUser(userDetails);
+      
+      }else{
+        queryClient.invalidateQueries("tasks");
       }
       setIsVerifing(false);
+      
 
     } catch (error) {
       console.log(error);
       setUser(null);
+      queryClient.invalidateQueries("tasks");
       sessionStorage.removeItem("user");
       setIsVerifing(false);
     }
   };
 
+  useQuery({
+    queryKey: ["verifyUser"],
+    queryFn: async () => await verifyuser(),
+    staleTime: 0,
+    refetchIntervalInBackground:true,
+    refetchInterval: 1000 * 60 * 60 ,
+    refetchOnWindowFocus: false,
+  });
+  //   useQuery('verifyUser', verifyuser, {
+  //   refetchInterval: 1000 * 60 * 60, // Refetch every hour
+  //   refetchOnWindowFocus: true, // Refetch when window gains focus
+  // });
   const signUp = async (userData) => {
     try {
       setIsLoading(true);
@@ -96,6 +116,7 @@ const [isVerifing, setIsVerifing]=useState(true);
    
   };
   useEffect(()=>{
+
     (async()=>{ await verifyuser(); setIsLoading(false);})();
   
   },[]);

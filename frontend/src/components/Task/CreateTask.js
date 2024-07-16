@@ -38,15 +38,16 @@ const CreateTask = ({ currentDate, setIsCreating, setCurrentDate, open }) => {
       return await apiCreateTask(task);
     },
     onSuccess: async (data) => {
-      console.log(data);
-      const TempTasks = [...Tasks];
-      let index = TempTasks.findIndex((t) => t.task?.DateTime > data?.task?.DateTime);
-      if (index === -1) {
-        index = TempTasks.length;
-    }
-      TempTasks.splice(index, 0, data);
-      queryClient.setQueryData(["tasks",user.id, yearmonth], TempTasks);
-      dispatch(setTasks(TempTasks));
+      // console.log(data);
+      queryClient.invalidateQueries("tasks");
+    //   const TempTasks = [...Tasks];
+    //   let index = TempTasks.findIndex((t) => t.task?.DateTime > data?.task?.DateTime);
+    //   if (index === -1) {
+    //     index = TempTasks.length;
+    // }
+    //   TempTasks.splice(index, 0, data);
+    //   queryClient.setQueryData(["tasks",user.id, yearmonth], TempTasks);
+    //   dispatch(setTasks(TempTasks));
     },
     onError: (error) => {
       console.log(error);
