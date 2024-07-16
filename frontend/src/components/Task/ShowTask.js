@@ -2,16 +2,19 @@ import { useEffect, useRef, useState } from "react";
 import classes from "./ShowTask.module.css";
 import EditTask from "./EditTask.js";
 import ViewTask from "./ViewTask.js";
+import ShareTask from "./ShareTask.js";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setTasks } from "../../store/TaskSlice.js";
 import { MdModeEdit } from "react-icons/md";
 import { MdDelete } from "react-icons/md";
 import { GrView } from "react-icons/gr";
-import { apiGetTask,apiDeleteTask } from "../../services/Taskservice.js";
+import { FaShareAlt } from "react-icons/fa";
+import { apiGetTask,apiDeleteTask ,apiAllUser } from "../../services/Taskservice.js";
 import Loader from "../comman/Loader.js";
 import ErrorBox from "../comman/ErrorBox.js";
 import { showDate } from "../../helper/helperfunction.js";
+import { useAuth } from "../../context/AuthContext.js";
 //Date -fns
 
 import { endOfMonth, startOfMonth, format } from "date-fns";
@@ -19,12 +22,13 @@ import { endOfMonth, startOfMonth, format } from "date-fns";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { Card, Typography } from "@material-tailwind/react";
+import { toast } from "react-toastify";
 
 const TABLE_HEAD = [
-  { name: "Task Name", width: "30%" },
+  { name: "Task Name", width: "25%" },
   { name: "Task Type", width: "20%" },
   { name: "Date-Time", width: "30%" },
-  { name: "Action", width: "20%" },
+  { name: "Action", width: "25%" },
 ];
 
 const DateToString = (date) => {
@@ -35,6 +39,7 @@ const DateToString = (date) => {
 //React-query
 
 const ShowTask = ({ currentDate, setCurrentDate, yearmonth }) => {
+  const { user } = useAuth();
   const dispatch = useDispatch();
   const queryClient = useQueryClient();
   const start = DateToString(startOfMonth(currentDate));
@@ -42,11 +47,13 @@ const ShowTask = ({ currentDate, setCurrentDate, yearmonth }) => {
 
   //redux
   const Tasks = useSelector((state) => state.Tasks);
+
   // const isloading = useSelector((state) => state.FetchLoading);
 
   const [SelectedTask, setSelectedTask] = useState(null);
   const [showBox, setShowBox] = useState(null);
   const [deleting , setdeleting] = useState(null);
+  const [users,setUsers]= useState(null);
   const showContainerRef = useRef();
 
   //react-query;
@@ -55,11 +62,28 @@ const ShowTask = ({ currentDate, setCurrentDate, yearmonth }) => {
     isError,
     error,
   } = useQuery({
-    queryKey: ["tasks", yearmonth],
+    queryKey: ["tasks",user.id, yearmonth],
     queryFn: async () => await apiGetTask(start, end),
     staleTime: 1000 * 60 * 60 * 24,
   });
 
+  const {isFetchin: allUserLoading ,isError:errorInFetchingUser }= useQuery ({
+    queryKey:['users'],
+    queryFn: async () => {const data= await apiAllUser(); setUsers(data); return data; },
+    staleTime: 1000 * 60 * 60 * 24,
+  })
+  const fetchUsers = async () => {
+    try {
+      const data = await queryClient.ensureQueryData({
+        queryKey: ["users"],
+        queryFn: async () =>  await apiAllUser(),
+      });
+      console.log("fetch User", data);
+    setUsers(data);
+    } catch (e) {
+      console.log("error fetching User " ,error?.message);
+    }
+  };
   const selectTask = (task) => {
     setSelectedTask(task);
   };
@@ -67,18 +91,20 @@ const ShowTask = ({ currentDate, setCurrentDate, yearmonth }) => {
   const fetchTasks = async () => {
     try {
       const data = await queryClient.ensureQueryData({
-        queryKey: ["tasks", yearmonth],
+        queryKey: ["tasks", user.id, yearmonth],
         queryFn: () => apiGetTask(start, end),
       });
       console.log("fetch task", data);
       await dispatch(setTasks(data));
     } catch (e) {
-      console.log("error fetching Task " ,error.message);
+      console.log(Tasks);
+      console.log("error fetching Task ");
     }
   };
   useEffect(() => {
     console.log(Tasks);
     fetchTasks();
+    fetchUsers();
   }, [yearmonth, fetchTasks]);
 
   //delete task
@@ -90,32 +116,31 @@ const ShowTask = ({ currentDate, setCurrentDate, yearmonth }) => {
      
       console.log("delete from :",Tasks , "delete",id);
       const removeindex = Tasks.findIndex((t) => t._id === id);
+     
       console.log(removeindex);
       setdeleting(null);
       
       if (removeindex !== -1) {
         const updatedTasks = [...Tasks.slice(0, removeindex), ...Tasks.slice(removeindex + 1)];
-         queryClient.setQueryData(["tasks", yearmonth], updatedTasks);
+         queryClient.setQueryData(["tasks",user.id, yearmonth], updatedTasks);
          dispatch(setTasks(updatedTasks));
         
       }
       
+      toast.success("Task deleted successfully");
      
     },
     onError: (error) => {
-      console.log(error);
       setdeleting(null);
-      throw new Error(error, "unable to deleting Task ");
+      toast.error(error.message);
     },
   });
  const  handleDelete=async (id)=>{
   setdeleting(id);
-  await deleteTask.mutateAsync({id:id});
+    try{await deleteTask.mutateAsync({id:id});}catch(e){console.log(e)};
 
    }
-  useEffect(()=>{
-    console.log(deleteTask.isLoading);
-  },[deleteTask]);
+ 
 
   // useEffect(() => {
   //   const selectedDiv = showContainerRef?.current?.querySelectorAll(
@@ -155,9 +180,24 @@ const ShowTask = ({ currentDate, setCurrentDate, yearmonth }) => {
           open={showBox === "EditBox"}
           yearmonth={yearmonth}
           setCurrentDate={setCurrentDate}
+          user={user}
+        
         ></EditTask>
       )}
-
+      {showBox && showBox === "ShareBox" && (
+        <ShareTask
+          SelectedTask={SelectedTask}
+          key={SelectedTask._id}
+          closeSharebox={() => {
+            selectTask(null);
+            setShowBox(null);
+          }}
+          open={showBox === "ShareBox"}
+          users={users}
+          yearmonth={yearmonth}
+          user={user}
+        ></ShareTask>
+      )}
       <div className="flex h-12  items-center text-left ">
         <h1 className="items-center font-sans text-2xl font-bold leading-5">
           Monthly Tasks
@@ -187,20 +227,20 @@ const ShowTask = ({ currentDate, setCurrentDate, yearmonth }) => {
             </tr>
           </thead>
           <tbody className="w-full">
-           {!isloading ?  ( Tasks.length > 0 ? (
-              Tasks.map(({ _id, TaskName, TaskType, DateTime }, index) => {
+           {!isloading ?  ( (Tasks && Tasks.length > 0) ? (
+              Tasks.map(({ _id, task }, index) => {
                 const classes = "px-4 py-2";
                 return (
                   <tr key={_id} className="h-2 w-full even:bg-blue-gray-50/50 ">
                     <td
-                      className={`${classes}   w-[30%] overflow-hidden text-wrap`}
+                      className={`${classes}   w-[25%] overflow-hidden text-wrap`}
                     >
                       <Typography
                         variant="small"
                         color="blue-gray"
                         className=" text-wrap  font-normal  "
                       >
-                        {TaskName}
+                        {task?.TaskName}
                       </Typography>
                     </td>
                     <td className={`${classes} w-[20%] overflow-hidden`}>
@@ -209,7 +249,7 @@ const ShowTask = ({ currentDate, setCurrentDate, yearmonth }) => {
                         color="blue-gray"
                         className=" text-wrap  font-normal "
                       >
-                        {TaskType}
+                        {task?.TaskType}
                       </Typography>
                     </td>
                     <td className={`${classes}  w-[30%]`}>
@@ -218,10 +258,11 @@ const ShowTask = ({ currentDate, setCurrentDate, yearmonth }) => {
                         color="blue-gray"
                         className="font-normal"
                       >
-                        {showDate(DateTime)}
+                        {showDate(task?.DateTime)}
+                        
                       </Typography>
                     </td>
-                    <td className={`${classes}  w-[20%]   `}>
+                    <td className={`${classes}  w-[25%]   `}>
                       <Typography
                         as="a"
                         href="#"
@@ -237,12 +278,18 @@ const ShowTask = ({ currentDate, setCurrentDate, yearmonth }) => {
                             setShowBox("ViewBox");
                           }}
                         />
+                       
                         <MdModeEdit className=" hover:scale-125"
                           onClick={() => {
                             selectTask(Tasks[index]);
                             setShowBox("EditBox");
                           }}
                         />
+                         <FaShareAlt  className=" hover:scale-125" onClick={() => {
+                             
+                             selectTask(Tasks[index]);
+                             setShowBox("ShareBox");
+                           }}/>
                         <MdDelete  className={`${deleting&& deleting===_id ? "animate-bounce scale-200 bg-red-400 " : ""}  hover:bg-red-400 hover:scale-125 border-1 rounded-md  `}
                           onClick={()=>handleDelete(_id)}
                         />

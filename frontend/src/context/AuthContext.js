@@ -8,7 +8,8 @@ import {
 } from "../services/Authservice";
 import { useNavigate } from 'react-router-dom';
 import Loader from "../components/comman/Loader";
-import ErrorBox from "../components/comman/ErrorBox";
+// import ErrorBox from "../components/comman/ErrorBox";
+import { toast } from 'react-toastify';
 
 
 const AuthContext = createContext(null);
@@ -16,26 +17,28 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
 const [isLoading, setIsLoading]=useState(true);
+const [isVerifing, setIsVerifing]=useState(true);
   const verifyuser = async () => {
     try {
-     setIsLoading(true);
+      setIsVerifing(true);
       const verifiedUser = await apiVerifyToken();
       if (verifiedUser?.email) {
         const userDetails = {
           username: verifiedUser.username,
           email: verifiedUser.email,
+          id:verifiedUser.id,
         };
         sessionStorage.setItem("user", JSON.stringify(userDetails));
         if(JSON.stringify(user)!==JSON.stringify(userDetails))
         setUser(userDetails);
       }
-      setIsLoading(false);
+      setIsVerifing(false);
 
     } catch (error) {
       console.log(error);
       setUser(null);
       sessionStorage.removeItem("user");
-      setIsLoading(false);
+      setIsVerifing(false);
     }
   };
 
@@ -44,15 +47,17 @@ const [isLoading, setIsLoading]=useState(true);
       setIsLoading(true);
       const newUser = await apiSignUp(userData);
       const { message, ...userDetails } = newUser;
+      console.log("signup User",userDetails);
       setUser(userDetails);
       setError(null);
       sessionStorage.setItem("user", JSON.stringify(userDetails));
       setIsLoading(false);
     } catch (err) {
       console.log(err.message);
+      toast.error(err.message || "An error occurred during Signup.");
       setError(err.message || "An error occurred during Signup.");
       setIsLoading(false);
-      throw new Error(error.message || "An error occurred during login.");
+      throw new Error(err.message || "An error occurred during signUp.");
    
     }
   };
@@ -61,13 +66,14 @@ const [isLoading, setIsLoading]=useState(true);
       setIsLoading(true);
       const loginUser = await apiLogIn(userData);
       const { messages, ...userDetails } = loginUser;
-      console.log(userDetails);
+      console.log("login User", userDetails);
       setUser(userDetails);
       setError(null);
       setIsLoading(false);
       sessionStorage.setItem("user", JSON.stringify(userDetails));
     } catch (error) {
       console.log(error);
+      toast.error(error.message || "An error occurred during login.");
       setError(error.message || "An error occurred during login.");
       setIsLoading(false);
     }
@@ -83,6 +89,7 @@ const [isLoading, setIsLoading]=useState(true);
       setIsLoading(false);
       return response;
     } catch (error) {
+      toast.error(error.message || "Unable to logout from system");
       setError(error.message || "Unable to logout from system");
       setIsLoading(false);
     }
@@ -92,21 +99,20 @@ const [isLoading, setIsLoading]=useState(true);
     (async()=>{ await verifyuser(); setIsLoading(false);})();
   
   },[]);
-  useEffect(()=>{
-    setTimeout(()=>{ setError(null);
-  },1000)
-} ,[error])
+
   return (
     <>
       {/* {user?<AppNavWrapper props={{user,logout,setLoading}}></AppNavWrapper>:<div>intro</div>} */}
-      {isLoading && <Loader className="z-50"></Loader> }
+      {isVerifing ? <Loader className="z-50"></Loader> :(
+     <> {isLoading && <Loader className="z-50"></Loader> }
       <AuthContext.Provider
         value={{ user, error, logIn, signUp, logout, setError,verifyuser }}
       > 
-      {error && <ErrorBox message={error}></ErrorBox>}
+      {/* {error && <ErrorBox message={error}></ErrorBox>} */}
         {children}
       </AuthContext.Provider>
-
+      </>
+      )}
     </>
 
   );

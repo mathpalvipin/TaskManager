@@ -13,7 +13,7 @@ import {
   DialogBody,
   DialogFooter,
 } from "@material-tailwind/react";
-const TaskTypes = ["Daily", "Weekly", "Monthly", "Yearly", "BirthDay"];
+const TaskTypes = ["OneTime","Daily", "Weekly", "Monthly", "Yearly", "BirthDay"];
 
 const EditTask = ({
   SelectedTask,
@@ -21,12 +21,14 @@ const EditTask = ({
   yearmonth,
   setCurrentDate,
   open,
+  user,
 }) => {
+  
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
   const Tasks = useSelector((state) => state.Tasks);
   const [isloading, setIsLoading] = useState(false);
-  const [task, setTask] = useState(SelectedTask);
+  const [task, setTask] = useState(SelectedTask?.task);
   const editTask = useMutation({
     mutationFn: async (task) => {
       return await apiUpdateTask(task);
@@ -38,12 +40,12 @@ const EditTask = ({
       if (removeindex !== -1) {
         TempTasks.splice(removeindex, 1);
       }
-      let addindex = TempTasks.findIndex((t) => t.DateTime > data.DateTime);
+      let addindex = TempTasks.findIndex((t) => t?.task?.DateTime > data?.task?.DateTime);
       if (addindex === -1) {
         addindex = TempTasks.length;
       }
       TempTasks.splice(addindex, 0, data);
-      queryClient.setQueryData(["tasks", yearmonth], TempTasks);
+      queryClient.setQueryData(["tasks",user.id, yearmonth], TempTasks);
       dispatch(setTasks(TempTasks));
     },
     onError: (error) => {
@@ -55,6 +57,7 @@ const EditTask = ({
     e.preventDefault();
     try {
       setIsLoading(true);
+      console.log(task);
       await editTask.mutateAsync({
         ...task,
         DateTime: task.DateTime.slice(0, 16),
@@ -69,7 +72,7 @@ const EditTask = ({
   };
   // Update the local state if the prop changes
   useEffect(() => {
-    setTask(SelectedTask);
+    setTask(SelectedTask?.task);
   }, [SelectedTask]);
 
   return (
@@ -90,18 +93,7 @@ const EditTask = ({
         </DialogHeader>
         <DialogBody className="p-0 ">
           <form onSubmit={handleSubmit}>
-            <div>
-              {" "}
-              <label className="text-md font-sans  ">Date Time</label>
-              <input
-                className={`${classes.input} border-2 focus:border-primary-500 `}
-                type="datetime-local"
-                name="Datetime"
-                value={task.DateTime}
-                placeholder="Datetime"
-                onChange={(e) => setTask({ ...task, DateTime: e.target.value })}
-              ></input>
-            </div>
+           
             <div>
               {" "}
               <label className="text-md font-sans ">Task Name</label>
@@ -127,6 +119,18 @@ const EditTask = ({
                   <option value={type}>{type}</option>
                 ))}
               </select>
+            </div>
+            <div>
+              {" "}
+              <label className="text-md font-sans  ">Date Time</label>
+              <input
+                className={`${classes.input} border-2 focus:border-primary-500 `}
+                type="datetime-local"
+                name="Datetime"
+                value={task.DateTime}
+                placeholder="Datetime"
+                onChange={(e) => setTask({ ...task, DateTime: e.target.value })}
+              ></input>
             </div>
             <div className="mt-2 flex justify-end">
               {" "}

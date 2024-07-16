@@ -13,7 +13,7 @@ const Signup = () => {
   });
   const handleSignUp = async (e) => {
     e.preventDefault();
-    console.log(userData);
+    
     try {
       await signUp(userData);
       navigate("/app/home");

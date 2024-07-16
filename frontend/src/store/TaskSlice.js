@@ -5,13 +5,20 @@ import {
   apiUpdateTask,
 } from "../services/Taskservice";
 
-
+// const Tasktypes =["OneTime","Daily", "Weekly", "Monthly", "Yearly", "BirthDay"];
 const initialState = {
   Tasks: [],
   FetchLoading: false,
   CreateLoading: false,
   UpdateLoading: false,
   error: null,
+   types : {
+    Weekly: { count: 0 ,color:'yellow' },
+    Monthly: { count: 0 ,color:"green" },
+    Yearly: { count: 0 ,color:"purple" },
+    BirthDay: { count: 0 ,color:"blue" },
+    OneTime: { count: 0 ,color:"red" },
+  },
 };
 // export const getTasks = createAsyncThunk("Tasks/getTasks", async (date) => {
 //   try {
@@ -57,10 +64,28 @@ const TaskReducer = createSlice({
     //         return e.message;
     //       }
     // }
-    setTasks : (state,action)=>{
-      state.Tasks=action.payload;
-    }
+    setTasks: (state, action) => {
+      const types = {
+        Weekly: { count: 0 ,color:'yellow' },
+        Monthly: { count: 0 ,color:"green" },
+        Yearly: { count: 0 ,color:"purple" },
+        BirthDay: { count: 0 ,color:"blue" },
+        OneTime: { count: 0 ,color:"red" },
+      };
+      // const monthly =0,weekly=0, yearly=0,birthday=0;
+      for (const task of action.payload) {
+        const TaskType = task?.task?.TaskType;
+        if (types[TaskType])
+          types[TaskType] = {
+            ...state.types[TaskType],
+            count: types[TaskType].count + 1
+          };
+      }
+      console.log(types);
+       state.types = types;
     
+      state.Tasks = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -81,9 +106,9 @@ const TaskReducer = createSlice({
       // })
       // .addCase(createTask.fulfilled, (state, action) => {
       //   state.CreateLoading = false;
-      //   state.Tasks.push(action.payload); 
+      //   state.Tasks.push(action.payload);
       //   state.error = null;
-        
+
       // })
       // .addCase(createTask.rejected, (state, action) => {
       //   state.CreateLoading = false;
@@ -108,5 +133,5 @@ const TaskReducer = createSlice({
       });
   },
 });
- export const {setTasks}=TaskReducer.actions;
+export const { setTasks } = TaskReducer.actions;
 export default TaskReducer.reducer;

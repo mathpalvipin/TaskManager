@@ -16,7 +16,8 @@ import {
   DialogBody,
   DialogFooter,
 } from "@material-tailwind/react";
-const TaskTypes = ["Daily", "Weekly", "Monthly", "Yearly", "BirthDay"];
+import { useAuth } from "../../context/AuthContext";
+const TaskTypes = ["OneTime","Daily", "Weekly", "Monthly", "Yearly", "BirthDay"];
 const CreateTask = ({ currentDate, setIsCreating, setCurrentDate, open }) => {
   const dispatch = useDispatch();
   const queryClient = useQueryClient();
@@ -24,7 +25,7 @@ const CreateTask = ({ currentDate, setIsCreating, setCurrentDate, open }) => {
   const month = getMonth(currentDate) + 1;
   const year = getYear(currentDate);
   const yearmonth = year + "-" + month;
-  
+  const {user}= useAuth();
   // const dispatch = useDispatch();
 
   const [task, setTask] = useState({
@@ -39,12 +40,12 @@ const CreateTask = ({ currentDate, setIsCreating, setCurrentDate, open }) => {
     onSuccess: async (data) => {
       console.log(data);
       const TempTasks = [...Tasks];
-      let index = TempTasks.findIndex((t) => t.DateTime > data.DateTime);
+      let index = TempTasks.findIndex((t) => t.task?.DateTime > data?.task?.DateTime);
       if (index === -1) {
         index = TempTasks.length;
     }
       TempTasks.splice(index, 0, data);
-      queryClient.setQueryData(["tasks", yearmonth], TempTasks);
+      queryClient.setQueryData(["tasks",user.id, yearmonth], TempTasks);
       dispatch(setTasks(TempTasks));
     },
     onError: (error) => {
@@ -91,6 +92,33 @@ const CreateTask = ({ currentDate, setIsCreating, setCurrentDate, open }) => {
         </DialogHeader>
         <DialogBody className="p-0 ">
           <form onSubmit={handleSubmit}>
+           
+            <div>
+              {" "}
+              <label className="text-md font-sans ">Task Name</label>
+              <input
+                className={`${classes.input} border-2 focus:border-primary-500 font-thin`}
+                type="text"
+                name="TaskName"
+                value={task.TaskName}
+                placeholder="Taskname"
+                onChange={(e) => setTask({ ...task, TaskName: e.target.value })}
+              ></input>
+            </div>
+            <div>
+              {" "}
+              <label className="text-md font-sans  ">Task Type</label>
+              <select
+                name="Task type"
+                defaultValue={task.TaskType}
+                className={`${classes.input} border-2 focus:border-primary-500`}
+                onChange={(e) => setTask({ ...task, TaskType: e.target.value })}
+              >
+                {TaskTypes.map((type) => (
+                  <option value={type}>{type}</option>
+                ))}
+              </select>
+            </div>
             <div>
               {" "}
               <label className="text-md font-sans  ">Date Time</label>
@@ -102,32 +130,6 @@ const CreateTask = ({ currentDate, setIsCreating, setCurrentDate, open }) => {
                 placeholder="Datetime"
                 onChange={(e) => setTask({ ...task, DateTime: e.target.value })}
               ></input>
-            </div>
-            <div>
-              {" "}
-              <label className="text-md font-sans ">Task Name</label>
-              <input
-                className={`${classes.input} border-2 focus:border-primary-500`}
-                type="text"
-                name="TaskName"
-                value={task.TaskName}
-                placeholder="Taskname"
-                onChange={(e) => setTask({ ...task, TaskName: e.target.value })}
-              ></input>
-            </div>
-            <div>
-              {" "}
-              <label className="text-md font-sans  ">Task Name</label>
-              <select
-                name="Task type"
-                defaultValue={task.TaskType}
-                className={`${classes.input} border-2 focus:border-primary-500`}
-                onChange={(e) => setTask({ ...task, TaskType: e.target.value })}
-              >
-                {TaskTypes.map((type) => (
-                  <option value={type}>{type}</option>
-                ))}
-              </select>
             </div>
             <div className="mt-2 flex justify-end">
               {" "}
