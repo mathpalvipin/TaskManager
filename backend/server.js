@@ -9,7 +9,7 @@ import TaskRoutes from "./src/routes/TaskRoutes.js"
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
+app.use(cors({ credentials: true, origin: "http://localhost:3000" ,withCredentials: true }));
 
 app.use(cookieParser());  //used to get cookies from user http request.
 app.use(bodyParser.json());
