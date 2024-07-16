@@ -36,13 +36,14 @@ app.use(
 //The extended: true option allows for parsing complex objects and arrays in the URL-encoded data.
 
 connect(mongoURI);
-
-app.use("/auth", authRoutes);
-app.use("/task", TaskRoutes);
-
 router.get("/", (req, res)=>{
   res.send("Hello from the server!");
 });
+app.use("/auth", authRoutes);
+app.use("/task", TaskRoutes);
+app.use("/", router);
+
+
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
