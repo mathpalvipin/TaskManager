@@ -1,4 +1,5 @@
 import express from "express";
+import { Router } from "express";
 import { connect } from "mongoose";
 import bodyParser from "body-parser";
 import cors from "cors";
@@ -7,6 +8,7 @@ import { mongoURI } from "./src/config/config.js";
 import  cookieParser from "cookie-parser";
 import TaskRoutes from "./src/routes/TaskRoutes.js"
 
+const router = Router();
 const app = express();
 const PORT = process.env.PORT || 5000;
 app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
@@ -38,6 +40,9 @@ connect(mongoURI);
 app.use("/auth", authRoutes);
 app.use("/task", TaskRoutes);
 
+router.get("/", (req, res)=>{
+  res.send("Hello from the server!");
+});
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
