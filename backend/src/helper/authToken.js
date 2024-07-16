@@ -1,7 +1,7 @@
 import { secretKey } from "../config/config.js";
 import JWT from "jsonwebtoken";
 export const tokenGenerator = (user) => {
-  const token = JWT.sign({ email: user.email,username:user.username }, secretKey, {
+  const token = JWT.sign({ id: user._id ,email: user.email,username:user.username }, secretKey, {
     expiresIn: "1h",
   });
   return token;

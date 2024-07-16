@@ -3,8 +3,8 @@ import classes from "./CreateTask.module.css";
 import { useEffect, useState } from "react";
 import { apiUpdateTask } from "../../services/Taskservice";
 import Loader from "../comman/Loader";
-import { IoMdCloseCircle } from "react-icons/io";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+
+import { useMutation, useQueryClient  } from "@tanstack/react-query";
 import { setTasks } from "../../store/TaskSlice";
 import {
   Button,
@@ -13,7 +13,7 @@ import {
   DialogBody,
   DialogFooter,
 } from "@material-tailwind/react";
-const TaskTypes = ["Daily", "Weekly", "Monthly", "Yearly", "BirthDay"];
+const TaskTypes = ["OneTime","Daily", "Weekly", "Monthly", "Yearly", "BirthDay"];
 
 const EditTask = ({
   SelectedTask,
@@ -21,29 +21,33 @@ const EditTask = ({
   yearmonth,
   setCurrentDate,
   open,
+  user,
 }) => {
+  
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
   const Tasks = useSelector((state) => state.Tasks);
   const [isloading, setIsLoading] = useState(false);
-  const [task, setTask] = useState(SelectedTask);
-  const mutation = useMutation({
+  const [task, setTask] = useState(SelectedTask?.task);
+  const editTask = useMutation({
     mutationFn: async (task) => {
       return await apiUpdateTask(task);
     },
     onSuccess: async (data) => {
       console.log(data);
-      const TempTasks = [...Tasks];
-      const removeindex = TempTasks.findIndex((t) => data._id === t._id);
-      if (removeindex !== -1) {
-        TempTasks.splice(removeindex, 1);
-      }
-      const addindex = TempTasks.findIndex((t) => t.DateTime > data.DateTime);
-
-      TempTasks.splice(addindex, 0, data);
-
-      queryClient.setQueryData(["tasks", yearmonth], TempTasks);
-      dispatch(setTasks(TempTasks));
+      queryClient.invalidateQueries("tasks");
+      // const TempTasks = [...Tasks];
+      // const removeindex = TempTasks.findIndex((t) => data._id === t._id);
+      // if (removeindex !== -1) {
+      //   TempTasks.splice(removeindex, 1);
+      // }
+      // let addindex = TempTasks.findIndex((t) => t?.task?.DateTime > data?.task?.DateTime);
+      // if (addindex === -1) {
+      //   addindex = TempTasks.length;
+      // }
+      // TempTasks.splice(addindex, 0, data);
+      // queryClient.setQueryData(["tasks",user.id, yearmonth], TempTasks);
+      // dispatch(setTasks(TempTasks));
     },
     onError: (error) => {
       console.log(error);
@@ -54,7 +58,8 @@ const EditTask = ({
     e.preventDefault();
     try {
       setIsLoading(true);
-      await mutation.mutateAsync({
+      console.log(task);
+      await editTask.mutateAsync({
         ...task,
         DateTime: task.DateTime.slice(0, 16),
       });
@@ -68,12 +73,12 @@ const EditTask = ({
   };
   // Update the local state if the prop changes
   useEffect(() => {
-    setTask(SelectedTask);
+    setTask(SelectedTask?.task);
   }, [SelectedTask]);
 
   return (
     <>
-      {isloading && <Loader text="Updating Tasks"></Loader>}
+      
       <Dialog
         size="xs"
         open={open}
@@ -89,18 +94,7 @@ const EditTask = ({
         </DialogHeader>
         <DialogBody className="p-0 ">
           <form onSubmit={handleSubmit}>
-            <div>
-              {" "}
-              <label className="text-md font-sans  ">Date Time</label>
-              <input
-                className={`${classes.input} border-2 focus:border-primary-500 `}
-                type="datetime-local"
-                name="Datetime"
-                value={task.DateTime}
-                placeholder="Datetime"
-                onChange={(e) => setTask({ ...task, DateTime: e.target.value })}
-              ></input>
-            </div>
+           
             <div>
               {" "}
               <label className="text-md font-sans ">Task Name</label>
@@ -127,6 +121,18 @@ const EditTask = ({
                 ))}
               </select>
             </div>
+            <div>
+              {" "}
+              <label className="text-md font-sans  ">Date Time</label>
+              <input
+                className={`${classes.input} border-2 focus:border-primary-500 `}
+                type="datetime-local"
+                name="Datetime"
+                value={task.DateTime}
+                placeholder="Datetime"
+                onChange={(e) => setTask({ ...task, DateTime: e.target.value })}
+              ></input>
+            </div>
             <div className="mt-2 flex justify-end">
               {" "}
               <Button
@@ -137,13 +143,13 @@ const EditTask = ({
               >
                 <span>Cancel</span>
               </Button>
-              <button
+              <Button disabled={!!editTask.isPending}
+              loading={!!editTask.isPending}
               type="submit"
-                class="border-1 rounded-lg bg-primary-500 px-4 py-2 font-sans tracking-wide text-white shadow-md"
-                
+                className={`${!!editTask.isPending ? " ":" " } border-1 rounded-lg bg-primary-500 px-4 py-2 font-sans tracking-wide text-white shadow-md`} 
               >
                 <span>Update</span>
-              </button>
+              </Button>
             </div>
           </form>
         </DialogBody>

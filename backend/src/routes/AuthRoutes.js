@@ -23,11 +23,16 @@ router.post("/signup", async (req, res) => {
     // The salt is then stored along with the hashed password in the database.
     // This prevents attackers from using precomputed tables (rainbow tables) to crack passwords since each password has a unique salt.
 
-    //check if username exists
+    // check if username exists
     // const Userexists= await User.exists({username:username});
     // if(Userexists){
-    //     return res.status(400).send('Email already exists.');
+    //     return res.status(400).send('Usser already exists.');
     // }
+   // check if email exists 
+   const userEmail = await User.exists({email:email});
+   if(userEmail){
+    return res.status(400).send({ message: "Email already exists" });
+   }
 
     const user = new User({
       email,
@@ -35,7 +40,7 @@ router.post("/signup", async (req, res) => {
       password: hashedPassword,
     });
     await user.save();
-
+ 
     var token = tokenGenerator(user);
     res.cookie("userToken", token, { httpOnly: true }); //set token in HTTPonly cookie ,
     // this cookie can not be read by javascript (so secure)and send with every request from frontend to backend.
@@ -44,10 +49,10 @@ router.post("/signup", async (req, res) => {
       message: "User created successfully",
       username: user.username,
       email: user.email,
+      id:user._id
     });
   } catch (error) {
-    if (error.code === 11000)
-      return res.status(403).send({ message: "Email already exists." });
+    
     res.status(500).json({ message: "Internal Server Error" });
   }
 });
@@ -75,6 +80,7 @@ router.post("/login", async (req, res) => {
         messages: "Login sucessfully",
         username: user.username,
         email: user.email,
+        id:user._id
       });
     }, 2000);
   } catch (error) {
@@ -103,4 +109,14 @@ router.delete("/logout", (req, res) => {
   }
 });
 
+router.get('/users',async(req,res)=>{
+  try{ 
+  const users  = await User.find();
+  const sendUser = users.map(({_id, email ,username})=>({_id ,email , username}))
+  res.status(200).send(sendUser);
+  }catch (error) {
+    console.log(error)
+    res.status(500).json({ message: "unable to fetch user" });
+}}
+)
 export default router;

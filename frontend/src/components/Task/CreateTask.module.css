@@ -52,8 +52,22 @@
 .input {
   
   font-size: 18px;
-  font-weight: bold;
-  padding: 0.5rem 1rem;
+  font-weight: 100;
+  padding: 0.4rem 1rem;
+  width: 100%;
+  outline: none;
+  background: #ffffff;
+  color: #000000;
+  border: 2px solid #c4d1eb;
+  border-radius: 0.125rem;
+  box-shadow: 3px 3px 2px 0px #e2e2e2;
+  transition: 0.3s ease;
+}
+.AddUserInput {
+  
+ 
+  font-weight: 100;
+  padding: 0.2rem 0.2rem;
   width: 100%;
   outline: none;
   background: #ffffff;

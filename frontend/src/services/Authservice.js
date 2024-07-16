@@ -18,7 +18,8 @@ export const apiSignUp = async (credential) => {
     const response = await axios.post(SignupURL, credential);
     return response.data;
   } catch (error) {
-    throw new Error(error.response?.data?.message || error.messsage || "Error While Login ");
+    console.log(error);
+    throw new Error(error.response?.data?.message || error.messsage || "Error While Signup ");
   }
 };
 
@@ -29,7 +30,7 @@ export const apiVerifyToken = async () => {
     return response.data.user;
   } catch (error) {
     console.log(error);
-    throw new Error( error.message||"Invalid Token")
+    throw new Error( error?.message||"Invalid Token")
   }
 };
 
