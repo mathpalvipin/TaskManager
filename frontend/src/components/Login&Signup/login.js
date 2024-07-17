@@ -26,10 +26,10 @@ const Login = () => {
       <div className="flex h-full w-full justify-center pt-8">
         <div class="relative flex flex-col rounded-xl bg-transparent bg-clip-border text-gray-700 shadow-none">
           <h4 class="block font-sans text-2xl font-semibold leading-snug tracking-normal text-blue-gray-900 antialiased">
-            Sign Up
+            Sign In
           </h4>
           <p class="mt-1 block font-sans text-base font-normal leading-relaxed text-gray-700 antialiased">
-            Nice to meet you! Enter your details to register.
+            Nice to meet you! Enter your details to Login.
           </p>
           <form class="mb-2 mt-8 w-80 max-w-screen-lg sm:w-96">
             <div class="mb-1 flex flex-col gap-6">

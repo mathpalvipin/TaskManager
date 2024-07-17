@@ -39,7 +39,7 @@ const CreateTask = ({ currentDate, setIsCreating, setCurrentDate, open }) => {
     },
     onSuccess: async (data) => {
       // console.log(data);
-      queryClient.invalidateQueries("tasks");
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
     //   const TempTasks = [...Tasks];
     //   let index = TempTasks.findIndex((t) => t.task?.DateTime > data?.task?.DateTime);
     //   if (index === -1) {
