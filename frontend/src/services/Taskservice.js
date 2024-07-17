@@ -8,7 +8,7 @@ import {
   SHARETASK_URL,
   TASKUSER_URL
 } from "../config/api";
-
+axios.defaults.withCredentials = true;
 export const apiCreateTask = async (taskDetails) => {
   try {
     const response = await axios.post(CreateTaskURL, taskDetails);
