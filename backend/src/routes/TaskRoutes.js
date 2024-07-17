@@ -47,7 +47,7 @@ router.get("/show", verifyToken, async (req, res) => {
   try {
     const start = req.query.start;
     const end = req.query.end;
-    console.log("Yearly", start, end);
+    // console.log("Yearly", start, end);
     if (start && end) {
       const email = req.user?.email; //get user email  by token set in cookie httponly
       const user = await User.findOne({ email: email });
@@ -67,14 +67,14 @@ router.get("/show", verifyToken, async (req, res) => {
         const isAfterCreate =
           new Date(t.task.DateTime) <= new Date(endDateString);
 
-        console.log(
-          new Date(t.task.DateTime),
-          startDateString,
-          new Date(startDateString),
-          sameType,
-          sameMonth,
-          isAfterCreate
-        );
+        // console.log(
+        //   new Date(t.task.DateTime),
+        //   startDateString,
+        //   new Date(startDateString),
+        //   sameType,
+        //   sameMonth,
+        //   isAfterCreate
+        // );
         return sameType && sameMonth && isAfterCreate;
       });
       const monthly = tasks.filter((t) => {
@@ -263,12 +263,12 @@ router.post("/taskUserList", verifyToken, async (req, res) => {
     const id = req.body?.id;
     const email = req.user?.email; //get user email  by token set in cookie httponly
     const user = await User.findOne({ email: email });
-    console.log(id);
+    // console.log(id);
     const list = await UserTask.find({ task: id, isDeleted: false }).populate({
       path: "user",
       select: "-password",
     });
-    console.log(list);
+    // console.log(list);
     return res.status(200).json(list);
   } catch (error) {
     console.log(error);
