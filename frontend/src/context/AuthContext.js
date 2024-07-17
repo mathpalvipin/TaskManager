@@ -135,7 +135,7 @@ const [isVerifing, setIsVerifing]=useState(true);
         {children}
       </AuthContext.Provider>
       </>
-      )}
+     )} 
     </>
 
   );
