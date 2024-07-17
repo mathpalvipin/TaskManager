@@ -10,7 +10,7 @@ export const tokenGenerator = (user) => {
 export const verifyToken = (req, res, next) => {
   
   const token = req.cookies.userToken;
-  console.log(token);
+  // console.log("verify token ",token);
   if (!token) {
     return  res.status(401).json({ message: "Unauthorized: Missing token" });
   }
