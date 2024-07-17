@@ -42,7 +42,7 @@ router.post("/signup", async (req, res) => {
     await user.save();
  
     var token = tokenGenerator(user);
-    res.cookie("userToken", token, { httpOnly: true }); //set token in HTTPonly cookie ,
+    res.cookie("userToken", token, { httpOnly: true }, Secure, SameSite='None'); //set token in HTTPonly cookie ,
     // this cookie can not be read by javascript (so secure)and send with every request from frontend to backend.
 
     res.status(201).json({
@@ -73,7 +73,7 @@ router.post("/login", async (req, res) => {
     }
 
     var token = tokenGenerator(user);
-    res.cookie("userToken", token, { httpOnly: true }); //set token in HTTPonly cookie ,
+    res.cookie("userToken", token, { httpOnly: true }  , Secure, SameSite='None'); //set token in HTTPonly cookie ,
     // this cookie can not be read by javascript (so secure)and send with every request from frontend to backend.
     setTimeout(() => {
       res.status(200).json({
@@ -99,7 +99,7 @@ router.get("/protected", verifyToken, (req, res) => {
 
 router.delete("/logout", (req, res) => {
   try {
-    res.cookie("userToken", "", { expires: new Date(0) });
+    res.cookie("userToken", "", { expires: new Date(0) } , Secure, SameSite='None');
 
     setTimeout(() => {
       res.status(200).send({ message: "User Logged out successfully" });
@@ -109,7 +109,7 @@ router.delete("/logout", (req, res) => {
   }
 });
 
-router.get('/users',async(req,res)=>{
+router.get('/users',verifyToken, async(req,res)=>{
   try{ 
   const users  = await User.find();
   const sendUser = users.map(({_id, email ,username})=>({_id ,email , username}))
