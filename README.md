@@ -108,4 +108,6 @@ https://tanstack.com/query/latest/docs/framework/react/guides/queries
 
 UI initial ->
 ![alt text](image.png)
+newUI initial ->
+![alt text](image2.png)
 
