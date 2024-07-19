@@ -12,7 +12,7 @@ const router = Router();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors({ credentials: true, origin: "https://task-manager-frontend-jade.vercel.app"  }));
+app.use(cors({ credentials: true, origin: process.env.FRONTEND_URL  }));
 
 
 app.use(cookieParser());  //used to get cookies from user http request.
