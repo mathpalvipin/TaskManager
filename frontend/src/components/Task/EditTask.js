@@ -35,7 +35,7 @@ const EditTask = ({
     },
     onSuccess: async (data) => {
       console.log(data);
-      queryClient.invalidateQueries("tasks");
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
       // const TempTasks = [...Tasks];
       // const removeindex = TempTasks.findIndex((t) => data._id === t._id);
       // if (removeindex !== -1) {

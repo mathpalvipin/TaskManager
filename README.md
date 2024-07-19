@@ -1,3 +1,48 @@
+# Task Management Web App
+
+Welcome to our Task Management Web Application! This application is built using React for the frontend and Node.js for the backend. It provides a comprehensive task management system with features like task creation, editing, deletion, recurrence, and sharing.
+
+## Table of Contents
+
+- [Features](#features)
+- [Technologies Used](#technologies-used)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Contributing](#contributing)
+- [License](#license)
+
+## Features
+
+- **Task Management**: Create, edit, and delete tasks.
+- **Recurrence**: Set tasks to recur daily, monthly, yearly, or for special occasions like birthdays.
+- **Task Sharing**: Share tasks with other users for better collaboration.
+- **Authentication**: Secure JWT-based authentication using context hooks and HTTP-only cookies.
+
+## Technologies Used
+
+### Frontend
+
+- **React**: A JavaScript library for building user interfaces.
+- **React-Redux**: To manage and centralize the application state.
+
+### Backend
+
+- **Node.js**: A JavaScript runtime built on Chrome's V8 JavaScript engine.
+
+### Authentication
+
+- **JWT (JSON Web Token)**: For secure authentication using context hooks and storing tokens in HTTP-only cookies.
+
+## Installation
+
+To run this application locally, follow these steps:
+
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/your-username/task-management-app.git
+   cd task-management-app
+
 # TaskManager
 
 #react 

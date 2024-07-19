@@ -62,7 +62,7 @@ const ShowTask = ({ currentDate, setCurrentDate, yearmonth }) => {
     isError,
     error,
   } = useQuery({
-    queryKey: ["tasks",user.id, yearmonth],
+    queryKey: ["tasks",user?.id, yearmonth],
     queryFn: async () => await apiGetTask(start, end),
     staleTime: 1000 * 60 * 60 * 24,
   });
@@ -92,7 +92,7 @@ const ShowTask = ({ currentDate, setCurrentDate, yearmonth }) => {
   const fetchTasks = async () => {
     try {
       const data = await queryClient.ensureQueryData({
-        queryKey: ["tasks", user.id, yearmonth],
+        queryKey: ["tasks", user?.id, yearmonth],
         queryFn: () => apiGetTask(start, end),
       });
       console.log("fetch task", data);
@@ -115,7 +115,7 @@ const ShowTask = ({ currentDate, setCurrentDate, yearmonth }) => {
     },
     onSuccess: async (id) => {
       console.log("delete from :",Tasks , "delete",id);
-      queryClient.invalidateQueries("tasks");
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
       setdeleting(null);
       toast.success("Task deleted successfully");
     },
