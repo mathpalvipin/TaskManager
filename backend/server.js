@@ -7,7 +7,7 @@ import authRoutes from "./src/routes/AuthRoutes.js";
 import { mongoURI } from "./src/config/config.js";
 import  cookieParser from "cookie-parser";
 import TaskRoutes from "./src/routes/TaskRoutes.js"
-
+import subscriptionRoutes from "./src/routes/SubscriptionRoutes.js";
 const router = Router();
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -44,7 +44,7 @@ router.get("/", (req, res)=>{
 app.use("/auth", authRoutes);
 app.use("/task", TaskRoutes);
 app.use("/", router);
-
+app.use('/subscribe', subscriptionRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
