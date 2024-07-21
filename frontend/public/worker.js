@@ -10,8 +10,7 @@ self.addEventListener('push', async function(event) {
     //  icon: 'logo.png',  // Ensure the icon path is correct
     //  badge: 'logo.png'  // Optional: Add a badge icon if you have one
   };
-  console.log('[Service Worker] Push Received.',data ,options);
-  alert("Show Notification - Task ")
+  // console.log('[Service Worker] Push Received.',data ,options);
   event.waitUntil(
       self.registration.showNotification(title).then(() => {
         console.log('Notification shown successfully');
