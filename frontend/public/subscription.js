@@ -1,6 +1,7 @@
 // public/subscribe.js
 const publicVapidKey = "BHKaG4rVvAKEGQPaJf73yZ4w0SL3bSfzaoTUiDuUtOq6VGC9YbhpeIReA-BJtVIWscu_sKkSgQS51wtrYKFNnGY";
 console.log("Register Service Worker");
+const apiUrl = "https://task-manager-backend-khaki.vercel.app";
 
 // Check for service worker
 if ('serviceWorker' in navigator) {
@@ -28,7 +29,11 @@ async function send() {
 
 navigator.serviceWorker.ready.then((registration) => {
   console.log("show sample",registration);
-  registration.showNotification("Vibration Sample");
+  registration.showNotification("Vibration Sample").then(() => {
+    console.log('Notification shown successfully');
+  }).catch(error => {
+    console.error('Error showing notification:', error);
+  });
 });
 
   // Register Push
@@ -38,7 +43,7 @@ navigator.serviceWorker.ready.then((registration) => {
   });
 
   // Send Push Notification
-  await fetch(  `${process.env.REACT_APP_BACKENDURL}subscribe`, {
+  await fetch(  `${apiUrl}/subscribe`, {
     method: 'POST',
     body: JSON.stringify({
       userId: 'USER_ID', // Replace with the actual user ID
