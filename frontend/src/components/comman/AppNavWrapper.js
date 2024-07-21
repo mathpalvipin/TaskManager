@@ -30,21 +30,13 @@ const AppNavWrapper = () => {
           <NavLink to="/app/home">Task Manager</NavLink>
         </div>
         <div className={`${classes.nav}`}>
-          <NavLink
-            className={({ isActive, isPending }) =>
-              `flex h-full w-auto items-center  justify-center p-4 font-body   ${
-                isPending
-                  ? ""
-                  : isActive
-                    ? `border-b-4 border-primary-500 font-bold  text-primary-500 hover:border-primary-600 hover:text-primary-600 `
-                    : ""
-              }  `
-            }
-            to="/app/home"
-          >
-            Calender
-          </NavLink>
-          <NavLink
+         
+         
+        </div>
+        <div className="flex ">
+          {user ? (
+            <>
+              <NavLink
             className={({ isActive, isPending }) =>
               `flex h-full w-auto items-center  justify-center px-4  font-body   ${
                 isPending
@@ -54,14 +46,10 @@ const AppNavWrapper = () => {
                     : ""
               }  `
             }
-            to="/app/page1"
+            to="/intro"
           >
             Github
           </NavLink>
-        </div>
-        <div className="flex ">
-          {user ? (
-            <>
               <div className="flex h-full items-center justify-center px-2 font-body text-xl ">
                 <IoIosNotificationsOutline />
               </div>
@@ -84,6 +72,20 @@ const AppNavWrapper = () => {
               </div>
             </>
           ) : (
+           <> <NavLink
+            className={({ isActive, isPending }) =>
+              `flex h-full w-auto items-center  justify-center px-4  font-body   ${
+                isPending
+                  ? ""
+                  : isActive
+                    ? ` border-b-4 border-primary-500 font-bold  text-primary-500   hover:border-primary-600 hover:text-primary-600`
+                    : ""
+              }  `
+            }
+            to="/intro"
+          >
+            Introduction
+          </NavLink>
             <NavLink
               className={({ isActive, isPending }) =>
                 `flex h-full w-auto items-center  justify-center px-4  font-body   ${
@@ -98,6 +100,7 @@ const AppNavWrapper = () => {
             >
               login/Signup
             </NavLink>
+            </>
           )}
         </div>
       </div>
