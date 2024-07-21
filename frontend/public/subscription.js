@@ -38,7 +38,7 @@ navigator.serviceWorker.ready.then((registration) => {
   });
 
   // Send Push Notification
-  await fetch('http://localhost:5000/subscribe', {
+  await fetch(  `${process.env.REACT_APP_BACKENDURL}subscribe`, {
     method: 'POST',
     body: JSON.stringify({
       userId: 'USER_ID', // Replace with the actual user ID
