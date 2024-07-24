@@ -99,7 +99,7 @@ router.get("/protected", verifyToken, (req, res) => {
 
 router.delete("/logout", (req, res) => {
   try {
-    res.cookie("userToken", "", { expires: new Date(0) } , { httpOnly: true , secure:true, sameSite:'None' } );
+    res.cookie("userToken", "", { expires: new Date(0) , httpOnly: true , secure:true, sameSite:'None' } );
 
     setTimeout(() => {
       res.status(200).send({ message: "User Logged out successfully" });
