@@ -1,7 +1,8 @@
 import  express from  'express';
-
+import nodeSchedule  from 'node-schedule'
 import Subscription  from '../models/Subscription.js';
-import { sendPushMessage } from '../helper/helper.js';
+import { indianTime, sendPushMessage } from '../helper/helper.js';
+import {add} from "date-fns";
 import webpush from 'web-push';
 // VAPID keys should be generated only once.
 const vapidKeys = {
@@ -19,8 +20,28 @@ const subscriptionRoutes = express.Router();
 
 subscriptionRoutes.post('/', async (req, res) => {
   const { userId, subscription } = req.body;
- 
+  
   try {
+    const t= indianTime( add (indianTime (new Date()), {minutes:1}));
+     const job = nodeSchedule.scheduleJob(
+      t,
+      function (subscription) {
+        console.log(subscription);
+        const payload = JSON.stringify({ title: "testing on scheduler server", body: "body of test" });
+        webpush
+          .sendNotification(subscription, payload)
+          .then(() => {
+            console.log("notification send");
+          })
+          .catch((error) => {
+            console.log(error);
+            throw new Error("Error sending notification:", error);
+          });
+      }.bind(null, subscription)
+    );
+    console.log(job.name);
+
+    
     const checksubscription = await  Subscription.find({userId:userId ,endpoint:subscription.endpoint });
 
     if(checksubscription.length > 0) {
@@ -28,8 +49,8 @@ subscriptionRoutes.post('/', async (req, res) => {
       return res.status(409).json({ message: 'Subscription already exists.' });  // Return 409 Conflict if already subscribed.  // In a real-world application, you may want to update the existing subscription instead of creating a new one.
     }
 
-     await Subscription.create({ userId, ...subscription });
-
+    const subscribe= await Subscription.create({ userId, ...subscription });
+ 
 
     // Send a push notification
     
