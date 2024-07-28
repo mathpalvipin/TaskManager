@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { loginURL, SignupURL, LogoutURL } from "../config/api";
+import { loginURL, SignupURL, LogoutURL ,NOTIFICATION_SUBSCRIPTION_URL} from "../config/api";
 import { VerifyToken } from "../config/api";
 axios.defaults.withCredentials = true;
 export const apiLogIn = async (credential) => {
@@ -42,3 +42,18 @@ export const apiLogout = async () => {
     throw new Error(error.response?.data?.message || error.messsage || "Error While Login ");
   }
 };
+
+export const apiSubscriptionNotificaiton =async(userId ,subscription)=>{
+   try{
+    
+    console.log("API Subscription",userId, subscription);
+   const response= await axios.post(NOTIFICATION_SUBSCRIPTION_URL, {
+        userId: userId, // Replace with the actual user ID
+        subscription
+      }); 
+      return response.data; 
+   }
+   catch (error) {
+    throw error;
+  }
+} 

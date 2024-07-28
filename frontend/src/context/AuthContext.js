@@ -5,21 +5,21 @@ import {
   apiSignUp,
   apiVerifyToken,
   apiLogout,
+  apiSubscriptionNotificaiton,
 } from "../services/Authservice";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import Loader from "../components/comman/Loader";
 // import ErrorBox from "../components/comman/ErrorBox";
-import { toast } from 'react-toastify';
-import { useQuery ,useQueryClient } from "@tanstack/react-query";
-
+import { toast } from "react-toastify";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 const AuthContext = createContext(null);
 export const AuthProvider = ({ children }) => {
   const queryClient = useQueryClient();
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
-const [isLoading, setIsLoading]=useState(true);
-const [isVerifing, setIsVerifing]=useState(true);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isVerifing, setIsVerifing] = useState(true);
 
   const verifyuser = async () => {
     try {
@@ -29,19 +29,17 @@ const [isVerifing, setIsVerifing]=useState(true);
         const userDetails = {
           username: verifiedUser.username,
           email: verifiedUser.email,
-          id:verifiedUser.id,
+          id: verifiedUser.id,
         };
         sessionStorage.setItem("user", JSON.stringify(userDetails));
-        if(JSON.stringify(user)!==JSON.stringify(userDetails))
-        setUser(userDetails);
-      
-      }else{
+        if (JSON.stringify(user) !== JSON.stringify(userDetails))
+          setUser(userDetails);
+      } else {
         queryClient.invalidateQueries("tasks");
         setUser(null);
       }
       setIsVerifing(false);
-      
-
+      return verifiedUser;
     } catch (error) {
       console.log(error);
       setUser(null);
@@ -51,15 +49,15 @@ const [isVerifing, setIsVerifing]=useState(true);
     }
   };
 
- const {refetch :verify} =  useQuery({
-      queryKey: ["verifyUser"],
-      queryFn: async () => await verifyuser(),
-      staleTime: 0,
-      refetchIntervalInBackground:true,
-      refetchInterval: 1000 * 60 * 60 ,
-      refetchOnWindowFocus: false,
-      retry: 2,
-    });
+  const { refetch: verify } = useQuery({
+    queryKey: ["verifyUser"],
+    queryFn: async () => await verifyuser(),
+    staleTime: 0,
+    refetchIntervalInBackground: true,
+    refetchInterval: 1000 * 60 * 60,
+    refetchOnWindowFocus: false,
+    retry: 2,
+  });
   //   useQuery('verifyUser', verifyuser, {
   //   refetchInterval: 1000 * 60 * 60, // Refetch every hour
   //   refetchOnWindowFocus: true, // Refetch when window gains focus
@@ -69,7 +67,7 @@ const [isVerifing, setIsVerifing]=useState(true);
       setIsLoading(true);
       const newUser = await apiSignUp(userData);
       const { message, ...userDetails } = newUser;
-      console.log("signup User",userDetails);
+      console.log("signup User", userDetails);
       setUser(userDetails);
       setError(null);
       sessionStorage.setItem("user", JSON.stringify(userDetails));
@@ -80,7 +78,6 @@ const [isVerifing, setIsVerifing]=useState(true);
       setError(err.message || "An error occurred during Signup.");
       setIsLoading(false);
       throw new Error(err.message || "An error occurred during signUp.");
-   
     }
   };
   const logIn = async (userData) => {
@@ -99,12 +96,12 @@ const [isVerifing, setIsVerifing]=useState(true);
       setError(error.message || "An error occurred during login.");
       setIsLoading(false);
     }
-   
   };
   const logout = async () => {
     try {
       setIsLoading(true);
       const response = await apiLogout();
+      queryClient.invalidateQueries();
       setUser(null);
       setError(null);
       sessionStorage.clear("user");
@@ -115,29 +112,49 @@ const [isVerifing, setIsVerifing]=useState(true);
       setError(error.message || "Unable to logout from system");
       setIsLoading(false);
     }
-   
   };
-  useEffect(()=>{
+  useEffect(() => {
+    (async () => {
+      const user = await verifyuser();
+      // Send Push Notification
+      if (user) {
+       
+          const subscription = JSON.parse(localStorage.getItem("subscription"));
+          try {
+            await apiSubscriptionNotificaiton(user.id, subscription);
+          } catch (e) {
+            if (e?.response?.status !== 409)
+              toast.error(
+                e?.response?.data?.message ||
+                  e?.messsage ||
+                  "Unable to subscribe to nofitication please try again",
+              );
+          }
+    
+      }
 
-    (async()=>{ await verifyuser(); setIsLoading(false);})();
-  
-  },[]);
+      setIsLoading(false);
+    })();
+  }, []);
 
   return (
     <>
       {/* {user?<AppNavWrapper props={{user,logout,setLoading}}></AppNavWrapper>:<div>intro</div>} */}
-      {isVerifing ? <Loader className="z-50"></Loader> :(
-     <> {isLoading && <Loader className="z-50"></Loader> }
-      <AuthContext.Provider
-        value={{ user, error, logIn, signUp, logout, setError,verify }}
-      > 
-      {/* {error && <ErrorBox message={error}></ErrorBox>} */}
-        {children}
-      </AuthContext.Provider>
-      </>
-     )} 
+      {isVerifing ? (
+        <Loader className="z-50"></Loader>
+      ) : (
+        <>
+          {" "}
+          {isLoading && <Loader className="z-50"></Loader>}
+          <AuthContext.Provider
+            value={{ user, error, logIn, signUp, logout, setError, verify }}
+          >
+            {/* {error && <ErrorBox message={error}></ErrorBox>} */}
+            {children}
+          </AuthContext.Provider>
+        </>
+      )}
     </>
-
   );
 };
 export const useAuth = () => {

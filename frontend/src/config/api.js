@@ -13,3 +13,4 @@ export const DeleteTaskURL = `${API_BASE_URL}/task/delete`;
 export const GETALLUSER_URL = `${API_BASE_URL}/auth/users`;
 export const SHARETASK_URL = `${API_BASE_URL}/task/share_task`;
 export const TASKUSER_URL = `${API_BASE_URL}/task/taskUserList`;
+export const NOTIFICATION_SUBSCRIPTION_URL = `${API_BASE_URL}/subscribe`
