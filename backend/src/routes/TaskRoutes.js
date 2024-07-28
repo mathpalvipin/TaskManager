@@ -3,7 +3,18 @@ import { verifyToken } from "../helper/authToken.js";
 import User from "../models/User.js";
 import Task from "../models/Task.js";
 import UserTask from "../models/UserTask.js";
-import { getMonth, getYear, setMonth, getDaysInMonth, getDate } from "date-fns";
+import nodeSchedule from "node-schedule";
+import { addMinutes, milliseconds, isSameDay, getHours ,add } from "date-fns";
+import { indianTime  , sendNotifcation } from "../helper/helper.js";
+import Notification from "../models/Notification.js";
+import {
+  getMonth,
+  getYear,
+  setMonth,
+  getDaysInMonth,
+  getDate,
+  differenceInMilliseconds,
+} from "date-fns";
 const router = Router();
 const TaskTypes = [
   "OneTime",
@@ -32,13 +43,55 @@ router.post("/Create", verifyToken, async (req, res) => {
       DateTime: DateTime,
       role: "creator",
     });
-    const createdTask = await UserTask.findOne({ _id: userTask._id }).populate({
+    const createdTask = await userTask.populate({
       path: "task",
     });
+
+    const notification = await Notification.create({
+      userTask: userTask._id,
+      dateTime: DateTime,
+    });
+    // console.log(
+    //   await notification.populate({
+    //     path: "userTask",
+    //     populate: [{ path: "task" }, { path: "user" }],
+    //   })
+    // );
+
+    // Convert to Indian time (Asia/Kolkata)
+    // schedule task if task is today or if current time is >23 and task belong to next day
+    const indianDateTime = indianTime(DateTime);
+    const indianCurrentTime = indianTime(new Date());
+    console.log("Now hours -", getHours(indianCurrentTime));
+    
+    console.log("task time", indianDateTime , "currentime- ",indianCurrentTime ,"day+1 - " , indianTime(add(indianDateTime, { days: 1 })));
+    if (
+      isSameDay(indianDateTime, indianCurrentTime) ||
+      (getHours(indianCurrentTime) === 23 &&
+        isSameDay(indianCurrentTime, indianTime(add(indianDateTime, { days: 1 }))))
+    ) {
+      
+    const job = nodeSchedule.scheduleJob(
+        indianDateTime,
+        function (notificationId) {
+          console.log(notificationId);
+          sendNotifcation(notificationId);
+        }.bind(null, notification._id)
+      );
+      console.log(job.name);
+    }
+    
+
+    // rule.minute = 1;
+
+    // const rule = new schedule.RecurrenceRule();
+
+    // console.log(nodeSchedule)
     setTimeout(() => {
       res.status(200).json(createdTask);
     }, 1000);
   } catch (e) {
+    console.log(e);
     res.status(500).json({ message: "Internal Server Error" });
   }
 });
