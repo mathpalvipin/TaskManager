@@ -60,11 +60,67 @@ To get a local copy up and running follow these simple steps.
 - MongoDB
 
 ### Installation
+# React and Node.js Application Setup
 
-1. Clone the repo
-   ```bash
-   git clone https://github.com/your-username/task-management-app.git
-   cd task-management-app
+## Prerequisites
+
+Ensure you have the following installed on your machine:
+
+- Node.js (v12 or higher)
+- npm (v6 or higher)
+- MongoDB (if your backend requires it)
+
+Running the Application
+
+1. Clone the Repository
+```
+git clone https://github.com/mathpalvipin/TaskManager.git
+cd <TaskManager>
+```
+2. Install Dependencies
+Backend
+```
+cd backend
+npm install
+```
+Frontend
+```
+cd frontend
+npm install
+```
+4. Start the Servers
+Backend
+```
+cd backend
+npm start
+```
+Backend server runs on http://localhost:5000.
+
+Frontend
+In a new terminal window/tab:
+
+```
+cd frontend
+npm start
+```
+Frontend app runs on http://localhost:3000.
+
+Example Environment Files
+React .env.example
+
+```
+SECRET_KEY=
+MONGODB_URI=
+FRONTEND_URL=http://localhost:3000
+PRIVATE_KEY=
+PUBLIC_KEY=
+```
+
+Node .env.example
+```
+REACT_APP_BACKENDURL=http://localhost:5000
+```
+
 
 # TaskManager
 
