@@ -19,7 +19,8 @@ const ShareTask = ({ SelectedTask, closeSharebox, open, users ,user}) => {
   const  usersList = users;
   const [filter, setFilter] = useState("");
   const task = SelectedTask?.task;
-  
+  const currentuser=user;
+  // console.log("currentuser: " , currentuser);
    const {isFetching: isloading,
 
   } = useQuery({
@@ -117,20 +118,22 @@ const ShareTask = ({ SelectedTask, closeSharebox, open, users ,user}) => {
                       className={` ml-1  flex  h-[calc(100vh/4)] w-full  flex-col overflow-y-auto  ${classes.noscrollbar}`}
                     >
                       {usersList?.map((user) =>
-                         user?.email?.includes(filter) && !sharedUser.some(u=>u._id ===user._id) ? (
+                    {  
+                        return  user?.email?.includes(filter) && !sharedUser.some(u=>u._id ===user._id) && currentuser?.id!==user._id  ? (
                           <><div
                             className="cursor-pointer mx-4 hover:scale-110"
                             key={user._id}
                             onClick={() => addToSharedList(user)}
                           >
+                           
                             {user.email}
                            
                           </div>
                         
                            </>
-                        ) : (
+                    ) : (
                           <></>
-                        ),
+                        )}
                       )}
                     </div>
                     {/* {usersList.map(user=>( <option value={user.id} key={user.email}>{user.email}</option>))} */}

@@ -31,7 +31,7 @@ export const sendPushMessage = async (userId, title, body) => {
   for (let i = 0; i < subscriptions.length; i++) {
     const subscription = subscriptions[i];
     const { _id, ...endpoint } = subscription;
-    // console.log("send notification to ", userId, title, body);
+    console.log("send notification to ", userId, title, body);
     const payload = JSON.stringify({ title: title, body: body });
     webpush
       .sendNotification(subscription, payload)
@@ -40,7 +40,7 @@ export const sendPushMessage = async (userId, title, body) => {
       })
       .catch((error) => {
         console.log(error);
-        throw new Error("Error sending notification:", error);
+        // throw new Error("Error sending notification:", error);
       });
   }
 
@@ -63,7 +63,7 @@ export const sendNotifcation = async (notificationId) => {
     // console.log(notification);
     await sendPushMessage(userId, task.TaskType, task.TaskName);
     //schedule next task daily type
-    if (task.TaskType === TaskTypes[1]) {
+    if (task?.TaskType === TaskTypes[1]) {
       const newdatetime = indianTime(add(datetime, { days: 1 }));
       await Notification.create({
         userTask: notification?.userTask,
@@ -71,7 +71,7 @@ export const sendNotifcation = async (notificationId) => {
       });
     }
     //schedule next task monthly  type
-    else if (task.TaskType === TaskTypes[3]) {
+    else if (task?.TaskType === TaskTypes[3]) {
       const newdatetime = indianTime(add(datetime, { months: 1 }));
       await Notification.create({
         userTask: notification?.userTask,
@@ -79,7 +79,7 @@ export const sendNotifcation = async (notificationId) => {
       });
     }
     //schedule next task yearly and birthday  type
-    else if (task.TaskType === TaskTypes[4] || task.TaskType === TaskTypes[5]) {
+    else if (task?.TaskType === TaskTypes[4] || task?.TaskType === TaskTypes[5]) {
       const newdatetime = indianTime(add(datetime, { years: 1 }));
       await Notification.create({
         userTask: notification?.userTask,
