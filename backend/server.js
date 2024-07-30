@@ -56,7 +56,7 @@ app.use('/subscribe', subscriptionRoutes);
 //   const notification =await Notification.find({isNotified:false});
 //   console.log(notification);
 // });
-nodeSchedule.scheduleJob('* 23 * * *', async function(){
+nodeSchedule.scheduleJob('0 23 * * *', async function(){
 // nodeSchedule.scheduleJob('* * * * *', async function(){
  try{ console.log("cron job run");
   const dateTimeNextDay =indianTime(add(indianTime(new Date()),{days:1}));

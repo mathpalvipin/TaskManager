@@ -5,7 +5,7 @@ import Task from "../models/Task.js";
 import UserTask from "../models/UserTask.js";
 import nodeSchedule from "node-schedule";
 import { addMinutes, milliseconds, isSameDay, getHours ,add } from "date-fns";
-import { indianTime  , sendNotifcation } from "../helper/helper.js";
+import { indianTime  , nextValidDate, sendNotifcation } from "../helper/helper.js";
 import Notification from "../models/Notification.js";
 import {
   getMonth,
@@ -66,7 +66,7 @@ router.post("/Create", verifyToken, async (req, res) => {
     
     console.log("task time", indianDateTime , "currentime- ",indianCurrentTime ,"day+1 - " , indianTime(add(indianDateTime, { days: 1 })));
     if (
-      isSameDay(indianDateTime, indianCurrentTime) ||
+      indianDateTime >= indianCurrentTime && isSameDay(indianDateTime, indianCurrentTime) ||
       (getHours(indianCurrentTime) === 23 &&
         isSameDay(indianCurrentTime, indianTime(add(indianDateTime, { days: 1 }))))
     ) {
@@ -78,8 +78,29 @@ router.post("/Create", verifyToken, async (req, res) => {
           sendNotifcation(notificationId);
         }.bind(null, notification._id)
       );
-      console.log(job.name);
+      notification.name = job?.name;
+      await notification.save();
     }
+
+    if(indianDateTime < indianCurrentTime){
+       const date = indianDateTime;
+       const type =  createdTask?.task?.TaskType;
+       if(type ==="OneTime") return res.status(200).json(createdTask);
+       console.log("out",date,type);
+      const nextDate= await   nextValidDate(type , date);
+      console.log("nextvalidDate -",nextDate);
+     const nextJob= nodeSchedule.scheduleJob(
+       nextDate,
+       function (notificationId) {
+         console.log(notificationId);
+         sendNotifcation(notificationId);
+       }.bind(null, notification._id)
+     );
+     notification.name = nextJob.name;
+     await notification.save();
+     
+    }
+
     
 
     // rule.minute = 1;
@@ -87,9 +108,9 @@ router.post("/Create", verifyToken, async (req, res) => {
     // const rule = new schedule.RecurrenceRule();
 
     // console.log(nodeSchedule)
-    setTimeout(() => {
+   
       res.status(200).json(createdTask);
-    }, 1000);
+   
   } catch (e) {
     console.log(e);
     res.status(500).json({ message: "Internal Server Error" });
@@ -224,9 +245,9 @@ router.get("/show", verifyToken, async (req, res) => {
         ...finalMonthly,
         ...finalDaily,
       ];
-      setTimeout(() => {
+     
         res.status(200).json(finaltask);
-      }, 1000);
+    
     } else {
       const email = req.user?.email; //get user email  by token set in cookie httponly
       const user = await User.findOne({ email: email });
@@ -235,9 +256,8 @@ router.get("/show", verifyToken, async (req, res) => {
         isDeleted: false,
       }).populate({ path: "task" });
 
-      setTimeout(() => {
         res.status(200).json(tasks);
-      }, 1000);
+     
     }
   } catch (e) {
     console.log(e);
@@ -271,9 +291,9 @@ router.post("/edit", verifyToken, async (req, res) => {
       isDeleted: false,
     }).populate({ path: "task" });
 
-    setTimeout(() => {
+  
       return res.status(200).json(updatedTask);
-    }, 2000);
+   
   } catch (e) {
     res.status(500).json({ message: "Internal Server Error" });
   }
@@ -303,9 +323,8 @@ router.post("/delete", verifyToken, async (req, res) => {
     );
     if (!task) return res.status(500).json({ message: "Task Not found " });
 
-    setTimeout(() => {
       return res.status(200).json(userTaskToDelete._id);
-    }, 1500);
+   
   } catch (err) {
     res.status(500).json({ message: "Internal Server Error" });
   }
@@ -378,9 +397,8 @@ router.post("/share_task", verifyToken, async (req, res) => {
       user: { $not: { $eq: user._id } },
     }).populate({ path: "user", select: "-password" });
 
-    setTimeout(() => {
       return res.status(200).json(list);
-    }, 1500);
+    
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Internal Server Error" });

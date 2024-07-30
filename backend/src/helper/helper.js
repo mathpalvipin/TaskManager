@@ -2,7 +2,7 @@ import moment from "moment-timezone";
 import Notification from "../models/Notification.js";
 import webpush from "web-push";
 import Subscription from "../models/Subscription.js";
-import { add } from "date-fns";
+import { add,differenceInYears,differenceInMonths,differenceInDays } from "date-fns";
 const TaskTypes = [
   "OneTime",
   "Daily",
@@ -31,7 +31,7 @@ export const sendPushMessage = async (userId, title, body) => {
   for (let i = 0; i < subscriptions.length; i++) {
     const subscription = subscriptions[i];
     const { _id, ...endpoint } = subscription;
-    console.log("send notification to ",userId ,title ,body );
+    console.log("send notification to ", userId, title, body);
     const payload = JSON.stringify({ title: title, body: body });
     webpush
       .sendNotification(subscription, payload)
@@ -61,7 +61,7 @@ export const sendNotifcation = async (notificationId) => {
     const task = notification?.userTask?.task;
     const datetime = indianTime(notification?.dateTime);
     console.log(notification);
-    await sendPushMessage(userId,task.TaskType , task.TaskName);
+    await sendPushMessage(userId, task.TaskType, task.TaskName);
     //schedule next task daily type
     if (task.TaskType === TaskTypes[1]) {
       const newdatetime = indianTime(add(datetime, { days: 1 }));
@@ -91,5 +91,24 @@ export const sendNotifcation = async (notificationId) => {
     return;
   } catch (e) {
     throw Error(e);
+  }
+};
+
+export const nextValidDate = async (type, date) => {
+  console.log(type, date);
+  if (type === TaskTypes[1]) {
+    const result = differenceInDays(indianTime(new Date()), date);
+   
+    return indianTime(add(date, { days: result + 1 }));
+  }
+  // monthly  type
+  else if (type === TaskTypes[3]) {
+    const result = differenceInMonths(indianTime(new Date()), date);
+    return indianTime(add(date, { months: result + 1 }));
+  }
+  // yearly and birthday  type
+  else if (type === TaskTypes[4] || type === TaskTypes[5]) {
+    const result = differenceInYears(indianTime(new Date()), date);
+    return indianTime(add(date, { years: result + 1 }));
   }
 };

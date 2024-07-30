@@ -11,6 +11,8 @@ Welcome to our Task Management Web Application! This application is built using 
 - [Contributing](#contributing)
 - [License](#license)
 
+The scheduling script that continuously monitors and schedules tasks should be deployed on an environment that supports long-running processes. Vercel itself does not support long-running processes, so you'll need to use another service.
+
 ## Features
 
 - **Task Management**: Create, edit, and delete tasks.

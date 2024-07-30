@@ -35,7 +35,7 @@ export const AuthProvider = ({ children }) => {
         if (JSON.stringify(user) !== JSON.stringify(userDetails))
           setUser(userDetails);
       } else {
-        queryClient.invalidateQueries("tasks");
+        queryClient.removeQueries();
         setUser(null);
       }
       setIsVerifing(false);
@@ -43,7 +43,7 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       console.log(error);
       setUser(null);
-      queryClient.invalidateQueries("tasks");
+      queryClient.removeQueries();
       sessionStorage.removeItem("user");
       setIsVerifing(false);
     }
@@ -101,7 +101,7 @@ export const AuthProvider = ({ children }) => {
     try {
       setIsLoading(true);
       const response = await apiLogout();
-      queryClient.invalidateQueries();
+      queryClient.removeQueries();
       setUser(null);
       setError(null);
       sessionStorage.clear("user");
@@ -114,11 +114,11 @@ export const AuthProvider = ({ children }) => {
     }
   };
   useEffect(() => {
-    (async () => {
-      const user = await verifyuser();
-      // Send Push Notification
-      if (user) {
-       
+    setTimeout(() => {
+      (async () => {
+        const user = await verifyuser();
+        // Send Push Notification
+        if (user) {
           const subscription = JSON.parse(localStorage.getItem("subscription"));
           try {
             await apiSubscriptionNotificaiton(user.id, subscription);
@@ -130,11 +130,11 @@ export const AuthProvider = ({ children }) => {
                   "Unable to subscribe to nofitication please try again",
               );
           }
-    
-      }
+        }
 
-      setIsLoading(false);
-    })();
+        setIsLoading(false);
+      })();
+    }, 50);
   }, []);
 
   return (

@@ -17,7 +17,8 @@ export const verifyToken = (req, res, next) => {
 
   JWT.verify(token, secretKey, (err, decoded) => {
     if (err) {
-      return  res.status(401).json({ message: "Unauthorized: Missing token" });
+      res.cookie("userToken", "", { expires: new Date(0) , httpOnly: true , secure:true, sameSite:'None' } );
+      return  res.status(401).json({ message: "Unauthorized:  token expire" });
     }
 
     req.user = decoded; // Attach user information to the request object
