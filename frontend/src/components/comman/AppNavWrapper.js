@@ -96,7 +96,7 @@ const AppNavWrapper = () => {
                       : ""
                 }  `
               }
-              to="/auth/login"
+              to="/auth/signup"
             >
               login/Signup
             </NavLink>
