@@ -44,7 +44,7 @@ const ShareTask = ({ SelectedTask, closeSharebox, open, users ,user}) => {
       return await apiShareTask(task._id, sharedUser);
     },
     onSuccess: async (data) => {
-      console.log(data);
+      // console.log(data);
       queryClient.setQueryData(["TaskUser", task._id,user.id], data);
       setSharedUser(data);
       closeSharebox();

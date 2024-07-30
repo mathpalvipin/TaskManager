@@ -67,7 +67,7 @@ export const AuthProvider = ({ children }) => {
       setIsLoading(true);
       const newUser = await apiSignUp(userData);
       const { message, ...userDetails } = newUser;
-      console.log("signup User", userDetails);
+      // console.log("signup User", userDetails);
       setUser(userDetails);
       setError(null);
       sessionStorage.setItem("user", JSON.stringify(userDetails));
@@ -85,7 +85,7 @@ export const AuthProvider = ({ children }) => {
       setIsLoading(true);
       const loginUser = await apiLogIn(userData);
       const { messages, ...userDetails } = loginUser;
-      console.log("login User", userDetails);
+      // console.log("login User", userDetails);
       setUser(userDetails);
       setError(null);
       setIsLoading(false);

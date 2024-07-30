@@ -12,7 +12,7 @@ axios.defaults.withCredentials = true;
 export const apiCreateTask = async (taskDetails) => {
   try {
     const response = await axios.post(CreateTaskURL, taskDetails);
-    console.log(response.data);
+    // console.log(response.data);
     return response.data;
   } catch (e) {
     console.log(e);
@@ -50,7 +50,7 @@ export const apiGetTaskbyMonth = async () => {
 export const apiUpdateTask = async (task) => {
   try {
     const response = await axios.post(UpdateTaskURL, task);
-    console.log(response.data);
+    // console.log(response.data);
     return response.data;
   } catch (e) {
     console.log(e);
@@ -90,10 +90,10 @@ export const apiShareTask = async(selectedTaskId, sharedList) =>{
 
 export const  apiGetTaskUser = async ( id ,userId )=>{
   try{
-    console.log("user",userId);
+    // console.log("user",userId);
     const response = await axios.post(TASKUSER_URL, {id:id});
      const userlist = response.data.map( d =>  d.user).filter(d=>d._id !== userId);
-    console.log("shareuserlist service", userlist);
+    // console.log("shareuserlist service", userlist);
     return userlist;
   }catch(e){
     throw new Error(e?.response?.data?.message || "Unable to fetch Task'sUser");

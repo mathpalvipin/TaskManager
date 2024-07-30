@@ -81,7 +81,7 @@ const TaskReducer = createSlice({
             count: types[TaskType].count + 1
           };
       }
-      console.log(types);
+      // console.log(types);
        state.types = types;
     
       state.Tasks = action.payload;

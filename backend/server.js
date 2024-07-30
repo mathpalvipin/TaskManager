@@ -58,18 +58,19 @@ app.use('/subscribe', subscriptionRoutes);
 // });
 nodeSchedule.scheduleJob('0 23 * * *', async function(){
 // nodeSchedule.scheduleJob('* * * * *', async function(){
- try{ console.log("cron job run");
+ try{ 
+// console.log("cron job run");
   const dateTimeNextDay =indianTime(add(indianTime(new Date()),{days:1}));
   const notifications =await Notification.find({isNotified:false});
   const scheduleNotifications = notifications.filter(notification => isSameDay(indianTime(notification.dateTime), indianTime(dateTimeNextDay)));
   for ( let  i = 0 ; i<scheduleNotifications.length ; i++ ){
     const scheduledTask = scheduleNotifications[i];
     const indianDateTime = indianTime(scheduledTask.dateTime);
-    console.log(scheduledTask,indianDateTime);
+    // console.log(scheduledTask,indianDateTime);
      nodeSchedule.scheduleJob(
       indianDateTime,
       function (notificationId) {
-        console.log(notificationId);
+        // console.log(notificationId);
         sendNotifcation(notificationId);
       }.bind(null, scheduledTask._id)
     );

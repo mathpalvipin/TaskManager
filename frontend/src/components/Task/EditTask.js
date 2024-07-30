@@ -34,7 +34,7 @@ const EditTask = ({
       return await apiUpdateTask(task);
     },
     onSuccess: async (data) => {
-      console.log(data);
+      // console.log(data);
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
       // const TempTasks = [...Tasks];
       // const removeindex = TempTasks.findIndex((t) => data._id === t._id);
@@ -58,7 +58,7 @@ const EditTask = ({
     e.preventDefault();
     try {
       setIsLoading(true);
-      console.log(task);
+      // console.log(task);
       await editTask.mutateAsync({
         ...task,
         DateTime: task.DateTime.slice(0, 16),

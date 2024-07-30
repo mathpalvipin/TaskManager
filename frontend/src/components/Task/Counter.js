@@ -9,7 +9,7 @@ const colorVariants = {
 }
 const Counter = () => {
   const types = useSelector((state) => state.types);
-  console.log(types);
+  // console.log(types);
   return (
     <>
       {Object.keys(types).map((key) => (

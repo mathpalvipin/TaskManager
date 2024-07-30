@@ -6,7 +6,7 @@ axios.defaults.withCredentials = true;
 export const apiLogIn = async (credential) => {
   try {
     const response = await axios.post(loginURL, credential); 
-    console.log(response);
+    // console.log(response);
     return response.data;
   } catch (error) {
     console.log(error);
@@ -46,7 +46,7 @@ export const apiLogout = async () => {
 export const apiSubscriptionNotificaiton =async(userId ,subscription)=>{
    try{
     
-    console.log("API Subscription",userId, subscription);
+    // console.log("API Subscription",userId, subscription);
    const response= await axios.post(NOTIFICATION_SUBSCRIPTION_URL, {
         userId: userId, // Replace with the actual user ID
         subscription

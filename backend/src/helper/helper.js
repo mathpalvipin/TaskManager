@@ -31,7 +31,7 @@ export const sendPushMessage = async (userId, title, body) => {
   for (let i = 0; i < subscriptions.length; i++) {
     const subscription = subscriptions[i];
     const { _id, ...endpoint } = subscription;
-    console.log("send notification to ", userId, title, body);
+    // console.log("send notification to ", userId, title, body);
     const payload = JSON.stringify({ title: title, body: body });
     webpush
       .sendNotification(subscription, payload)
@@ -60,7 +60,7 @@ export const sendNotifcation = async (notificationId) => {
     const userId = notification?.userTask?.user._id;
     const task = notification?.userTask?.task;
     const datetime = indianTime(notification?.dateTime);
-    console.log(notification);
+    // console.log(notification);
     await sendPushMessage(userId, task.TaskType, task.TaskName);
     //schedule next task daily type
     if (task.TaskType === TaskTypes[1]) {
@@ -95,7 +95,7 @@ export const sendNotifcation = async (notificationId) => {
 };
 
 export const nextValidDate = async (type, date) => {
-  console.log(type, date);
+  // console.log(type, date);
   if (type === TaskTypes[1]) {
     const result = differenceInDays(indianTime(new Date()), date);
    

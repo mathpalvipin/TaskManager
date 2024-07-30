@@ -18,7 +18,7 @@ if ('serviceWorker' in navigator) {
 
 // Register SW, Register Push, Send Push
 async function send() {
-  console.log("send function ");
+  // console.log("send function ");
   // Register Service Worker
   const register = await navigator.serviceWorker.register('/worker.js', {
     scope: '/'
@@ -56,7 +56,7 @@ function urlBase64ToUint8Array(base64String) {
   for (let i = 0; i < rawData.length; ++i) {
     outputArray[i] = rawData.charCodeAt(i);
   }
-  console.log(outputArray);
+  // console.log(outputArray);
   return outputArray;
 }
 

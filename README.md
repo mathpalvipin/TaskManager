@@ -1,46 +1,66 @@
-# Task Management Web App
+# Web Application
 
-Welcome to our Task Management Web Application! This application is built using React for the frontend and Node.js for the backend. It provides a comprehensive task management system with features like task creation, editing, deletion, recurrence, and sharing.
+Welcome to our web application! This project is built using a modern stack of technologies to provide a robust and user-friendly experience for task management and notifications.
 
 ## Table of Contents
 
-- [Features](#features)
 - [Technologies Used](#technologies-used)
-- [Installation](#installation)
-- [Usage](#usage)
+- [Features](#features)
+- [How to Use](#how-to-use)
+- [Getting Started](#getting-started)
 - [Contributing](#contributing)
 - [License](#license)
-
-The scheduling script that continuously monitors and schedules tasks should be deployed on an environment that supports long-running processes. Vercel itself does not support long-running processes, so you'll need to use another service.
-
-## Features
-
-- **Task Management**: Create, edit, and delete tasks.
-- **Recurrence**: Set tasks to recur daily, monthly, yearly, or for special occasions like birthdays.
-- **Task Sharing**: Share tasks with other users for better collaboration.
-- **Authentication**: Secure JWT-based authentication using context hooks and HTTP-only cookies.
 
 ## Technologies Used
 
 ### Frontend
 
 - **React**: A JavaScript library for building user interfaces.
-- **React-Redux**: To manage and centralize the application state.
+- **React Context**: Used for authentication context throughout the web app.
+- **React-Redux**: To manage and centralize task management state.
 
 ### Backend
 
 - **Node.js**: A JavaScript runtime built on Chrome's V8 JavaScript engine.
+- **Node-Scheduler**: To schedule task.(The scheduling script that continuously monitors and schedules tasks should be deployed on an environment that supports long-running processes. Vercel itself does not support long-running processes, so you'll need to use localhost instead for notification)
 
-### Authentication
+- **Cron Job**: For periodic task scheduling.
+- **JWT (JSON Web Token)**: Used for secure authentication, with tokens stored in HTTP-only cookies.
+- **MongoDB**: A NoSQL database for storing application data.
 
-- **JWT (JSON Web Token)**: For secure authentication using context hooks and storing tokens in HTTP-only cookies.
+### Notifications
 
-## Installation
+- **WebPush**: To send notifications.
+- **Service Worker**: To listen to push events and show notifications on the frontend.
 
-To run this application locally, follow these steps:
+## Features
 
-1. Clone the repository:
+### Task Management
 
+- Create, edit, and delete tasks.
+- Set tasks to be recursive (daily, monthly, yearly, for birthdays).
+- Share tasks with other users.
+- Get notifications at task time.
+
+## How to Use
+
+1. **Log in** to your account to start managing your tasks.
+2. **Create new tasks**, set their recurrence, and share them with your friends and colleagues.
+3. **Receive notifications** when tasks are due.
+
+## Getting Started
+
+To get a local copy up and running follow these simple steps.
+
+### Prerequisites
+
+- Node.js
+- npm (Node Package Manager)
+- MongoDB
+
+### Installation
+
+1. Clone the repo
    ```bash
    git clone https://github.com/your-username/task-management-app.git
    cd task-management-app

@@ -2,7 +2,7 @@ import { AvatarComponent } from 'avatar-initials';
 
 export default function UserLogo({name}) {
     const userName = name.split(' ');
-    console.log(userName);
+    // console.log(userName);
     let firstName;
     let lastName;
     if(userName.length >1){

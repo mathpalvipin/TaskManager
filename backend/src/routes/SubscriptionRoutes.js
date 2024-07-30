@@ -47,7 +47,7 @@ subscriptionRoutes.post('/', async (req, res) => {
     const checksubscription = await  Subscription.find({userId:userId ,endpoint:subscription.endpoint });
 
     if(checksubscription.length > 0) {
-    console.log("Checking subscription",checksubscription.length);
+    // console.log("Checking subscription",checksubscription.length);
     //  await sendPushMessage(userId, "Test check Notification","this is body of test notification" );
       return res.status(409).json({ message: 'Subscription already exists.' });  // Return 409 Conflict if already subscribed.  // In a real-world application, you may want to update the existing subscription instead of creating a new one.
     }

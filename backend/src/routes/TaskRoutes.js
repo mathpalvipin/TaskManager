@@ -62,9 +62,9 @@ router.post("/Create", verifyToken, async (req, res) => {
     // schedule task if task is today or if current time is >23 and task belong to next day
     const indianDateTime = indianTime(DateTime);
     const indianCurrentTime = indianTime(new Date());
-    console.log("Now hours -", getHours(indianCurrentTime));
+    // console.log("Now hours -", getHours(indianCurrentTime));
     
-    console.log("task time", indianDateTime , "currentime- ",indianCurrentTime ,"day+1 - " , indianTime(add(indianDateTime, { days: 1 })));
+    // console.log("task time", indianDateTime , "currentime- ",indianCurrentTime ,"day+1 - " , indianTime(add(indianDateTime, { days: 1 })));
     if (
       indianDateTime >= indianCurrentTime && isSameDay(indianDateTime, indianCurrentTime) ||
       (getHours(indianCurrentTime) === 23 &&
@@ -74,7 +74,7 @@ router.post("/Create", verifyToken, async (req, res) => {
     const job = nodeSchedule.scheduleJob(
         indianDateTime,
         function (notificationId) {
-          console.log(notificationId);
+          // console.log(notificationId);
           sendNotifcation(notificationId);
         }.bind(null, notification._id)
       );
@@ -86,13 +86,13 @@ router.post("/Create", verifyToken, async (req, res) => {
        const date = indianDateTime;
        const type =  createdTask?.task?.TaskType;
        if(type ==="OneTime") return res.status(200).json(createdTask);
-       console.log("out",date,type);
+      //  console.log("out",date,type);
       const nextDate= await   nextValidDate(type , date);
-      console.log("nextvalidDate -",nextDate);
+      // console.log("nextvalidDate -",nextDate);
      const nextJob= nodeSchedule.scheduleJob(
        nextDate,
        function (notificationId) {
-         console.log(notificationId);
+        //  console.log(notificationId);
          sendNotifcation(notificationId);
        }.bind(null, notification._id)
      );

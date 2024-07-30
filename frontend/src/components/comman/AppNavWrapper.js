@@ -14,7 +14,7 @@ const AppNavWrapper = () => {
     e.preventDefault();
     try {
       const res = await logout();
-      console.log(res);
+      // console.log(res);
 
       navigate("/auth/login"); //user navigate inside component and redirect inside loader function of router
     } catch (e) {
@@ -26,7 +26,7 @@ const AppNavWrapper = () => {
   return (
     <>
       <div className="z-10 flex h-full w-full bg-white ">
-        <div className="text-shadow justify-left ml-4 flex w-full items-center pt-2 font-logo text-2xl">
+        <div className="text-shadow justify-left ml-4 flex w-full items-center pt-2 font-logo  text-sm sm:text-xl md:text-2xl">
           <NavLink to="/app/home">Task Manager</NavLink>
         </div>
         <div className={`${classes.nav}`}>

@@ -79,10 +79,10 @@ const ShowTask = ({ currentDate, setCurrentDate, yearmonth }) => {
         queryKey: ["users"],
         queryFn: async () =>  await apiAllUser(),
       });
-      console.log("fetch User", data);
+      // console.log("fetch User", data);
     setUsers(data);
     } catch (e) {
-      console.log("error fetching User " ,error?.message);
+      // console.log("error fetching User " ,error?.message);
     }
   };
   const selectTask = (task) => {
@@ -95,15 +95,15 @@ const ShowTask = ({ currentDate, setCurrentDate, yearmonth }) => {
         queryKey: ["tasks", user?.id, yearmonth],
         queryFn: () => apiGetTask(start, end),
       });
-      console.log("fetch task", data);
+      // console.log("fetch task", data);
       await dispatch(setTasks(data));
     } catch (e) {
-      console.log(Tasks);
+      // console.log(Tasks);
       console.log("error fetching Task ");
     }
   };
   useEffect(() => {
-    console.log(Tasks);
+    // console.log(Tasks);
     fetchTasks();
     fetchUsers();
   }, [yearmonth, fetchTasks]);
@@ -114,7 +114,7 @@ const ShowTask = ({ currentDate, setCurrentDate, yearmonth }) => {
       return await apiDeleteTask(id);
     },
     onSuccess: async (id) => {
-      console.log("delete from :",Tasks , "delete",id);
+      // console.log("delete from :",Tasks , "delete",id);
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
       setdeleting(null);
       toast.success("Task deleted successfully");

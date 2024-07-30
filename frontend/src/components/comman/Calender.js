@@ -55,10 +55,10 @@ const Calender = ({ setCurrentDate, currentDate = new Date() }) => {
       <div className=" flex flex-col h-full w-auto ">
       <div className="flex items-center justify-between mx-3 bg-white h-12 ">
        <div className="flex justify-center items-center "> 
-        <h1 className="text-2xl leading-5 mr-2 items-center  font-bold font-sans">{format(currentDate, "dd  LLLL  yyyy")} </h1>
+        <h1 className="text-2xl  leading-5 mr-2 items-center  font-bold font-sans">{format(currentDate, "dd  LLLL  yyyy")} </h1>
         <button
           onClick={() => setIsCreating(true)}
-          className="m-1 rounded-md px-2 py-1  bg-primary-500  text-white hover:bg-primary-600"
+          className="m-2 md:m-1 rounded-md  px-1 py-1 text-sm sm:text-md md:text-lg bg-primary-500  text-white hover:bg-primary-600"
         >
           Create Task
         </button>
