@@ -13,15 +13,15 @@ const Home = () => {
   
   return (
     <>
-      <div className="flex h-full w-full mt-3">
-        <div className={` w-3/6 h-full    mx-8 }`}>
+      <div className="flex  md:flex-row flex-col-reverse h-full w-full mt-3">
+        <div className={`md:w-3/6 w-full h-full  px-4  md:mx-8 }`}>
           <ShowTask
             currentDate={currentDate}
             yearmonth={yearmonth}
             setCurrentDate={setCurrentDate}
           ></ShowTask>
         </div>
-        <div className=" flex h-full w-3/6 flex-col mx-8">
+        <div className=" flex h-full md:w-3/6 w-full flex-col mx-1 md:mx-8">
           <div className="h-5/6 w-auto">
             <Calender
               currentDate={currentDate}

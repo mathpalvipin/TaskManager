@@ -18,7 +18,7 @@ export const AuthProvider = ({ children }) => {
   const queryClient = useQueryClient();
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [isVerifing, setIsVerifing] = useState(true);
 
   const verifyuser = async () => {
@@ -43,7 +43,7 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       console.log(error);
       setUser(null);
-      queryClient.removeQueries();
+      // queryClient.removeQueries();
       sessionStorage.removeItem("user");
       setIsVerifing(false);
     }
@@ -114,9 +114,9 @@ export const AuthProvider = ({ children }) => {
     }
   };
   useEffect(() => {
-    setTimeout(() => {
+ 
       (async () => {
-        const user = await verifyuser();
+        // const user = await verifyuser();
         // Send Push Notification
         if (user) {
           const subscription = JSON.parse(localStorage.getItem("subscription"));
@@ -134,8 +134,8 @@ export const AuthProvider = ({ children }) => {
 
         setIsLoading(false);
       })();
-    }, 50);
-  }, []);
+ 
+  }, [user]);
 
   return (
     <>
